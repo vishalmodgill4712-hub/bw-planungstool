@@ -1,14 +1,10 @@
 const express = require('express');
-const path = require('path');
-const fs = require('fs');
 const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ─── GitHub-based permanent storage ─────────────────────────
-// Data is saved as a JSON file in the GitHub repo.
-// This way saves survive server restarts on the free Render plan.
+// ─── GitHub permanent storage ─────────────────────────────────
 const INITIAL_DATA = {
   "2341.9011": {
     "liefertermin": [],
@@ -2464,22 +2460,15 @@ const GITHUB_REPO  = process.env.GITHUB_REPO || 'vishalmodgill4712-hub/bw-planun
 const DATA_FILE    = 'planungsdaten.json';
 const GITHUB_API   = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE}`;
 
-// In-memory cache so we don't hit GitHub API on every request
-let memoryCache = null;
-
-// Simple local session storage (sessions are short-lived, reset on restart is fine)
-const sessions = {};
+let memoryCache = null; // in-memory cache to reduce GitHub API calls
+const sessions  = {};   // in-memory sessions (reset on restart is fine)
 
 async function githubGet() {
   if (memoryCache) return memoryCache;
   const r = await fetch(GITHUB_API, {
-    headers: {
-      'Authorization': `token ${GITHUB_TOKEN}`,
-      'Accept': 'application/vnd.github.v3+json'
-    }
+    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
   });
   if (r.status === 404) {
-    // File doesn't exist yet — use initial data
     memoryCache = { plan: INITIAL_DATA, updated_at: new Date().toISOString(), updated_by: 'system', sha: null };
     return memoryCache;
   }
@@ -2494,39 +2483,25 @@ async function githubSave(planData, username) {
   const now = new Date().toISOString();
   const payload = { plan: planData, updated_at: now, updated_by: username };
   const content = Buffer.from(JSON.stringify(payload, null, 2)).toString('base64');
-
-  // Get current SHA if we don't have it (needed for updates)
-  if (!memoryCache || !memoryCache.sha) {
-    try { await githubGet(); } catch(e) {}
-  }
-
+  if (!memoryCache || !memoryCache.sha) { try { await githubGet(); } catch(e) {} }
   const body = {
-    message: `Planungsdaten gespeichert von ${username} (${new Date().toLocaleString('de-DE')})`,
+    message: `Gespeichert von ${username} (${new Date().toLocaleString('de-DE')})`,
     content,
     ...(memoryCache && memoryCache.sha ? { sha: memoryCache.sha } : {})
   };
-
   const r = await fetch(GITHUB_API, {
     method: 'PUT',
-    headers: {
-      'Authorization': `token ${GITHUB_TOKEN}`,
-      'Content-Type': 'application/json',
-      'Accept': 'application/vnd.github.v3+json'
-    },
+    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
     body: JSON.stringify(body)
   });
-  if (!r.ok) {
-    const err = await r.json();
-    throw new Error('GitHub save failed: ' + (err.message || r.status));
-  }
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
   const result = await r.json();
-  // Update cache with new SHA
   memoryCache = { ...payload, sha: result.content.sha };
   console.log('✓ Saved to GitHub by', username);
   return { ok: true, saved_at: now };
 }
 
-// ─── Users — edit here to add/change users ────────────────────
+// ─── Users ────────────────────────────────────────────────────
 const USERS = [
   { name: 'Modu',        password: 'planung2026', role: 'planer' },
   { name: 'Planer',      password: 'planer123',   role: 'planer' },
@@ -2549,13 +2524,13 @@ function planersOnly(req, res, next) {
   next();
 }
 
-// ─── API ──────────────────────────────────────────────────────
+// ─── API Routes ───────────────────────────────────────────────
 app.post('/api/login', (req, res) => {
   const { username='', password='' } = req.body || {};
   const user = USERS.find(u => u.name.toLowerCase() === username.toLowerCase().trim() && u.password === password);
   if (!user) return res.status(401).json({ error: 'Benutzername oder Passwort falsch.' });
   const token = crypto.randomBytes(32).toString('hex');
-  sessions[token] = { username: user.name, role: user.role, at: Date.now() };
+  sessions[token] = { username: user.name, role: user.role };
   res.json({ token, username: user.name, role: user.role });
 });
 
@@ -2565,30 +2540,20 @@ app.post('/api/logout', auth, (req, res) => {
 });
 
 app.get('/api/plan', auth, async (req, res) => {
-  try {
-    const data = await githubGet();
-    res.json(data);
-  } catch(e) {
-    console.error('Load error:', e.message);
-    res.status(500).json({ error: 'Failed to load data: ' + e.message });
-  }
+  try { res.json(await githubGet()); }
+  catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 app.post('/api/plan', auth, planersOnly, async (req, res) => {
   const { plan } = req.body || {};
   if (!plan) return res.status(400).json({ error: 'No data' });
-  try {
-    const result = await githubSave(plan, req.user.username);
-    res.json(result);
-  } catch(e) {
-    console.error('Save error:', e.message);
-    res.status(500).json({ error: 'Failed to save: ' + e.message });
-  }
+  try { res.json(await githubSave(plan, req.user.username)); }
+  catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
-// ─── Serve the frontend ───────────────────────────────────────
+// ─── Frontend ─────────────────────────────────────────────────
 const FRONTEND_HTML = `<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -2938,6 +2903,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   <div class="user-menu">
     <span class="user-name" id="userNameDisplay">—</span>
     <span class="role-badge" id="userRoleBadge">—</span>
+    <button id="globalSaveBtn" class="btn-small btn-primary" onclick="globalSave()" style="display:none">💾 Speichern</button>
     <button class="logout-btn" onclick="logout()">Abmelden</button>
   </div>
 </header>
@@ -3182,7 +3148,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
 <script>
 
 // ═══════════════════════════════════════════════════════════
-// SERVER CONNECTION — saves permanently to Render database
+// SERVER CONNECTION — saves permanently to GitHub via server
 // ═══════════════════════════════════════════════════════════
 let AUTH_TOKEN = null;
 try { AUTH_TOKEN = sessionStorage.getItem('bw_token'); } catch(e){}
@@ -3228,7 +3194,7 @@ function showToast(msg, isError) {
   if (!el) {
     el = document.createElement('div');
     el.id = '_toast';
-    el.style.cssText = 'position:fixed;bottom:22px;right:24px;padding:11px 18px;border-radius:8px;font-size:13px;font-family:Calibri,Arial,sans-serif;font-weight:600;z-index:9999;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:opacity .4s';
+    el.style.cssText = 'position:fixed;bottom:22px;right:24px;padding:11px 18px;border-radius:8px;font-size:14px;font-family:Calibri,Arial,sans-serif;font-weight:600;z-index:9999;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:opacity .4s';
     document.body.appendChild(el);
   }
   el.textContent = msg;
@@ -3237,6 +3203,21 @@ function showToast(msg, isError) {
   el.style.opacity = '1';
   clearTimeout(el._t);
   el._t = setTimeout(() => el.style.opacity='0', 3500);
+}
+
+// Global save function — always saves PLAN to GitHub permanently
+async function globalSave() {
+  const btn = document.getElementById('globalSaveBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird gespeichert...'; }
+  try {
+    await apiSavePlan(PLAN);
+    showToast('✓ Dauerhaft gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
+    if (btn) { btn.textContent = '✓ Gespeichert'; }
+    setTimeout(() => { if(btn){btn.disabled=false; btn.textContent='💾 Speichern';} }, 2000);
+  } catch(e) {
+    showToast('⚠ Fehler beim Speichern: ' + e.message, true);
+    if (btn) { btn.disabled = false; btn.textContent = '💾 Speichern'; }
+  }
 }
 
 const INPUT_DATA = {"2341.9011": {"liefertermin": [], "tz_bom": [{"stage_art": "2341.1011", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 4, "r_zt": 38}], "fr_bom": [{"stage_art": "2341.2011", "menge_per_stk": 1, "maschine": "M3050", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2341.9012": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 10}, {"year": 2026, "kw": 26, "menge": 20}, {"year": 2026, "kw": 27, "menge": 10}, {"year": 2026, "kw": 28, "menge": 10}, {"year": 2026, "kw": 29, "menge": 40}, {"year": 2026, "kw": 35, "menge": 20}, {"year": 2026, "kw": 37, "menge": 10}, {"year": 2026, "kw": 38, "menge": 20}, {"year": 2026, "kw": 40, "menge": 10}, {"year": 2026, "kw": 41, "menge": 20}, {"year": 2026, "kw": 43, "menge": 20}, {"year": 2026, "kw": 44, "menge": 20}, {"year": 2026, "kw": 45, "menge": 20}, {"year": 2026, "kw": 46, "menge": 10}, {"year": 2026, "kw": 47, "menge": 20}, {"year": 2026, "kw": 48, "menge": 10}, {"year": 2026, "kw": 49, "menge": 10}, {"year": 2026, "kw": 50, "menge": 10}], "tz_bom": [{"stage_art": "2341.1011", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 4, "r_zt": 38}], "fr_bom": [{"stage_art": "2341.2013", "menge_per_stk": 1, "maschine": "M3050", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2342.9012": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 37, "menge": 50}, {"year": 2026, "kw": 40, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}], "tz_bom": [{"stage_art": "2342.1012", "menge_per_stk": 0.25, "maschine": "M1585", "s_zt": 4, "r_zt": 90}], "fr_bom": [{"stage_art": "2342.2012", "menge_per_stk": 1, "maschine": "M3050", "s_zt": 1.5, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2454.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 50}, {"year": 2026, "kw": 28, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 41, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}, {"year": 2026, "kw": 50, "menge": 50}], "tz_bom": [{"stage_art": "2454.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 1.5, "r_zt": 90}, {"stage_art": "2454.1002", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 1.25, "r_zt": 35}, {"stage_art": "2454.1003", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 1.25, "r_zt": 35}], "fr_bom": [{"stage_art": "2454.2001", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 5.17, "r_zt": 45}, {"stage_art": "2454.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 1.78, "r_zt": 45}, {"stage_art": "2454.2003", "menge_per_stk": 1, "maschine": "M1567", "s_zt": 1.78, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "9000001"}, "2455.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 37, "menge": 50}, {"year": 2026, "kw": 41, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}, {"year": 2026, "kw": 50, "menge": 50}], "tz_bom": [{"stage_art": "2455.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 0.75, "r_zt": 90}], "fr_bom": [{"stage_art": "2455.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2.98, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2456.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 36, "menge": 50}, {"year": 2026, "kw": 39, "menge": 50}, {"year": 2026, "kw": 43, "menge": 50}, {"year": 2026, "kw": 46, "menge": 50}, {"year": 2026, "kw": 49, "menge": 50}], "tz_bom": [{"stage_art": "2456.1001", "menge_per_stk": 0.5, "maschine": "M1585", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2456.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.08, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2457.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 50}, {"year": 2026, "kw": 28, "menge": 50}, {"year": 2026, "kw": 35, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 42, "menge": 50}, {"year": 2026, "kw": 45, "menge": 50}, {"year": 2026, "kw": 48, "menge": 50}], "tz_bom": [{"stage_art": "2457.1001", "menge_per_stk": 0.5, "maschine": "M2735", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2457.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.15, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2458.9003": {"liefertermin": [{"year": 2026, "kw": 23, "menge": 20}, {"year": 2026, "kw": 24, "menge": 20}, {"year": 2026, "kw": 26, "menge": 20}, {"year": 2026, "kw": 27, "menge": 20}, {"year": 2026, "kw": 29, "menge": 60}, {"year": 2026, "kw": 36, "menge": 20}, {"year": 2026, "kw": 37, "menge": 20}, {"year": 2026, "kw": 38, "menge": 20}, {"year": 2026, "kw": 40, "menge": 20}, {"year": 2026, "kw": 41, "menge": 20}, {"year": 2026, "kw": 42, "menge": 20}, {"year": 2026, "kw": 44, "menge": 20}, {"year": 2026, "kw": 45, "menge": 20}, {"year": 2026, "kw": 46, "menge": 20}, {"year": 2026, "kw": 47, "menge": 20}, {"year": 2026, "kw": 49, "menge": 20}], "tz_bom": [{"stage_art": "2458.1001", "menge_per_stk": 0.25, "maschine": "M2735", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2458.2003", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 1.79, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2459.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 40, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}], "tz_bom": [{"stage_art": "2459.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 0.75, "r_zt": 90}], "fr_bom": [{"stage_art": "2459.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.5, "r_zt": 45}], "mo_s_zt": 0.14, "mo_a_platz": "EG 12"}, "2460.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 37, "menge": 50}, {"year": 2026, "kw": 40, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}], "tz_bom": [{"stage_art": "2460.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 2.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2460.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.07, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2461.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 50}, {"year": 2026, "kw": 28, "menge": 50}, {"year": 2026, "kw": 35, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 42, "menge": 50}, {"year": 2026, "kw": 45, "menge": 50}, {"year": 2026, "kw": 48, "menge": 50}], "tz_bom": [{"stage_art": "2461.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 1.67, "r_zt": 90}], "fr_bom": [{"stage_art": "2461.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.4, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2521.9001": {"liefertermin": [{"year": 2026, "kw": 23, "menge": 24}, {"year": 2026, "kw": 48, "menge": 24}], "tz_bom": [{"stage_art": "2521.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1003", "menge_per_stk": 0.25, "maschine": "M435", "s_zt": 1.5, "r_zt": 90}, {"stage_art": "2521.1004", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1005", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2521.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 4, "r_zt": 45}, {"stage_art": "2521.2002", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 2, "r_zt": 45}, {"stage_art": "2521.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 0.4, "r_zt": 45}, {"stage_art": "2521.2004", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 4, "r_zt": 45}, {"stage_art": "2521.2005", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2521.2006", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.875, "mo_a_platz": "EG 12"}, "2522.9001": {"liefertermin": [{"year": 2026, "kw": 29, "menge": 25}], "tz_bom": [{"stage_art": "2522.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 4, "r_zt": 90}, {"stage_art": "2521.1003", "menge_per_stk": 0.5, "maschine": "M435", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2522.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2521.2003", "menge_per_stk": 2, "maschine": "M3045", "s_zt": 0.4, "r_zt": 45}], "mo_s_zt": 0.28, "mo_a_platz": "EG 12"}, "2522.9002": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 25}], "tz_bom": [{"stage_art": "2521.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2522.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2522.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": null, "r_zt": null}, {"stage_art": "2521.2003", "menge_per_stk": 2, "maschine": "M3045", "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2522.9003": {"liefertermin": [], "tz_bom": [{"stage_art": "2522.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2521.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2522.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2521.2003", "menge_per_stk": 2, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2523.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 24}], "tz_bom": [{"stage_art": "2523.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2523.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1005", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1004", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2523.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 4, "r_zt": 45}, {"stage_art": "2523.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2523.2005", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3, "r_zt": 45}, {"stage_art": "2523.2006", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3, "r_zt": 45}, {"stage_art": "2523.2004", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 30}], "mo_s_zt": 0.875, "mo_a_platz": "EG 12"}, "2524.9001": {"liefertermin": [{"year": 2026, "kw": 23, "menge": 25}, {"year": 2026, "kw": 29, "menge": 25}, {"year": 2026, "kw": 39, "menge": 25}, {"year": 2026, "kw": 44, "menge": 25}, {"year": 2026, "kw": 48, "menge": 25}], "tz_bom": [{"stage_art": "2524.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1003", "menge_per_stk": 0.25, "maschine": "M435", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2524.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.2, "r_zt": 45}, {"stage_art": "2521.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 0.4, "r_zt": 45}], "mo_s_zt": 0.5384615384615384, "mo_a_platz": "EG 12"}, "2525.9001": {"liefertermin": [{"year": 2026, "kw": 29, "menge": 25}, {"year": 2026, "kw": 38, "menge": 25}, {"year": 2026, "kw": 44, "menge": 25}, {"year": 2026, "kw": 48, "menge": 25}], "tz_bom": [{"stage_art": "2525.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 4, "r_zt": 90}, {"stage_art": "2525.1002", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 4, "r_zt": 90}, {"stage_art": "2525.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2525.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2525.2002", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 3.5, "r_zt": 45}, {"stage_art": "2525.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.33, "r_zt": 45}, {"stage_art": "2525.2004", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.33, "r_zt": 45}], "mo_s_zt": 0.5384615384615384, "mo_a_platz": "EG 12"}, "2541.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 20}, {"year": 2026, "kw": 28, "menge": 20}, {"year": 2026, "kw": 35, "menge": 20}, {"year": 2026, "kw": 42, "menge": 20}, {"year": 2026, "kw": 47, "menge": 20}], "tz_bom": [{"stage_art": "2541.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2541.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.67, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2541.9002": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 20}, {"year": 2026, "kw": 29, "menge": 20}, {"year": 2026, "kw": 35, "menge": 20}, {"year": 2026, "kw": 39, "menge": 20}, {"year": 2026, "kw": 44, "menge": 20}, {"year": 2026, "kw": 50, "menge": 20}], "tz_bom": [{"stage_art": "2541.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2541.2002", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.53, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2544.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 24}], "tz_bom": [{"stage_art": "2544.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2544.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2544.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2544.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.54, "mo_a_platz": "#N/A"}, "2601.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 45, "menge": 15}], "tz_bom": [{"stage_art": "2601.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2601.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2601.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 3, "r_zt": 45}, {"stage_art": "2601.2002", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2602.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 46, "menge": 15}], "tz_bom": [{"stage_art": "2602.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}, {"stage_art": "2602.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2602.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.25, "r_zt": 45}, {"stage_art": "2602.2002", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.08, "r_zt": 45}], "mo_s_zt": 0.4666666666666667, "mo_a_platz": "EG 12"}, "2603.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 38, "menge": 15}, {"year": 2026, "kw": 45, "menge": 15}], "tz_bom": [{"stage_art": "2603.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2603.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.63, "r_zt": 45}, {"stage_art": "2603.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 1.02, "r_zt": 30}], "mo_s_zt": 0.875, "mo_a_platz": "EG 12"}, "2604.9001": {"liefertermin": [{"year": 2026, "kw": 28, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 46, "menge": 15}], "tz_bom": [{"stage_art": "2604.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2604.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2604.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2604.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2604.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2604.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 4, "r_zt": 30}], "mo_s_zt": 1.75, "mo_a_platz": "EG 12"}, "2605.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 46, "menge": 15}], "tz_bom": [{"stage_art": "2605.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2605.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2605.1003", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2605.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 4.17, "r_zt": 45}, {"stage_art": "2605.2002", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 2.5, "r_zt": 45}, {"stage_art": "2603.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 1.02, "r_zt": 30}, {"stage_art": "2605.2003", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 1.4, "mo_a_platz": "EG 12"}, "2664.9001": {"liefertermin": [{"year": 2026, "kw": 28, "menge": 25}, {"year": 2026, "kw": 45, "menge": 25}], "tz_bom": [{"stage_art": "2664.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2664.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2664.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2664.1004", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2664.1005", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2664.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 5, "r_zt": 45}, {"stage_art": "2664.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2664.2003", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2664.2004", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2664.2005", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1, "r_zt": 45}], "mo_s_zt": 0.84, "mo_a_platz": "EG 12"}, "2665.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 25}, {"year": 2026, "kw": 37, "menge": 25}, {"year": 2026, "kw": 50, "menge": 25}], "tz_bom": [{"stage_art": "2665.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 6, "r_zt": 60}, {"stage_art": "2665.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2665.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2665.1004", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2665.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 2.3, "r_zt": 45}, {"stage_art": "2665.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2.03, "r_zt": 45}, {"stage_art": "2665.2003", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2665.2004", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 2, "r_zt": 45}], "mo_s_zt": 0.84, "mo_a_platz": "EG 12"}, "2666.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 25}, {"year": 2026, "kw": 40, "menge": 25}], "tz_bom": [{"stage_art": "2666.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 2.5, "r_zt": 60}, {"stage_art": "2666.1002", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 2.5, "r_zt": 60}, {"stage_art": "2666.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2666.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2666.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2666.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2, "r_zt": 45}, {"stage_art": "2666.2004", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2, "r_zt": 45}], "mo_s_zt": 1.1666666666666667, "mo_a_platz": "EG 12"}, "2667.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 25}, {"year": 2026, "kw": 39, "menge": 25}], "tz_bom": [{"stage_art": "2667.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2667.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.5, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2668.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 25}, {"year": 2026, "kw": 38, "menge": 25}], "tz_bom": [{"stage_art": "2668.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2668.2001", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3.5, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2669.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 25}], "tz_bom": [{"stage_art": "2669.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2669.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2669.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2669.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.59, "mo_a_platz": null}, "2720.9001": {"liefertermin": [], "tz_bom": [{"stage_art": "2720.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1004", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2720.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2005", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.88, "mo_a_platz": null}, "2721.9001": {"liefertermin": [], "tz_bom": [{"stage_art": "2720.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1004", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2721.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2005", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.88, "mo_a_platz": null}, "2724.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 10}], "tz_bom": [{"stage_art": "2724.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.1003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.1004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2724.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.2003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.2004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.42, "mo_a_platz": null}, "2725.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2725.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2725.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2727.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 4}, {"year": 2026, "kw": 29, "menge": 6}], "tz_bom": [{"stage_art": "2727.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2727.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.1, "mo_a_platz": null}, "2728.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 10}], "tz_bom": [{"stage_art": "2728.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2728.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2728.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2728.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.1, "mo_a_platz": null}, "2729.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2729.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2729.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2730.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2730.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2730.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2731.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2731.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2731.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2732.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2732.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2732.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2733.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2733.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2733.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}};
@@ -4698,24 +4679,26 @@ attemptLogin = async function() {
     const {plan} = await apiLoadPlan();
     PLAN = plan;
     DRAFT = JSON.parse(JSON.stringify(PLAN));
-    showToast('✓ Verbunden mit Server', false);
+    showToast('✓ Verbunden — Daten geladen', false);
     showApp();
+    // Show global save button only for Planer
+    const saveBtn = document.getElementById('globalSaveBtn');
+    if (saveBtn) saveBtn.style.display = user.role === 'planer' ? 'inline-block' : 'none';
   } catch(e) {
     errEl.textContent = e.message || 'Benutzername oder Passwort falsch.';
     errEl.classList.add('show');
   }
 };
 
-// Override saveDraft to persist to server
+// Also hook into existing saveDraft to auto-push to GitHub
 const _origSaveDraft = saveDraft;
 saveDraft = async function() {
   _origSaveDraft();
   try {
-    showToast('⏳ Wird gespeichert...', false);
     await apiSavePlan(PLAN);
     showToast('✓ Dauerhaft gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
   } catch(e) {
-    showToast('⚠ Fehler: ' + e.message, true);
+    showToast('⚠ Fehler beim Speichern: ' + e.message, true);
   }
 };
 
@@ -4726,7 +4709,7 @@ logout = async function() {
   _origLogout();
 };
 
-// Auto-restore session on page load
+// Auto-restore session on page reload
 (async function() {
   if (AUTH_TOKEN) {
     try {
@@ -4736,6 +4719,8 @@ logout = async function() {
       PLAN = plan;
       DRAFT = JSON.parse(JSON.stringify(PLAN));
       showApp();
+      const saveBtn = document.getElementById('globalSaveBtn');
+      if (saveBtn && CURRENT_USER && CURRENT_USER.role === 'planer') saveBtn.style.display = 'inline-block';
     } catch(e) {
       AUTH_TOKEN = null;
       sessionStorage.removeItem('bw_token');
@@ -4749,11 +4734,13 @@ logout = async function() {
 </html>
 `;
 
-// Serve frontend for all non-API routes (Express v5 compatible)
-// Serve frontend for all routes
 app.use((req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(FRONTEND_HTML);
 });
 
-app.listen(PORT, () => console.log('✓ BW Planungstool on port', PORT));
+app.listen(PORT, () => {
+  console.log('✓ BW Planungstool running on port', PORT);
+  console.log('  GitHub repo:', GITHUB_REPO);
+  if (!GITHUB_TOKEN) console.warn('  ⚠ No GITHUB_TOKEN set — saves will fail!');
+});
