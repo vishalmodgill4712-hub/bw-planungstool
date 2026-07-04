@@ -6,14 +6,9 @@ const crypto = require('crypto');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ─── Persistent data storage ─────────────────────────────────
-const DATA_DIR = path.join(__dirname, 'data');
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-
-const PLAN_FILE    = path.join(DATA_DIR, 'plan.json');
-const SESSION_FILE = path.join(DATA_DIR, 'sessions.json');
-const LOG_FILE     = path.join(DATA_DIR, 'log.json');
-
+// ─── GitHub-based permanent storage ─────────────────────────
+// Data is saved as a JSON file in the GitHub repo.
+// This way saves survive server restarts on the free Render plan.
 const INITIAL_DATA = {
   "2341.9011": {
     "liefertermin": [],
@@ -2464,18 +2459,71 @@ const INITIAL_DATA = {
   }
 };
 
-function readJSON(file, fallback) {
-  try { return JSON.parse(fs.readFileSync(file, 'utf8')); }
-  catch(e) { return fallback; }
-}
-function writeJSON(file, data) {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_REPO  = process.env.GITHUB_REPO || 'vishalmodgill4712-hub/bw-planungstool';
+const DATA_FILE    = 'planungsdaten.json';
+const GITHUB_API   = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE}`;
+
+// In-memory cache so we don't hit GitHub API on every request
+let memoryCache = null;
+
+// Simple local session storage (sessions are short-lived, reset on restart is fine)
+const sessions = {};
+
+async function githubGet() {
+  if (memoryCache) return memoryCache;
+  const r = await fetch(GITHUB_API, {
+    headers: {
+      'Authorization': `token ${GITHUB_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json'
+    }
+  });
+  if (r.status === 404) {
+    // File doesn't exist yet — use initial data
+    memoryCache = { plan: INITIAL_DATA, updated_at: new Date().toISOString(), updated_by: 'system', sha: null };
+    return memoryCache;
+  }
+  if (!r.ok) throw new Error('GitHub GET failed: ' + r.status);
+  const file = await r.json();
+  const content = Buffer.from(file.content, 'base64').toString('utf8');
+  memoryCache = { ...JSON.parse(content), sha: file.sha };
+  return memoryCache;
 }
 
-// Seed initial data on first run
-if (!fs.existsSync(PLAN_FILE)) {
-  writeJSON(PLAN_FILE, { plan: INITIAL_DATA, updated_at: new Date().toISOString(), updated_by: 'system' });
-  console.log('✓ Seeded', Object.keys(INITIAL_DATA).length, 'Artikel');
+async function githubSave(planData, username) {
+  const now = new Date().toISOString();
+  const payload = { plan: planData, updated_at: now, updated_by: username };
+  const content = Buffer.from(JSON.stringify(payload, null, 2)).toString('base64');
+
+  // Get current SHA if we don't have it (needed for updates)
+  if (!memoryCache || !memoryCache.sha) {
+    try { await githubGet(); } catch(e) {}
+  }
+
+  const body = {
+    message: `Planungsdaten gespeichert von ${username} (${new Date().toLocaleString('de-DE')})`,
+    content,
+    ...(memoryCache && memoryCache.sha ? { sha: memoryCache.sha } : {})
+  };
+
+  const r = await fetch(GITHUB_API, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${GITHUB_TOKEN}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json'
+    },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) {
+    const err = await r.json();
+    throw new Error('GitHub save failed: ' + (err.message || r.status));
+  }
+  const result = await r.json();
+  // Update cache with new SHA
+  memoryCache = { ...payload, sha: result.content.sha };
+  console.log('✓ Saved to GitHub by', username);
+  return { ok: true, saved_at: now };
 }
 
 // ─── Users — edit here to add/change users ────────────────────
@@ -2491,7 +2539,6 @@ app.use(express.json({ limit: '20mb' }));
 function auth(req, res, next) {
   const token = req.headers['x-auth-token'];
   if (!token) return res.status(401).json({ error: 'Not authenticated' });
-  const sessions = readJSON(SESSION_FILE, {});
   const s = sessions[token];
   if (!s) return res.status(401).json({ error: 'Invalid session' });
   req.user = s;
@@ -2508,33 +2555,35 @@ app.post('/api/login', (req, res) => {
   const user = USERS.find(u => u.name.toLowerCase() === username.toLowerCase().trim() && u.password === password);
   if (!user) return res.status(401).json({ error: 'Benutzername oder Passwort falsch.' });
   const token = crypto.randomBytes(32).toString('hex');
-  const sessions = readJSON(SESSION_FILE, {});
   sessions[token] = { username: user.name, role: user.role, at: Date.now() };
-  writeJSON(SESSION_FILE, sessions);
   res.json({ token, username: user.name, role: user.role });
 });
 
 app.post('/api/logout', auth, (req, res) => {
-  const sessions = readJSON(SESSION_FILE, {});
   delete sessions[req.headers['x-auth-token']];
-  writeJSON(SESSION_FILE, sessions);
   res.json({ ok: true });
 });
 
-app.get('/api/plan', auth, (req, res) => {
-  res.json(readJSON(PLAN_FILE, {}));
+app.get('/api/plan', auth, async (req, res) => {
+  try {
+    const data = await githubGet();
+    res.json(data);
+  } catch(e) {
+    console.error('Load error:', e.message);
+    res.status(500).json({ error: 'Failed to load data: ' + e.message });
+  }
 });
 
-app.post('/api/plan', auth, planersOnly, (req, res) => {
+app.post('/api/plan', auth, planersOnly, async (req, res) => {
   const { plan } = req.body || {};
   if (!plan) return res.status(400).json({ error: 'No data' });
-  const now = new Date().toISOString();
-  writeJSON(PLAN_FILE, { plan, updated_at: now, updated_by: req.user.username });
-  const log = readJSON(LOG_FILE, []);
-  log.unshift({ by: req.user.username, at: now, artikel: Object.keys(plan).length });
-  if (log.length > 50) log.splice(50);
-  writeJSON(LOG_FILE, log);
-  res.json({ ok: true, saved_at: now });
+  try {
+    const result = await githubSave(plan, req.user.username);
+    res.json(result);
+  } catch(e) {
+    console.error('Save error:', e.message);
+    res.status(500).json({ error: 'Failed to save: ' + e.message });
+  }
 });
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
