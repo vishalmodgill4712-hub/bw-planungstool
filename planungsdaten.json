@@ -2448,6 +2448,23 @@
       "mo_a_platz": null
     }
   },
-  "updated_at": "2026-07-04T08:14:35.409Z",
+  "done_status": {
+    "TZ|2341.1011|2026|24": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 24
+    },
+    "TZ|2455.1001|2026|24": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 24
+    },
+    "TZ|2456.1001|2026|24": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 24
+    }
+  },
+  "updated_at": "2026-07-04T08:18:46.950Z",
   "updated_by": "Modu"
 }
