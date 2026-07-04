@@ -2479,9 +2479,9 @@ async function githubGet() {
   return memoryCache;
 }
 
-async function githubSave(planData, username) {
+async function githubSave(planData, doneStatus, username) {
   const now = new Date().toISOString();
-  const payload = { plan: planData, updated_at: now, updated_by: username };
+  const payload = { plan: planData, done_status: doneStatus || {}, updated_at: now, updated_by: username };
   const content = Buffer.from(JSON.stringify(payload, null, 2)).toString('base64');
   if (!memoryCache || !memoryCache.sha) { try { await githubGet(); } catch(e) {} }
   const body = {
@@ -2545,9 +2545,9 @@ app.get('/api/plan', auth, async (req, res) => {
 });
 
 app.post('/api/plan', auth, planersOnly, async (req, res) => {
-  const { plan } = req.body || {};
+  const { plan, done_status } = req.body || {};
   if (!plan) return res.status(400).json({ error: 'No data' });
-  try { res.json(await githubSave(plan, req.user.username)); }
+  try { res.json(await githubSave(plan, done_status || {}, req.user.username)); }
   catch(e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -3179,11 +3179,11 @@ async function apiLoadPlan() {
   return await r.json();
 }
 
-async function apiSavePlan(plan) {
+async function apiSavePlan(plan, doneStatus) {
   const r = await fetch('/api/plan', {
     method:'POST',
     headers:{'Content-Type':'application/json','x-auth-token':AUTH_TOKEN},
-    body: JSON.stringify({plan})
+    body: JSON.stringify({plan, done_status: doneStatus || {}})
   });
   if (!r.ok) { const d=await r.json(); throw new Error(d.error||'Save failed'); }
   return await r.json();
@@ -3205,12 +3205,12 @@ function showToast(msg, isError) {
   el._t = setTimeout(() => el.style.opacity='0', 3500);
 }
 
-// Global save function — always saves PLAN to GitHub permanently
+// Global save function — saves PLAN + DONE_STATUS to GitHub permanently
 async function globalSave() {
   const btn = document.getElementById('globalSaveBtn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird gespeichert...'; }
   try {
-    await apiSavePlan(PLAN);
+    await apiSavePlan(PLAN, DONE_STATUS);
     showToast('✓ Dauerhaft gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
     if (btn) { btn.textContent = '✓ Gespeichert'; }
     setTimeout(() => { if(btn){btn.disabled=false; btn.textContent='💾 Speichern';} }, 2000);
@@ -4676,9 +4676,10 @@ attemptLogin = async function() {
     const user = await apiLogin(u, p);
     CURRENT_USER = {name: user.username, role: user.role};
     showToast('⏳ Daten werden geladen...', false);
-    const {plan} = await apiLoadPlan();
+    const {plan, done_status} = await apiLoadPlan();
     PLAN = plan;
     DRAFT = JSON.parse(JSON.stringify(PLAN));
+    if (done_status) DONE_STATUS = done_status;
     showToast('✓ Verbunden — Daten geladen', false);
     showApp();
     // Show global save button only for Planer
@@ -4695,7 +4696,7 @@ const _origSaveDraft = saveDraft;
 saveDraft = async function() {
   _origSaveDraft();
   try {
-    await apiSavePlan(PLAN);
+    await apiSavePlan(PLAN, DONE_STATUS);
     showToast('✓ Dauerhaft gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
   } catch(e) {
     showToast('⚠ Fehler beim Speichern: ' + e.message, true);
@@ -4715,9 +4716,10 @@ logout = async function() {
     try {
       const saved = sessionStorage.getItem('bw_user');
       if (saved) CURRENT_USER = JSON.parse(saved);
-      const {plan} = await apiLoadPlan();
+      const {plan, done_status} = await apiLoadPlan();
       PLAN = plan;
       DRAFT = JSON.parse(JSON.stringify(PLAN));
+      if (done_status) DONE_STATUS = done_status;
       showApp();
       const saveBtn = document.getElementById('globalSaveBtn');
       if (saveBtn && CURRENT_USER && CURRENT_USER.role === 'planer') saveBtn.style.display = 'inline-block';
