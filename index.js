@@ -2464,24 +2464,21 @@ const sessions  = {};
 
 async function githubGet() {
   if (memoryCache) return memoryCache;
-  console.log('Loading data from GitHub:', GITHUB_API);
+  console.log('Loading from GitHub:', GITHUB_REPO + '/' + DATA_FILE);
   const r = await fetch(GITHUB_API, {
     headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
   });
   console.log('GitHub GET status:', r.status);
   if (r.status === 404) {
-    console.log('No saved data found on GitHub — using initial data');
+    console.log('No saved data yet — using initial data');
     memoryCache = { plan: INITIAL_DATA, done_status: {}, updated_at: new Date().toISOString(), updated_by: 'system', sha: null };
     return memoryCache;
   }
-  if (!r.ok) {
-    const errText = await r.text();
-    throw new Error('GitHub GET failed: ' + r.status + ' ' + errText);
-  }
+  if (!r.ok) throw new Error('GitHub GET failed: ' + r.status);
   const file = await r.json();
   const content = Buffer.from(file.content, 'base64').toString('utf8');
   const parsed = JSON.parse(content);
-  console.log('✓ Loaded saved data from GitHub — Artikel:', Object.keys(parsed.plan || {}).length, '| Saved by:', parsed.updated_by, 'at', parsed.updated_at);
+  console.log('Loaded from GitHub — Artikel:', Object.keys(parsed.plan || {}).length, '| By:', parsed.updated_by);
   memoryCache = { ...parsed, sha: file.sha };
   return memoryCache;
 }
@@ -2492,7 +2489,7 @@ async function githubSave(planData, doneStatus, username) {
   const content = Buffer.from(JSON.stringify(payload, null, 2)).toString('base64');
   if (!memoryCache || !memoryCache.sha) { try { await githubGet(); } catch(e) {} }
   const body = {
-    message: `Gespeichert von ${username} (${new Date().toLocaleString('de-DE')})`,
+    message: `Gespeichert von ${username}`,
     content,
     ...(memoryCache && memoryCache.sha ? { sha: memoryCache.sha } : {})
   };
@@ -2504,7 +2501,7 @@ async function githubSave(planData, doneStatus, username) {
   if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
   const result = await r.json();
   memoryCache = { ...payload, sha: result.content.sha };
-  console.log('✓ Saved to GitHub by', username, '— new SHA:', result.content.sha.substring(0,8));
+  console.log('Saved to GitHub by', username);
   return { ok: true, saved_at: now };
 }
 
@@ -3174,11 +3171,11 @@ async function apiLoadPlan() {
   return await r.json();
 }
 
-async function apiSavePlan(plan) {
+async function apiSavePlan(plan, doneStatus) {
   const r = await fetch('/api/plan', {
     method:'POST',
     headers:{'Content-Type':'application/json','x-auth-token':AUTH_TOKEN},
-    body: JSON.stringify({plan})
+    body: JSON.stringify({plan, done_status: doneStatus || {}})
   });
   if (!r.ok) { const d=await r.json(); throw new Error(d.error||'Save failed'); }
   return await r.json();
@@ -3200,12 +3197,12 @@ function showToast(msg, isError) {
   el._t = setTimeout(() => el.style.opacity='0', 3500);
 }
 
-// Global save function — always saves PLAN to GitHub permanently
+// Global save function — always saves PLAN + DONE_STATUS to GitHub permanently
 async function globalSave() {
   const btn = document.getElementById('globalSaveBtn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird gespeichert...'; }
   try {
-    await apiSavePlan(PLAN);
+    await apiSavePlan(PLAN, DONE_STATUS);
     showToast('✓ Dauerhaft gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
     if (btn) { btn.textContent = '✓ Gespeichert'; }
     setTimeout(() => { if(btn){btn.disabled=false; btn.textContent='💾 Speichern';} }, 2000);
@@ -3374,6 +3371,10 @@ function toggleDone(stage, ident, year, kw) {
     DONE_STATUS[k] = { done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
   }
   renderAll();
+  // Auto-save erledigt status to GitHub immediately so it's never lost on reload
+  if (typeof apiSavePlan === 'function' && AUTH_TOKEN) {
+    apiSavePlan(PLAN, DONE_STATUS).catch(e => console.warn('Auto-save erledigt failed:', e.message));
+  }
 }
 function isPast(year, kw) {
   return absWeek(year, kw) < absWeek(CURRENT_YEAR, CURRENT_KW);
@@ -4673,9 +4674,10 @@ attemptLogin = async function() {
     const user = await apiLogin(u, p);
     CURRENT_USER = {name: user.username, role: user.role};
     showToast('⏳ Daten werden geladen...', false);
-    const {plan} = await apiLoadPlan();
-    PLAN = plan;
+    const loadedData = await apiLoadPlan();
+    PLAN = loadedData.plan;
     DRAFT = JSON.parse(JSON.stringify(PLAN));
+    if (loadedData.done_status) DONE_STATUS = loadedData.done_status;
     showToast('✓ Verbunden — Daten geladen', false);
     showApp();
     // Show global save button only for Planer
@@ -4692,7 +4694,7 @@ const _origSaveDraft = saveDraft;
 saveDraft = async function() {
   _origSaveDraft();
   try {
-    await apiSavePlan(PLAN);
+    await apiSavePlan(PLAN, DONE_STATUS);
     showToast('✓ Dauerhaft gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
   } catch(e) {
     showToast('⚠ Fehler beim Speichern: ' + e.message, true);
@@ -4712,9 +4714,10 @@ logout = async function() {
     try {
       const saved = sessionStorage.getItem('bw_user');
       if (saved) CURRENT_USER = JSON.parse(saved);
-      const {plan} = await apiLoadPlan();
-      PLAN = plan;
+      const loadedData2 = await apiLoadPlan();
+      PLAN = loadedData2.plan;
       DRAFT = JSON.parse(JSON.stringify(PLAN));
+      if (loadedData2.done_status) DONE_STATUS = loadedData2.done_status;
       showApp();
       const saveBtn = document.getElementById('globalSaveBtn');
       if (saveBtn && CURRENT_USER && CURRENT_USER.role === 'planer') saveBtn.style.display = 'inline-block';
@@ -4737,20 +4740,12 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, async () => {
-  console.log('✓ BW Planungstool on port', PORT);
-  if (!GITHUB_TOKEN) {
-    console.error('⚠ GITHUB_TOKEN not set — saves will fail!');
-    return;
-  }
-  // Test GitHub connection on startup
+  console.log('BW Planungstool running on port', PORT);
+  if (!GITHUB_TOKEN) { console.error('GITHUB_TOKEN not set!'); return; }
   try {
     const data = await githubGet();
-    if (data.sha) {
-      console.log('✓ GitHub connected — data loaded, SHA:', data.sha.substring(0,8));
-    } else {
-      console.log('ℹ GitHub connected but no saved data yet — will use initial data until first save');
-    }
+    console.log(data.sha ? 'GitHub connected OK' : 'GitHub connected — no saved data yet');
   } catch(e) {
-    console.error('✗ GitHub connection failed on startup:', e.message);
+    console.error('GitHub connection failed:', e.message);
   }
 });
