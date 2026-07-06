@@ -2547,8 +2547,13 @@
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 25
+    },
+    "FR|2458.2003|2026|22": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 22
     }
   },
-  "updated_at": "2026-07-06T06:27:27.408Z",
+  "updated_at": "2026-07-06T06:28:01.669Z",
   "updated_by": "Modu"
 }
