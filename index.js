@@ -4326,7 +4326,8 @@ function renderGantt(D) {
         html += \`<tr class="stage-row-fr">\${artCell()}\`;
         weeks.forEach(({year,kw}) => {
           const w = line.weeks.find(x => x.year===year && x.kw===kw);
-          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-fr cb-wide">\${line.stage_art}<br>FR:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+          const frDone = (w && w.menge) && isDone('FR', line.stage_art, year, kw);
+          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-fr cb-wide\${frDone?' done-cell':''}">\${line.stage_art}<br>FR:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
         });
         html += '</tr>';
       });
@@ -4337,7 +4338,8 @@ function renderGantt(D) {
         html += \`<tr class="stage-row-tz">\${artCell()}\`;
         weeks.forEach(({year,kw}) => {
           const w = line.weeks.find(x => x.year===year && x.kw===kw);
-          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-tz cb-wide">\${line.stage_art}<br>TZ:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+          const tzDone = (w && w.menge) && isDone('TZ', line.stage_art, year, kw);
+          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-tz cb-wide\${tzDone?' done-cell':''}">\${line.stage_art}<br>TZ:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
         });
         html += '</tr>';
       });
