@@ -2468,8 +2468,13 @@
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 24
+    },
+    "FR|2342.2012|2026|24": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 24
     }
   },
-  "updated_at": "2026-07-06T06:23:46.896Z",
+  "updated_at": "2026-07-06T06:23:48.216Z",
   "updated_by": "Modu"
 }
