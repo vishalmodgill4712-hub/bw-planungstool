@@ -2558,32 +2558,12 @@
       "doneAtYear": 2026,
       "doneAtKw": 22
     },
-    "TZ|2521.1003|2026|24": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 24
-    },
-    "TZ|2521.1004|2026|24": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 24
-    },
     "MO|2341.9012|2026|24": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 24
-    },
-    "MO|2454.9001|2026|24": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 24
-    },
-    "MO|2457.9001|2026|24": {
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 24
     }
   },
-  "updated_at": "2026-07-06T06:34:50.815Z",
+  "updated_at": "2026-07-06T06:39:18.705Z",
   "updated_by": "Modu"
 }
