@@ -288,7 +288,9 @@
         {
           "year": 2026,
           "kw": 24,
-          "menge": 50
+          "menge": 50,
+          "fr_offset": 3,
+          "tz_offset": 3
         },
         {
           "year": 2026,
@@ -352,7 +354,9 @@
         {
           "year": 2026,
           "kw": 24,
-          "menge": 50
+          "menge": 50,
+          "fr_offset": 3,
+          "tz_offset": 3
         },
         {
           "year": 2026,
@@ -2503,8 +2507,13 @@
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 24
+    },
+    "TZ|2341.1011|2026|25": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 25
     }
   },
-  "updated_at": "2026-07-06T06:24:24.970Z",
+  "updated_at": "2026-07-06T06:26:15.754Z",
   "updated_by": "Modu"
 }
