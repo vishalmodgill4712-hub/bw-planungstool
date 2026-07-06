@@ -2508,8 +2508,18 @@
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 24
+    },
+    "MO|2341.9012|2026|28": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 28
+    },
+    "MO|2342.9012|2026|28": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 28
     }
   },
-  "updated_at": "2026-07-04T08:24:31.938Z",
+  "updated_at": "2026-07-06T05:58:14.145Z",
   "updated_by": "Modu"
 }
