@@ -2464,17 +2464,25 @@ const sessions  = {};
 
 async function githubGet() {
   if (memoryCache) return memoryCache;
+  console.log('Loading data from GitHub:', GITHUB_API);
   const r = await fetch(GITHUB_API, {
     headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
   });
+  console.log('GitHub GET status:', r.status);
   if (r.status === 404) {
+    console.log('No saved data found on GitHub — using initial data');
     memoryCache = { plan: INITIAL_DATA, done_status: {}, updated_at: new Date().toISOString(), updated_by: 'system', sha: null };
     return memoryCache;
   }
-  if (!r.ok) throw new Error('GitHub GET failed: ' + r.status);
+  if (!r.ok) {
+    const errText = await r.text();
+    throw new Error('GitHub GET failed: ' + r.status + ' ' + errText);
+  }
   const file = await r.json();
   const content = Buffer.from(file.content, 'base64').toString('utf8');
-  memoryCache = { ...JSON.parse(content), sha: file.sha };
+  const parsed = JSON.parse(content);
+  console.log('✓ Loaded saved data from GitHub — Artikel:', Object.keys(parsed.plan || {}).length, '| Saved by:', parsed.updated_by, 'at', parsed.updated_at);
+  memoryCache = { ...parsed, sha: file.sha };
   return memoryCache;
 }
 
@@ -2496,7 +2504,7 @@ async function githubSave(planData, doneStatus, username) {
   if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
   const result = await r.json();
   memoryCache = { ...payload, sha: result.content.sha };
-  console.log('✓ Saved to GitHub by', username);
+  console.log('✓ Saved to GitHub by', username, '— new SHA:', result.content.sha.substring(0,8));
   return { ok: true, saved_at: now };
 }
 
@@ -4728,7 +4736,21 @@ app.use((req, res) => {
   res.send(FRONTEND_HTML);
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log('✓ BW Planungstool on port', PORT);
-  if (!GITHUB_TOKEN) console.warn('⚠ No GITHUB_TOKEN — saves will fail');
+  if (!GITHUB_TOKEN) {
+    console.error('⚠ GITHUB_TOKEN not set — saves will fail!');
+    return;
+  }
+  // Test GitHub connection on startup
+  try {
+    const data = await githubGet();
+    if (data.sha) {
+      console.log('✓ GitHub connected — data loaded, SHA:', data.sha.substring(0,8));
+    } else {
+      console.log('ℹ GitHub connected but no saved data yet — will use initial data until first save');
+    }
+  } catch(e) {
+    console.error('✗ GitHub connection failed on startup:', e.message);
+  }
 });
