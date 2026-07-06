@@ -2587,7 +2587,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .main { display: flex; height: calc(100vh - 58px); overflow: hidden; }
 
   .sidebar { width: 252px; min-width: 252px; background: var(--bg); border-right: 1px solid var(--border); overflow-y: auto; padding: 18px 12px; display: flex; flex-direction: column; gap: 18px; }
-  .sb-h { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent); font-weight: 700; padding: 0 4px; margin-bottom: 8px; border-left: 2px solid var(--accent); padding-left: 8px; }
+  .sb-h { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent); font-weight: 700; padding: 0 6px 0 8px; margin-bottom: 8px; border-left: 2px solid var(--accent); }
   .filter-group { display: flex; flex-direction: column; gap: 3px; }
   .filter-btn { background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); padding: 7px 10px; color: var(--muted); cursor: pointer; text-align: left; font-size: 12px; font-weight: 500; transition: all .12s; display: flex; align-items: center; gap: 8px; }
   .filter-btn:hover { background: var(--surface); color: var(--text); }
@@ -2617,11 +2617,11 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .content { flex: 1; overflow: auto; padding: 22px 26px; }
 
   .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
-  .sum-card { background: var(--card); border: 1px solid var(--border); border-top: 3px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow-sm); transition: border-color .15s; }
+  .sum-card { background: var(--card); border: 1px solid var(--border); border-top: 3px solid transparent; border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow-sm); transition: border-top-color .15s; }
   .sum-card:hover { border-top-color: var(--accent); }
   .sum-card.alert-card { border-color: var(--danger); background: rgba(220,38,38,.04); }
   .sum-card .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
-  .sum-card .val { font-size: 24px; font-weight: 800; font-family: var(--font-mono); letter-spacing: -.5px; color: var(--text); }
+  .sum-card .val { font-size: 21px; font-weight: 700; font-family: var(--font-mono); letter-spacing: -.3px; }
   .sum-card .sv { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
   .cap-section { margin-bottom: 20px; }
@@ -2643,10 +2643,10 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .cap-detail .warn-txt { color: var(--warn); }
 
   .view-tabs { display: flex; gap: 2px; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px; width: fit-content; }
-  .view-tab { background: transparent; border: none; border-radius: 6px; color: var(--muted); font-size: 12px; font-weight: 500; padding: 8px 16px; cursor: pointer; transition: all .12s; letter-spacing: .1px; position: relative; }
-  .view-tab:hover { color: var(--text); background: rgba(0,0,0,.03); }
+  .view-tab { background: transparent; border: none; border-radius: 6px; color: var(--muted); font-size: 12.5px; font-weight: 500; padding: 8px 16px; cursor: pointer; transition: all .12s; position: relative; }
+  .view-tab:hover { color: var(--text); }
   .view-tab.active { background: var(--bg); color: var(--accent); font-weight: 700; box-shadow: var(--shadow-sm); }
-  .view-tab.active::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 18px; height: 2px; background: var(--accent); border-radius: 2px; }
+  .view-tab.active::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 20px; height: 2px; background: var(--accent); border-radius: 2px; }
 
   .gantt-wrap { overflow-x: auto; }
   table.gantt { width: 100%; border-collapse: collapse; min-width: 1300px; }
@@ -2668,9 +2668,9 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   td.info-cell { text-align: center; color: var(--muted); font-size: 11px; }
   td.stage-cell { text-align: center; padding: 2px 3px; }
 
-  .cb { display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 9.5px; font-weight: 700; padding: 3px 6px; letter-spacing: .2px; min-width: 38px; gap: 2px; position: relative; margin: 1px; }
-  .cb.done-cell { opacity:.5; }
-  .cb.done-cell::after { content:'✓'; position:absolute; top:-5px; right:-5px; background:var(--fest); color:#fff; border-radius:50%; width:14px; height:14px; font-size:9px; display:flex; align-items:center; justify-content:center; font-weight:800; }
+  .cb { display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 9.5px; font-weight: 700; padding: 3px 6px; letter-spacing: .2px; min-width: 38px; gap: 2px; margin: 1px; position: relative; }
+  .cb.done-cell { opacity: .5; }
+  .cb.done-cell::after { content: '✓'; position: absolute; top: -6px; right: -6px; background: var(--fest); color: #fff; border-radius: 50%; width: 14px; height: 14px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
   .cb-wide { flex-direction: column; min-width: 58px; font-family: Calibri, 'Segoe UI', Arial, sans-serif; line-height: 1.5; padding: 4px 6px; text-align: center; }
   .cb-tz { background: rgba(139,92,246,.18); border: 1px solid rgba(139,92,246,.45); color: #6d28d9; }
   .cb-fr { background: rgba(245,158,11,.14); border: 1px solid rgba(245,158,11,.4); color: #92400e; }
@@ -2697,7 +2697,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .st-flex { color: var(--warn); font-size: 11px; }
   .st-est { color: var(--muted); font-size: 10px; font-style: italic; }
 
-  .sec-title { font-size: 15px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; color: var(--text); letter-spacing: -.2px; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; color: var(--muted); }
+  .sec-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; color: var(--text); letter-spacing: -.1px; }
   .sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
   .hidden { display: none !important; }
@@ -2900,6 +2900,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   <div class="user-menu">
     <span class="user-name" id="userNameDisplay">—</span>
     <span class="role-badge" id="userRoleBadge">—</span>
+    <button id="globalSaveBtn" class="btn-small btn-primary" onclick="globalSave()" style="display:none">💾 Speichern</button>
     <button class="logout-btn" onclick="logout()">Abmelden</button>
   </div>
 </header>
@@ -3132,6 +3133,80 @@ const FRONTEND_HTML = `<!DOCTYPE html>
 </div>
 
 <script>
+
+// ═══════════════════════════════════════════════════════════
+// SERVER CONNECTION — saves permanently to GitHub via server
+// ═══════════════════════════════════════════════════════════
+let AUTH_TOKEN = null;
+try { AUTH_TOKEN = sessionStorage.getItem('bw_token'); } catch(e){}
+
+async function apiLogin(username, password) {
+  const r = await fetch('/api/login', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({username, password})
+  });
+  const d = await r.json();
+  if (!r.ok) throw new Error(d.error || 'Login failed');
+  AUTH_TOKEN = d.token;
+  sessionStorage.setItem('bw_token', AUTH_TOKEN);
+  sessionStorage.setItem('bw_user', JSON.stringify({name:d.username, role:d.role}));
+  return d;
+}
+
+async function apiLogout() {
+  try { await fetch('/api/logout',{method:'POST',headers:{'x-auth-token':AUTH_TOKEN}}); } catch(e){}
+  AUTH_TOKEN = null;
+  sessionStorage.removeItem('bw_token');
+  sessionStorage.removeItem('bw_user');
+}
+
+async function apiLoadPlan() {
+  const r = await fetch('/api/plan', {headers:{'x-auth-token':AUTH_TOKEN}});
+  if (!r.ok) throw new Error('Failed to load');
+  return await r.json();
+}
+
+async function apiSavePlan(plan) {
+  const r = await fetch('/api/plan', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-auth-token':AUTH_TOKEN},
+    body: JSON.stringify({plan})
+  });
+  if (!r.ok) { const d=await r.json(); throw new Error(d.error||'Save failed'); }
+  return await r.json();
+}
+
+function showToast(msg, isError) {
+  let el = document.getElementById('_toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = '_toast';
+    el.style.cssText = 'position:fixed;bottom:22px;right:24px;padding:11px 18px;border-radius:8px;font-size:14px;font-family:Calibri,Arial,sans-serif;font-weight:600;z-index:9999;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:opacity .4s';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.background = isError ? '#dc2626' : '#16a34a';
+  el.style.color = '#fff';
+  el.style.opacity = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.style.opacity='0', 3500);
+}
+
+// Global save function — always saves PLAN to GitHub permanently
+async function globalSave() {
+  const btn = document.getElementById('globalSaveBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird gespeichert...'; }
+  try {
+    await apiSavePlan(PLAN);
+    showToast('✓ Dauerhaft gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
+    if (btn) { btn.textContent = '✓ Gespeichert'; }
+    setTimeout(() => { if(btn){btn.disabled=false; btn.textContent='💾 Speichern';} }, 2000);
+  } catch(e) {
+    showToast('⚠ Fehler beim Speichern: ' + e.message, true);
+    if (btn) { btn.disabled = false; btn.textContent = '💾 Speichern'; }
+  }
+}
+
 const INPUT_DATA = {"2341.9011": {"liefertermin": [], "tz_bom": [{"stage_art": "2341.1011", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 4, "r_zt": 38}], "fr_bom": [{"stage_art": "2341.2011", "menge_per_stk": 1, "maschine": "M3050", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2341.9012": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 10}, {"year": 2026, "kw": 26, "menge": 20}, {"year": 2026, "kw": 27, "menge": 10}, {"year": 2026, "kw": 28, "menge": 10}, {"year": 2026, "kw": 29, "menge": 40}, {"year": 2026, "kw": 35, "menge": 20}, {"year": 2026, "kw": 37, "menge": 10}, {"year": 2026, "kw": 38, "menge": 20}, {"year": 2026, "kw": 40, "menge": 10}, {"year": 2026, "kw": 41, "menge": 20}, {"year": 2026, "kw": 43, "menge": 20}, {"year": 2026, "kw": 44, "menge": 20}, {"year": 2026, "kw": 45, "menge": 20}, {"year": 2026, "kw": 46, "menge": 10}, {"year": 2026, "kw": 47, "menge": 20}, {"year": 2026, "kw": 48, "menge": 10}, {"year": 2026, "kw": 49, "menge": 10}, {"year": 2026, "kw": 50, "menge": 10}], "tz_bom": [{"stage_art": "2341.1011", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 4, "r_zt": 38}], "fr_bom": [{"stage_art": "2341.2013", "menge_per_stk": 1, "maschine": "M3050", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2342.9012": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 37, "menge": 50}, {"year": 2026, "kw": 40, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}], "tz_bom": [{"stage_art": "2342.1012", "menge_per_stk": 0.25, "maschine": "M1585", "s_zt": 4, "r_zt": 90}], "fr_bom": [{"stage_art": "2342.2012", "menge_per_stk": 1, "maschine": "M3050", "s_zt": 1.5, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2454.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 50}, {"year": 2026, "kw": 28, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 41, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}, {"year": 2026, "kw": 50, "menge": 50}], "tz_bom": [{"stage_art": "2454.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 1.5, "r_zt": 90}, {"stage_art": "2454.1002", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 1.25, "r_zt": 35}, {"stage_art": "2454.1003", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 1.25, "r_zt": 35}], "fr_bom": [{"stage_art": "2454.2001", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 5.17, "r_zt": 45}, {"stage_art": "2454.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 1.78, "r_zt": 45}, {"stage_art": "2454.2003", "menge_per_stk": 1, "maschine": "M1567", "s_zt": 1.78, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "9000001"}, "2455.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 37, "menge": 50}, {"year": 2026, "kw": 41, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}, {"year": 2026, "kw": 50, "menge": 50}], "tz_bom": [{"stage_art": "2455.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 0.75, "r_zt": 90}], "fr_bom": [{"stage_art": "2455.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2.98, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2456.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 36, "menge": 50}, {"year": 2026, "kw": 39, "menge": 50}, {"year": 2026, "kw": 43, "menge": 50}, {"year": 2026, "kw": 46, "menge": 50}, {"year": 2026, "kw": 49, "menge": 50}], "tz_bom": [{"stage_art": "2456.1001", "menge_per_stk": 0.5, "maschine": "M1585", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2456.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.08, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2457.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 50}, {"year": 2026, "kw": 28, "menge": 50}, {"year": 2026, "kw": 35, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 42, "menge": 50}, {"year": 2026, "kw": 45, "menge": 50}, {"year": 2026, "kw": 48, "menge": 50}], "tz_bom": [{"stage_art": "2457.1001", "menge_per_stk": 0.5, "maschine": "M2735", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2457.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.15, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2458.9003": {"liefertermin": [{"year": 2026, "kw": 23, "menge": 20}, {"year": 2026, "kw": 24, "menge": 20}, {"year": 2026, "kw": 26, "menge": 20}, {"year": 2026, "kw": 27, "menge": 20}, {"year": 2026, "kw": 29, "menge": 60}, {"year": 2026, "kw": 36, "menge": 20}, {"year": 2026, "kw": 37, "menge": 20}, {"year": 2026, "kw": 38, "menge": 20}, {"year": 2026, "kw": 40, "menge": 20}, {"year": 2026, "kw": 41, "menge": 20}, {"year": 2026, "kw": 42, "menge": 20}, {"year": 2026, "kw": 44, "menge": 20}, {"year": 2026, "kw": 45, "menge": 20}, {"year": 2026, "kw": 46, "menge": 20}, {"year": 2026, "kw": 47, "menge": 20}, {"year": 2026, "kw": 49, "menge": 20}], "tz_bom": [{"stage_art": "2458.1001", "menge_per_stk": 0.25, "maschine": "M2735", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2458.2003", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 1.79, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2459.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 40, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}], "tz_bom": [{"stage_art": "2459.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 0.75, "r_zt": 90}], "fr_bom": [{"stage_art": "2459.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.5, "r_zt": 45}], "mo_s_zt": 0.14, "mo_a_platz": "EG 12"}, "2460.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 37, "menge": 50}, {"year": 2026, "kw": 40, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}], "tz_bom": [{"stage_art": "2460.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 2.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2460.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.07, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2461.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 50}, {"year": 2026, "kw": 28, "menge": 50}, {"year": 2026, "kw": 35, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 42, "menge": 50}, {"year": 2026, "kw": 45, "menge": 50}, {"year": 2026, "kw": 48, "menge": 50}], "tz_bom": [{"stage_art": "2461.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 1.67, "r_zt": 90}], "fr_bom": [{"stage_art": "2461.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.4, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2521.9001": {"liefertermin": [{"year": 2026, "kw": 23, "menge": 24}, {"year": 2026, "kw": 48, "menge": 24}], "tz_bom": [{"stage_art": "2521.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1003", "menge_per_stk": 0.25, "maschine": "M435", "s_zt": 1.5, "r_zt": 90}, {"stage_art": "2521.1004", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1005", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2521.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 4, "r_zt": 45}, {"stage_art": "2521.2002", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 2, "r_zt": 45}, {"stage_art": "2521.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 0.4, "r_zt": 45}, {"stage_art": "2521.2004", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 4, "r_zt": 45}, {"stage_art": "2521.2005", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2521.2006", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.875, "mo_a_platz": "EG 12"}, "2522.9001": {"liefertermin": [{"year": 2026, "kw": 29, "menge": 25}], "tz_bom": [{"stage_art": "2522.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 4, "r_zt": 90}, {"stage_art": "2521.1003", "menge_per_stk": 0.5, "maschine": "M435", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2522.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2521.2003", "menge_per_stk": 2, "maschine": "M3045", "s_zt": 0.4, "r_zt": 45}], "mo_s_zt": 0.28, "mo_a_platz": "EG 12"}, "2522.9002": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 25}], "tz_bom": [{"stage_art": "2521.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2522.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2522.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": null, "r_zt": null}, {"stage_art": "2521.2003", "menge_per_stk": 2, "maschine": "M3045", "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2522.9003": {"liefertermin": [], "tz_bom": [{"stage_art": "2522.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2521.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2522.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2521.2003", "menge_per_stk": 2, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2523.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 24}], "tz_bom": [{"stage_art": "2523.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2523.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1005", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1004", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2523.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 4, "r_zt": 45}, {"stage_art": "2523.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2523.2005", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3, "r_zt": 45}, {"stage_art": "2523.2006", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3, "r_zt": 45}, {"stage_art": "2523.2004", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 30}], "mo_s_zt": 0.875, "mo_a_platz": "EG 12"}, "2524.9001": {"liefertermin": [{"year": 2026, "kw": 23, "menge": 25}, {"year": 2026, "kw": 29, "menge": 25}, {"year": 2026, "kw": 39, "menge": 25}, {"year": 2026, "kw": 44, "menge": 25}, {"year": 2026, "kw": 48, "menge": 25}], "tz_bom": [{"stage_art": "2524.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1003", "menge_per_stk": 0.25, "maschine": "M435", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2524.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.2, "r_zt": 45}, {"stage_art": "2521.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 0.4, "r_zt": 45}], "mo_s_zt": 0.5384615384615384, "mo_a_platz": "EG 12"}, "2525.9001": {"liefertermin": [{"year": 2026, "kw": 29, "menge": 25}, {"year": 2026, "kw": 38, "menge": 25}, {"year": 2026, "kw": 44, "menge": 25}, {"year": 2026, "kw": 48, "menge": 25}], "tz_bom": [{"stage_art": "2525.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 4, "r_zt": 90}, {"stage_art": "2525.1002", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 4, "r_zt": 90}, {"stage_art": "2525.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2525.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2525.2002", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 3.5, "r_zt": 45}, {"stage_art": "2525.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.33, "r_zt": 45}, {"stage_art": "2525.2004", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.33, "r_zt": 45}], "mo_s_zt": 0.5384615384615384, "mo_a_platz": "EG 12"}, "2541.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 20}, {"year": 2026, "kw": 28, "menge": 20}, {"year": 2026, "kw": 35, "menge": 20}, {"year": 2026, "kw": 42, "menge": 20}, {"year": 2026, "kw": 47, "menge": 20}], "tz_bom": [{"stage_art": "2541.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2541.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.67, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2541.9002": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 20}, {"year": 2026, "kw": 29, "menge": 20}, {"year": 2026, "kw": 35, "menge": 20}, {"year": 2026, "kw": 39, "menge": 20}, {"year": 2026, "kw": 44, "menge": 20}, {"year": 2026, "kw": 50, "menge": 20}], "tz_bom": [{"stage_art": "2541.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2541.2002", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.53, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2544.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 24}], "tz_bom": [{"stage_art": "2544.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2544.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2544.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2544.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.54, "mo_a_platz": "#N/A"}, "2601.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 45, "menge": 15}], "tz_bom": [{"stage_art": "2601.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2601.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2601.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 3, "r_zt": 45}, {"stage_art": "2601.2002", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2602.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 46, "menge": 15}], "tz_bom": [{"stage_art": "2602.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}, {"stage_art": "2602.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2602.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.25, "r_zt": 45}, {"stage_art": "2602.2002", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.08, "r_zt": 45}], "mo_s_zt": 0.4666666666666667, "mo_a_platz": "EG 12"}, "2603.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 38, "menge": 15}, {"year": 2026, "kw": 45, "menge": 15}], "tz_bom": [{"stage_art": "2603.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2603.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.63, "r_zt": 45}, {"stage_art": "2603.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 1.02, "r_zt": 30}], "mo_s_zt": 0.875, "mo_a_platz": "EG 12"}, "2604.9001": {"liefertermin": [{"year": 2026, "kw": 28, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 46, "menge": 15}], "tz_bom": [{"stage_art": "2604.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2604.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2604.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2604.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2604.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2604.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 4, "r_zt": 30}], "mo_s_zt": 1.75, "mo_a_platz": "EG 12"}, "2605.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 46, "menge": 15}], "tz_bom": [{"stage_art": "2605.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2605.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2605.1003", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2605.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 4.17, "r_zt": 45}, {"stage_art": "2605.2002", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 2.5, "r_zt": 45}, {"stage_art": "2603.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 1.02, "r_zt": 30}, {"stage_art": "2605.2003", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 1.4, "mo_a_platz": "EG 12"}, "2664.9001": {"liefertermin": [{"year": 2026, "kw": 28, "menge": 25}, {"year": 2026, "kw": 45, "menge": 25}], "tz_bom": [{"stage_art": "2664.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2664.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2664.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2664.1004", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2664.1005", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2664.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 5, "r_zt": 45}, {"stage_art": "2664.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2664.2003", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2664.2004", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2664.2005", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1, "r_zt": 45}], "mo_s_zt": 0.84, "mo_a_platz": "EG 12"}, "2665.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 25}, {"year": 2026, "kw": 37, "menge": 25}, {"year": 2026, "kw": 50, "menge": 25}], "tz_bom": [{"stage_art": "2665.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 6, "r_zt": 60}, {"stage_art": "2665.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2665.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2665.1004", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2665.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 2.3, "r_zt": 45}, {"stage_art": "2665.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2.03, "r_zt": 45}, {"stage_art": "2665.2003", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2665.2004", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 2, "r_zt": 45}], "mo_s_zt": 0.84, "mo_a_platz": "EG 12"}, "2666.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 25}, {"year": 2026, "kw": 40, "menge": 25}], "tz_bom": [{"stage_art": "2666.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 2.5, "r_zt": 60}, {"stage_art": "2666.1002", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 2.5, "r_zt": 60}, {"stage_art": "2666.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2666.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2666.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2666.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2, "r_zt": 45}, {"stage_art": "2666.2004", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2, "r_zt": 45}], "mo_s_zt": 1.1666666666666667, "mo_a_platz": "EG 12"}, "2667.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 25}, {"year": 2026, "kw": 39, "menge": 25}], "tz_bom": [{"stage_art": "2667.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2667.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.5, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2668.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 25}, {"year": 2026, "kw": 38, "menge": 25}], "tz_bom": [{"stage_art": "2668.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2668.2001", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3.5, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2669.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 25}], "tz_bom": [{"stage_art": "2669.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2669.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2669.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2669.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.59, "mo_a_platz": null}, "2720.9001": {"liefertermin": [], "tz_bom": [{"stage_art": "2720.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1004", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2720.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2005", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.88, "mo_a_platz": null}, "2721.9001": {"liefertermin": [], "tz_bom": [{"stage_art": "2720.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1004", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2721.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2005", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.88, "mo_a_platz": null}, "2724.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 10}], "tz_bom": [{"stage_art": "2724.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.1003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.1004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2724.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.2003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.2004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.42, "mo_a_platz": null}, "2725.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2725.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2725.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2727.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 4}, {"year": 2026, "kw": 29, "menge": 6}], "tz_bom": [{"stage_art": "2727.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2727.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.1, "mo_a_platz": null}, "2728.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 10}], "tz_bom": [{"stage_art": "2728.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2728.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2728.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2728.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.1, "mo_a_platz": null}, "2729.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2729.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2729.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2730.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2730.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2730.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2731.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2731.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2731.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2732.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2732.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2732.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2733.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2733.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2733.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}};
 
 // INPUT_DATA: { artikel: { liefertermin:[{year,kw,menge}], tz_bom:[{stage_art,menge_per_stk,maschine,s_zt,r_zt}], fr_bom:[...], mo_s_zt, mo_a_platz } }
@@ -4242,8 +4317,7 @@ function renderGantt(D) {
         html += \`<tr class="stage-row-fr">\${artCell()}\`;
         weeks.forEach(({year,kw}) => {
           const w = line.weeks.find(x => x.year===year && x.kw===kw);
-          const frDone = (w && w.menge) && isDone('FR', line.stage_art, year, kw);
-          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-fr cb-wide\${frDone?' done-cell':''}">\` + line.stage_art + \`<br>FR:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-fr cb-wide">\${line.stage_art}<br>FR:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
         });
         html += '</tr>';
       });
@@ -4254,8 +4328,7 @@ function renderGantt(D) {
         html += \`<tr class="stage-row-tz">\${artCell()}\`;
         weeks.forEach(({year,kw}) => {
           const w = line.weeks.find(x => x.year===year && x.kw===kw);
-          const tzDone = (w && w.menge) && isDone('TZ', line.stage_art, year, kw);
-          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-tz cb-wide\${tzDone?' done-cell':''}">\` + line.stage_art + \`<br>TZ:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-tz cb-wide">\${line.stage_art}<br>TZ:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
         });
         html += '</tr>';
       });
@@ -4580,6 +4653,71 @@ if (CURRENT_USER) {
 } else {
   document.getElementById('currentKW').textContent = \`KW \${CURRENT_KW} / \${CURRENT_YEAR}\`;
 }
+
+// Override attemptLogin to use real server auth
+const _origAttemptLogin = attemptLogin;
+attemptLogin = async function() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  errEl.classList.remove('show');
+  try {
+    const user = await apiLogin(u, p);
+    CURRENT_USER = {name: user.username, role: user.role};
+    showToast('⏳ Daten werden geladen...', false);
+    const {plan} = await apiLoadPlan();
+    PLAN = plan;
+    DRAFT = JSON.parse(JSON.stringify(PLAN));
+    showToast('✓ Verbunden — Daten geladen', false);
+    showApp();
+    // Show global save button only for Planer
+    const saveBtn = document.getElementById('globalSaveBtn');
+    if (saveBtn) saveBtn.style.display = user.role === 'planer' ? 'inline-block' : 'none';
+  } catch(e) {
+    errEl.textContent = e.message || 'Benutzername oder Passwort falsch.';
+    errEl.classList.add('show');
+  }
+};
+
+// Also hook into existing saveDraft to auto-push to GitHub
+const _origSaveDraft = saveDraft;
+saveDraft = async function() {
+  _origSaveDraft();
+  try {
+    await apiSavePlan(PLAN);
+    showToast('✓ Dauerhaft gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
+  } catch(e) {
+    showToast('⚠ Fehler beim Speichern: ' + e.message, true);
+  }
+};
+
+// Override logout
+const _origLogout = logout;
+logout = async function() {
+  await apiLogout();
+  _origLogout();
+};
+
+// Auto-restore session on page reload
+(async function() {
+  if (AUTH_TOKEN) {
+    try {
+      const saved = sessionStorage.getItem('bw_user');
+      if (saved) CURRENT_USER = JSON.parse(saved);
+      const {plan} = await apiLoadPlan();
+      PLAN = plan;
+      DRAFT = JSON.parse(JSON.stringify(PLAN));
+      showApp();
+      const saveBtn = document.getElementById('globalSaveBtn');
+      if (saveBtn && CURRENT_USER && CURRENT_USER.role === 'planer') saveBtn.style.display = 'inline-block';
+    } catch(e) {
+      AUTH_TOKEN = null;
+      sessionStorage.removeItem('bw_token');
+      sessionStorage.removeItem('bw_user');
+    }
+  }
+})();
+
 </script>
 </body>
 </html>
