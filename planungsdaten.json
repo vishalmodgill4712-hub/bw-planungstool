@@ -2578,8 +2578,18 @@
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 33
+    },
+    "TZ|2669.1001|2026|33": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 33
+    },
+    "TZ|2669.1002|2026|33": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 33
     }
   },
-  "updated_at": "2026-08-20T13:10:59.918Z",
+  "updated_at": "2026-08-20T13:11:01.088Z",
   "updated_by": "Modu"
 }
