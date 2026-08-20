@@ -2536,14 +2536,10 @@
       "done": false
     },
     "TZ|2541.1001|2026|32": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 32
+      "done": false
     },
     "TZ|2341.1011|2026|33": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 33
+      "done": false
     },
     "TZ|2457.1001|2026|33": {
       "done": true,
@@ -2625,6 +2621,6 @@
       "done": false
     }
   },
-  "updated_at": "2026-08-20T13:13:37.273Z",
+  "updated_at": "2026-08-20T13:13:40.314Z",
   "updated_by": "Modu"
 }
