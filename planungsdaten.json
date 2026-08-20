@@ -2563,9 +2563,7 @@
       "done": false
     },
     "TZ|2727.1001|2026|33": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 33
+      "done": false
     },
     "FR|2541.2002|2026|33": {
       "done": true,
@@ -2593,9 +2591,7 @@
       "doneAtKw": 33
     },
     "FR|2456.2001|2026|33": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 33
+      "done": false
     },
     "FR|2454.2002|2026|33": {
       "done": false
@@ -2607,6 +2603,6 @@
       "done": false
     }
   },
-  "updated_at": "2026-08-20T13:13:45.857Z",
+  "updated_at": "2026-08-20T13:13:47.541Z",
   "updated_by": "Modu"
 }
