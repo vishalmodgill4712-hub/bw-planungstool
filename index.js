@@ -2656,6 +2656,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .gantt-wrap { overflow-x: auto; }
   table.gantt { width: 100%; border-collapse: collapse; min-width: 1300px; }
   .gantt th { background: var(--surface); border: 1px solid var(--border); padding: 7px 8px; font-size: 10.5px; font-weight: 600; text-align: center; color: var(--muted); white-space: nowrap; }
+  #ganttTableModal thead { position: sticky; top: 0; z-index: 10; }
   .gantt th.kw-fest { color: var(--fest); }
   .gantt th.kw-flex { color: var(--warn); }
   .gantt th.kw-curr { color: var(--accent); border-bottom: 2px solid var(--accent); }
@@ -3175,8 +3176,19 @@ const FRONTEND_HTML = `<!DOCTYPE html>
         <button class="gantt-modal-close" onclick="closeGanttModal()" title="Schließen">✕</button>
       </div>
     </div>
-    <div class="gantt-modal-body">
-      <div class="gantt-wrap"><table class="gantt" id="ganttTableModal"></table></div>
+    <div style="padding:10px 20px 6px;border-bottom:1px solid #e5e7eb;background:#f9fafb;display:flex;align-items:center;gap:16px;flex-shrink:0">
+      <span style="font-size:11px;color:#6b7280;font-weight:600;white-space:nowrap">KW-Fenster:</span>
+      <input type="range" id="ganttSlider" min="-12" max="24" value="6" step="1"
+        style="flex:1;accent-color:#006EB7"
+        oninput="ganttOffset=parseInt(this.value);document.getElementById('ganttSliderLabel').textContent='KW '+(CURRENT_KW+ganttOffset>52?CURRENT_KW+ganttOffset-52:CURRENT_KW+ganttOffset+' – KW '+(CURRENT_KW+ganttOffset+20>52?CURRENT_KW+ganttOffset+20-52:CURRENT_KW+ganttOffset+19));renderGanttInto(computeDerived(),'ganttTableModal')">
+      <span id="ganttSliderLabel" style="font-size:11px;color:#006EB7;font-weight:700;white-space:nowrap;min-width:80px"></span>
+      <button onclick="ganttOffset=0;document.getElementById('ganttSlider').value=0;renderGanttInto(computeDerived(),'ganttTableModal')" style="background:#006EB7;color:#fff;border:none;border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;font-weight:600">Heute</button>
+    </div>
+    <div class="gantt-modal-body" style="overflow:auto;position:relative">
+      <table id="ganttTableModal" style="border-collapse:collapse;width:100%;font-family:Calibri,Arial,sans-serif;table-layout:fixed">
+        <thead id="ganttTableModalHead" style="position:sticky;top:0;z-index:10"></thead>
+        <tbody></tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -3552,7 +3564,15 @@ function openGanttModal() {
   if (!modal) return;
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
-  // Render Gantt into the modal table
+  // Start at a sensible offset (around KW 30 or current week whichever is later)
+  const targetKw = Math.max(CURRENT_KW, 28);
+  ganttOffset = targetKw - CURRENT_KW;
+  const slider = document.getElementById('ganttSlider');
+  if (slider) slider.value = ganttOffset;
+  // Update label
+  const lbl = document.getElementById('ganttSliderLabel');
+  const startKw = CURRENT_KW + ganttOffset;
+  if (lbl) lbl.textContent = 'KW ' + (startKw > 52 ? startKw - 52 : startKw);
   const D = computeDerived();
   renderGanttInto(D, 'ganttTableModal');
 }
@@ -4417,405 +4437,126 @@ function renderGantt(D) {
   renderGanttInto(D, 'ganttTable');
 }
 
+function renderGantt(D) {
+  // Gantt renders in modal only
+}
+
+let ganttOffset = 0;
+const GANTT_VISIBLE = 20;
+
 function renderGanttInto(D, tableId) {
-  const weeks = [];
-  for (let i = 0; i < KW_WINDOW; i++) {
-    let k = CURRENT_KW + i, y = CURRENT_YEAR;
-    if (k > 52) { k -= 52; y += 1; }
+  var arts = getArtikelList();
+  var showTZ = activeFilter === 'all' || activeFilter === 'TZ';
+  var showFR = activeFilter === 'all' || activeFilter === 'FR';
+  var showMO = activeFilter === 'all' || activeFilter === 'MO';
+  var showLI = activeFilter === 'all' || activeFilter === 'LI';
+
+  var weeks = [];
+  for (var i = 0; i < GANTT_VISIBLE; i++) {
+    var k = CURRENT_KW + ganttOffset + i;
+    var y = CURRENT_YEAR;
+    while (k > 52) { k -= 52; y++; }
+    while (k < 1)  { k += 52; y--; }
     weeks.push({year:y, kw:k});
   }
-  const arts = getArtikelList();
-  const showTZ = activeFilter === 'all' || activeFilter === 'TZ';
-  const showFR = activeFilter === 'all' || activeFilter === 'FR';
-  const showMO = activeFilter === 'all' || activeFilter === 'MO';
-  const showLI = activeFilter === 'all' || activeFilter === 'LI';
 
-  let html = '<thead><tr><th class="col-art">Artikel / Stufe</th>';
-  weeks.forEach(({year,kw}) => {
-    const isCur = (year===CURRENT_YEAR && kw===CURRENT_KW);
-    const cls = isCur ? 'kw-curr' : isFest(year,kw) ? 'kw-fest' : 'kw-flex';
-    html += \`<th class="\${cls}">KW\${kw}\${isCur?' ◀':isFest(year,kw)?' 🔒':''}</th>\`;
+  var C = {
+    LI: {bg:'#16a34a', light:'rgba(22,163,74,.13)'},
+    MO: {bg:'#006EB7', light:'rgba(0,110,183,.13)'},
+    FR: {bg:'#b45309', light:'rgba(180,83,9,.13)'},
+    TZ: {bg:'#676C6E', light:'rgba(103,108,110,.13)'},
+  };
+
+  var html = '<colgroup><col style="width:120px;min-width:120px"><col style="width:55px;min-width:55px">';
+  weeks.forEach(function() { html += '<col style="width:82px;min-width:72px">'; });
+  html += '</colgroup><thead><tr>';
+  html += '<th style="position:sticky;left:0;z-index:4;background:#1c2024;color:#fff;font-size:11px;padding:10px 12px;text-align:left;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;border-right:2px solid #374151">Artikel</th>';
+  html += '<th style="position:sticky;left:120px;z-index:4;background:#1c2024;color:#fff;font-size:11px;padding:10px 6px;text-align:center;border-right:1px solid #374151">Stufe</th>';
+
+  weeks.forEach(function(w) {
+    var isCur = (w.year===CURRENT_YEAR && w.kw===CURRENT_KW);
+    var fest = isFest(w.year, w.kw);
+    var bg = isCur ? '#006EB7' : fest ? '#374151' : '#1c2024';
+    var fw = isCur ? '800' : '600';
+    html += '<th style="background:' + bg + ';color:#fff;font-size:11px;font-weight:' + fw + ';padding:8px 4px;text-align:center;white-space:nowrap;border-left:1px solid rgba(255,255,255,.08)">' +
+      'KW' + w.kw + (isCur ? ' ◀' : '') + (fest ? ' 🔒' : '') +
+      '<div style="font-size:9px;font-weight:400;opacity:.7">' + w.year + '</div>' +
+      '</th>';
   });
   html += '</tr></thead><tbody>';
 
-  arts.forEach(art => {
-    const d = PLAN[art];
-    const rowCount = (showLI?1:0) + (showMO?1:0) + (showFR?Math.max(d.fr_bom.length,1):0) + (showTZ?Math.max(d.tz_bom.length,1):0);
-    let firstRow = true;
+  arts.forEach(function(art, artIdx) {
+    var d = PLAN[art];
+    var rowBg = artIdx % 2 === 0 ? '#ffffff' : '#f9fafb';
+    var firstArtCell = true;
 
-    function artCell() {
-      if (firstRow) {
-        firstRow = false;
-        return \`<td class="art-cell" rowspan="\${rowCount}"><span class="art-name">\${art}</span></td>\`;
-      }
-      return '';
+    function artCell(totalRows) {
+      if (!firstArtCell) return '';
+      firstArtCell = false;
+      return '<td rowspan="' + totalRows + '" style="position:sticky;left:0;z-index:2;background:' + rowBg + ';border-right:2px solid #e5e7eb;border-bottom:1px solid #f3f4f6;padding:8px 12px;font-weight:700;font-size:12px;vertical-align:middle;white-space:nowrap">' + art + '</td>';
     }
 
-    if (showLI) {
-      html += \`<tr class="stage-row-li">\${artCell()}\`;
-      weeks.forEach(({year,kw}) => {
-        const w = d.liefertermin.find(x => x.year===year && x.kw===kw);
-        const liDone = w && isDone('LI', art, year, kw);
-        if (w) {
-          html += \`<td class="stage-cell gantt-li-cell"
-            ondragover="event.preventDefault();this.classList.add('drag-target')"
-            ondragleave="this.classList.remove('drag-target')"
-            ondrop="this.classList.remove('drag-target');handleGanttDrop(event,'\${art}',\${kw},\${year})">
-            <span class="gantt-shift-btn" onclick="shiftLieferterminKW('\${art}',\${kw},\${year},-1)" title="1 Woche früher">◀</span>
-            <span class="cb cb-li\${liDone?' done-cell':''} draggable"
-              draggable="true"
-              ondragstart="handleGanttDragStart(event,'\${art}',\${kw},\${year})"
-              ondragend="document.querySelectorAll('.drag-target').forEach(e=>e.classList.remove('drag-target'))"
-              title="\${liDone?'Nicht erledigt':'Erledigt — zum Verschieben ziehen'}"
-              onclick="toggleDoneAndSave('LI','\${art}',\${year},\${kw})">LI:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>
-            <span class="gantt-shift-btn" onclick="shiftLieferterminKW('\${art}',\${kw},\${year},1)" title="1 Woche später">▶</span>
-          </td>\`;
-        } else {
-          html += \`<td class="stage-cell gantt-li-cell"
-            ondragover="event.preventDefault();this.classList.add('drag-target')"
-            ondragleave="this.classList.remove('drag-target')"
-            ondrop="this.classList.remove('drag-target');handleGanttDropEmpty(event,'\${art}',\${kw},\${year})">\</td>\`;
-        }
-      });
-      html += '</tr>';
-    }
-    if (showMO) {
-      html += \`<tr class="stage-row-mo">\${artCell()}\`;
-      weeks.forEach(({year,kw}) => {
-        const w = (D.montageByArt[art]||[]).find(x => x.year===year && x.kw===kw);
-        const moDone = w && isDone('MO', art, year, kw);
-        html += \`<td class="stage-cell">\${w ? \`<span class="cb cb-mo\${moDone?' done-cell':''}" title="\${moDone?'Als nicht erledigt markieren':'Als erledigt markieren'}" onclick="toggleDoneAndSave('MO','\${art}',\${year},\${kw})">MO:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
-      });
-      html += '</tr>';
-    }
-    if (showFR) {
-      const frLines = D.fraesenLines[art] && D.fraesenLines[art].length ? D.fraesenLines[art] : [{stage_art:'—', weeks:[]}];
-      frLines.forEach(line => {
-        html += \`<tr class="stage-row-fr">\${artCell()}\`;
-        weeks.forEach(({year,kw}) => {
-          const w = line.weeks.find(x => x.year===year && x.kw===kw);
-          const frDone = (w && w.menge) && isDone('FR', line.stage_art, year, kw);
-          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-fr cb-wide\${frDone?' done-cell':''}" title="\${frDone?'Als nicht erledigt markieren':'Als erledigt markieren'}" onclick="toggleDoneAndSave('FR','\${line.stage_art}',\${year},\${kw})">\${line.stage_art}<br>FR:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+    var totalRows = (showLI?1:0) + (showMO?1:0) +
+      (showFR ? Math.max((D.fraesenLines[art]||[]).length,1) : 0) +
+      (showTZ ? Math.max((D.tiefziehenLines[art]||[]).length,1) : 0);
+
+    function stageRows(stage, label, color, lines2) {
+      lines2.forEach(function(lineInfo, ri) {
+        html += '<tr style="background:' + rowBg + '">';
+        if (ri === 0) html += artCell(totalRows);
+        html += '<td style="position:sticky;left:120px;z-index:2;background:' + rowBg + ';border-right:1px solid #e5e7eb;padding:3px 5px;text-align:center;vertical-align:middle">' +
+          '<span style="display:inline-block;background:' + color.bg + ';color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px">' + label + '</span>' +
+          '</td>';
+        weeks.forEach(function(w) {
+          var cell = lineInfo.get(w.year, w.kw);
+          var done = isDone(stage, lineInfo.ident, w.year, w.kw);
+          if (cell) {
+            var cellBg = done ? 'rgba(22,163,74,.15)' : color.light;
+            var border = done ? '2px solid #16a34a' : ('1px solid ' + color.bg + '44');
+            var draggable = stage === 'LI' ? 'draggable="true" ondragstart="handleGanttDragStart(event,\'' + art + '\',' + w.kw + ',' + w.year + ')" ondragend="document.querySelectorAll(\'[data-dragtarget]\').forEach(function(e){e.style.background=\'\';})"' : '';
+            html += '<td style="padding:3px;text-align:center;vertical-align:middle;border-left:1px solid #f3f4f6' + (done?';background:rgba(22,163,74,.05)':'') + '"' +
+              ' ondragover="event.preventDefault();this.style.background=\'rgba(0,110,183,.12)\'"' +
+              ' ondragleave="this.style.background=\'\'"' +
+              ' ondrop="this.style.background=\'\';handleGanttDrop(event,\'' + art + '\',' + w.kw + ',' + w.year + ')">' +
+              '<div style="background:' + cellBg + ';border:' + border + ';border-radius:6px;padding:5px 3px;cursor:pointer;position:relative;transition:all .12s" ' +
+              draggable +
+              ' onclick="toggleDoneAndSave(\'' + stage + '\',\'' + lineInfo.ident + '\',' + w.year + ',' + w.kw + ')"' +
+              ' title="' + (done ? 'Nicht erledigt markieren' : 'Als erledigt markieren') + '">' +
+              (done ? '<span style="position:absolute;top:-5px;right:-5px;background:#16a34a;color:#fff;border-radius:50%;width:15px;height:15px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:800;line-height:1">✓</span>' : '') +
+              '<div style="font-size:10px;font-weight:700;color:#1c2024;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + cell.label + '</div>' +
+              '<div style="font-size:9px;color:#6b7280;margin-top:1px">' + cell.menge + ' Stk</div>' +
+              '</div></td>';
+          } else {
+            html += '<td style="border-left:1px solid #f3f4f6;padding:3px"' +
+              (stage === 'LI' ?
+                ' ondragover="event.preventDefault();this.style.background=\'rgba(0,110,183,.12)\'"' +
+                ' ondragleave="this.style.background=\'\'"' +
+                ' ondrop="this.style.background=\'\';handleGanttDropEmpty(event,\'' + art + '\',' + w.kw + ',' + w.year + ')"' : '') +
+              '></td>';
+          }
         });
         html += '</tr>';
       });
+    }
+
+    if (showLI) stageRows('LI','LI',C.LI,[{ident:art,get:function(y,k){var w=d.liefertermin.find(function(x){return x.year===y&&x.kw===k;});return w?{label:'Lieferung',menge:w.menge}:null;}}]);
+    if (showMO) stageRows('MO','MO',C.MO,[{ident:art,get:function(y,k){var w=(D.montageByArt[art]||[]).find(function(x){return x.year===y&&x.kw===k;});return w?{label:'Montage',menge:w.menge}:null;}}]);
+    if (showFR) {
+      var frL = (D.fraesenLines[art]&&D.fraesenLines[art].length)?D.fraesenLines[art]:[{stage_art:'—',weeks:[]}];
+      stageRows('FR','FR',C.FR,frL.map(function(l){return {ident:l.stage_art,get:function(y,k){var w=l.weeks.find(function(x){return x.year===y&&x.kw===k;});return(w&&w.menge)?{label:l.stage_art,menge:w.menge}:null;}};}));
     }
     if (showTZ) {
-      const tzLines = D.tiefziehenLines[art] && D.tiefziehenLines[art].length ? D.tiefziehenLines[art] : [{stage_art:'—', weeks:[]}];
-      tzLines.forEach(line => {
-        html += \`<tr class="stage-row-tz">\${artCell()}\`;
-        weeks.forEach(({year,kw}) => {
-          const w = line.weeks.find(x => x.year===year && x.kw===kw);
-          const tzDone = (w && w.menge) && isDone('TZ', line.stage_art, year, kw);
-          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-tz cb-wide\${tzDone?' done-cell':''}" title="\${tzDone?'Als nicht erledigt markieren':'Als erledigt markieren'}" onclick="toggleDoneAndSave('TZ','\${line.stage_art}',\${year},\${kw})">\${line.stage_art}<br>TZ:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
-        });
-        html += '</tr>';
-      });
+      var tzL = (D.tiefziehenLines[art]&&D.tiefziehenLines[art].length)?D.tiefziehenLines[art]:[{stage_art:'—',weeks:[]}];
+      stageRows('TZ','TZ',C.TZ,tzL.map(function(l){return {ident:l.stage_art,get:function(y,k){var w=l.weeks.find(function(x){return x.year===y&&x.kw===k;});return(w&&w.menge)?{label:l.stage_art,menge:w.menge}:null;}};}));
     }
+
+    html += '<tr><td colspan="' + (GANTT_VISIBLE+2) + '" style="height:3px;background:#f3f4f6;border-top:1px solid #e5e7eb"></td></tr>';
   });
+
   html += '</tbody>';
   document.getElementById(tableId).innerHTML = html;
 }
 
-// ─────────────────────────────────────────────
-// DETAIL TABLE
-// ─────────────────────────────────────────────
-function renderDetail(D) {
-  const arts = getArtikelList();
-  let rows = '';
-  const seenFrStage = new Set(), seenTzStage = new Set();
-
-  arts.forEach(art => {
-    const d = PLAN[art];
-
-    if (activeFilter === 'all' || activeFilter === 'LI') {
-      d.liefertermin.forEach(w => {
-        const fest = isFest(w.year, w.kw);
-        rows += rowHtml(art, 'LI', 'Lieferung', 'pill-li', '—', w.menge, '—', w.kw, w.year, fest, null);
-      });
-    }
-    if (activeFilter === 'all' || activeFilter === 'MO') {
-      (D.montageByArt[art]||[]).forEach(w => {
-        const fest = isFest(w.year, w.kw);
-        const std = (getMoSzt(art) * w.menge).toFixed(1) + 'h';
-        rows += rowHtml(art, 'MO', 'Montage', 'pill-mo', d.mo_a_platz||'—', w.menge, std, w.kw, w.year, fest, null);
-      });
-    }
-    if (activeFilter === 'all' || activeFilter === 'FR') {
-      (D.fraesenLines[art]||[]).forEach(line => {
-        if (seenFrStage.has(line.stage_art)) return;
-        seenFrStage.add(line.stage_art);
-        const g = D.fraesenGroups[line.stage_art];
-        Object.entries(g.weeksMap).sort().forEach(([key,menge]) => {
-          const [year,kw] = key.split('-').map(Number);
-          const fest = isFest(year, kw);
-          const label = g.artikel.length > 1 ? g.artikel.join('+') : art;
-          rows += rowHtml(label, 'FR', 'Fräsen', 'pill-fr', line.stage_art+' / '+(line.maschine||'—'), menge.toFixed(2), '—', kw, year, fest, null);
-        });
-      });
-    }
-    if (activeFilter === 'all' || activeFilter === 'TZ') {
-      (D.tiefziehenLines[art]||[]).forEach(line => {
-        if (seenTzStage.has(line.stage_art)) return;
-        seenTzStage.add(line.stage_art);
-        const g = D.tiefziehenGroups[line.stage_art];
-        Object.entries(g.weeksMap).sort().forEach(([key,menge]) => {
-          const [year,kw] = key.split('-').map(Number);
-          const fest = isFest(year, kw);
-          const label = g.artikel.length > 1 ? g.artikel.join('+') : art;
-          rows += rowHtml(label, 'TZ', 'Tiefziehen', 'pill-tz', line.stage_art+' / '+(line.maschine||'—'), menge.toFixed(2), '—', kw, year, fest, null);
-        });
-      });
-    }
-  });
-  document.getElementById('detailBody').innerHTML = rows || '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">Keine Daten</td></tr>';
-}
-
-function rowHtml(art, stKey, stLabel, pillCls, stageInfo, menge, std, kw, year, fest, kombi) {
-  return \`<tr>
-    <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;font-size:11px">\${art}</td>
-    <td><span class="stage-pill \${pillCls}">\${stKey} · \${stLabel}</span></td>
-    <td style="font-size:11px;color:var(--muted)">\${stageInfo}</td>
-    <td style="text-align:center">\${menge}</td>
-    <td style="text-align:center;color:var(--mo-c)">\${std}</td>
-    <td style="text-align:center;font-weight:600">KW\${kw}/\${year}</td>
-    <td style="text-align:center">—</td>
-    <td class="\${fest?'st-fest':'st-flex'}">\${fest?'🔒 FEST':'~ FLEX'}</td>
-    <td style="text-align:center;font-size:10px;color:var(--accent2)">\${kombi || '—'}</td>
-  </tr>\`;
-}
-
-// ─────────────────────────────────────────────
-// DASHBOARD — "Diese Woche" view + late detection
-// ─────────────────────────────────────────────
-function renderDashboard(D) {
-  document.getElementById('dashKW').textContent = \`\${CURRENT_KW} / \${CURRENT_YEAR}\`;
-  const curKey = CURRENT_YEAR + '-' + CURRENT_KW;
-  const arts = getArtikelList();
-
-  // TZ this week (deduplicated by stage_art)
-  const tzItems = [];
-  const seenTz = new Set();
-  arts.forEach(art => {
-    (D.tiefziehenLines[art]||[]).forEach(line => {
-      if (seenTz.has(line.stage_art)) return;
-      const g = D.tiefziehenGroups[line.stage_art];
-      const menge = g.weeksMap[curKey];
-      if (menge) {
-        seenTz.add(line.stage_art);
-        tzItems.push({ ident: line.stage_art, stageArt: line.stage_art, label: g.artikel.join('+'), menge, maschine: line.maschine });
-      }
-    });
-  });
-
-  // FR this week
-  const frItems = [];
-  const seenFr = new Set();
-  arts.forEach(art => {
-    (D.fraesenLines[art]||[]).forEach(line => {
-      if (seenFr.has(line.stage_art)) return;
-      const g = D.fraesenGroups[line.stage_art];
-      const menge = g.weeksMap[curKey];
-      if (menge) {
-        seenFr.add(line.stage_art);
-        frItems.push({ ident: line.stage_art, stageArt: line.stage_art, label: g.artikel.join('+'), menge, maschine: line.maschine });
-      }
-    });
-  });
-
-  // MO this week (per artikel, not combined)
-  const moItems = [];
-  arts.forEach(art => {
-    const w = (D.montageByArt[art]||[]).find(x => x.year===CURRENT_YEAR && x.kw===CURRENT_KW);
-    if (w) moItems.push({ ident: art, stageArt: null, label: art, menge: w.menge, maschine: PLAN[art].mo_a_platz });
-  });
-
-  // LI this week
-  const liItems = [];
-  arts.forEach(art => {
-    const w = PLAN[art].liefertermin.find(x => x.year===CURRENT_YEAR && x.kw===CURRENT_KW);
-    if (w) liItems.push({ ident: art, stageArt: null, label: art, menge: w.menge, maschine: null });
-  });
-
-  function renderDashList(containerId, items, stage) {
-    const el = document.getElementById(containerId);
-    if (!items.length) { el.innerHTML = '<div class="dash-empty">Keine Posten diese Woche</div>'; return; }
-    el.innerHTML = items.map(it => {
-      const done = isDone(stage, it.ident, CURRENT_YEAR, CURRENT_KW);
-      const stageArtLine = it.stageArt ? \`<span class="di-stageart">\${it.stageArt}</span>\` : '';
-      return \`<div class="dash-item \${done?'done':''}">
-        \${stageArtLine}
-        <span class="di-art">\${it.label}\${it.maschine ? ' <span style="color:var(--muted);font-weight:400">/ '+it.maschine+'</span>' : ''}</span>
-        <div class="di-meta">
-          <span>Menge: \${typeof it.menge==='number' ? it.menge.toFixed(it.menge%1?2:0) : it.menge}</span>
-          <label class="di-check"><input type="checkbox" \${done?'checked':''} onchange="toggleDone('\${stage}','\${it.ident}',\${CURRENT_YEAR},\${CURRENT_KW})"> erledigt</label>
-        </div>
-      </div>\`;
-    }).join('');
-  }
-
-  renderDashList('dashTZ', tzItems, 'TZ');
-  renderDashList('dashFR', frItems, 'FR');
-  renderDashList('dashMO', moItems, 'MO');
-  renderDashList('dashLI', liItems, 'LI');
-
-  // ── Late items: scan all stages, all weeks in the past, not done ──
-  const lateRows = [];
-  function scanLate(stage, label, pillCls, groupsOrItems, isGrouped) {
-    if (isGrouped) {
-      Object.entries(groupsOrItems).forEach(([stageArt, g]) => {
-        Object.entries(g.weeksMap).forEach(([key, menge]) => {
-          const [year, kw] = key.split('-').map(Number);
-          if (isLate(stage, stageArt, year, kw) && menge) {
-            lateRows.push({ art: g.artikel.join('+'), stage, label, pillCls, stageArt, menge, year, kw });
-          }
-        });
-      });
-    }
-  }
-  scanLate('TZ', 'Tiefziehen', 'pill-tz', D.tiefziehenGroups, true);
-  scanLate('FR', 'Fräsen', 'pill-fr', D.fraesenGroups, true);
-  // MO per artikel
-  Object.keys(PLAN).forEach(art => {
-    (D.montageByArt[art]||[]).forEach(w => {
-      if (isLate('MO', art, w.year, w.kw) && w.menge) {
-        lateRows.push({ art, stage:'MO', label:'Montage', pillCls:'pill-mo', stageArt: PLAN[art].mo_a_platz||'—', menge: w.menge, year:w.year, kw:w.kw });
-      }
-    });
-  });
-  // LI per artikel
-  Object.keys(PLAN).forEach(art => {
-    PLAN[art].liefertermin.forEach(w => {
-      if (isLate('LI', art, w.year, w.kw) && w.menge) {
-        lateRows.push({ art, stage:'LI', label:'Lieferung', pillCls:'pill-li', stageArt:'—', menge: w.menge, year:w.year, kw:w.kw });
-      }
-    });
-  });
-
-  lateRows.sort((a,b) => weeksOverdue(b.year,b.kw) - weeksOverdue(a.year,a.kw));
-
-  const lateBody = document.getElementById('lateBody');
-  if (!lateRows.length) {
-    lateBody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--fest);padding:16px">✓ Keine Verspätungen — alles im Plan</td></tr>';
-  } else {
-    lateBody.innerHTML = lateRows.map(r => {
-      const ov = weeksOverdue(r.year, r.kw);
-      return \`<tr class="late-row">
-        <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif">\${r.art}</td>
-        <td><span class="stage-pill \${r.pillCls}">\${r.stage} · \${r.label}</span></td>
-        <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;color:var(--muted)">\${r.stageArt}</td>
-        <td style="text-align:center">\${typeof r.menge==='number' ? r.menge.toFixed(r.menge%1?2:0) : r.menge}</td>
-        <td style="text-align:center">KW\${r.kw}/\${r.year}</td>
-        <td style="text-align:center"><span class="late-badge">+\${ov} Wo.</span></td>
-        <td style="text-align:center"><label class="di-check"><input type="checkbox" onchange="toggleDone('\${r.stage}','\${r.stage==='MO'||r.stage==='LI'?r.art:r.stageArt}',\${r.year},\${r.kw})"> erledigt</label></td>
-      </tr>\`;
-    }).join('');
-  }
-}
-
-function setTzFrFilter(f, btn) {
-  tzfrFilter = f;
-  btn.parentElement.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderTzFrOverview(computeDerived());
-}
-
-function renderTzFrOverview(D) {
-  const rows = [];
-
-  function collect(groups, stage, stageLabel) {
-    Object.entries(groups).forEach(([stageArt, g]) => {
-      const weeks = Object.keys(g.weeksMap)
-        .map(key => { const [year,kw] = key.split('-').map(Number); return {year,kw,menge:g.weeksMap[key]}; })
-        .filter(w => w.menge)
-        .sort((a,b) => absWeek(a.year,a.kw) - absWeek(b.year,b.kw));
-      if (!weeks.length) return;
-
-      let anyLate = false, allDone = true;
-      const plannedChips = [];
-      const actualChips = [];
-      weeks.forEach(w => {
-        const done = isDone(stage, stageArt, w.year, w.kw);
-        const late = isPast(w.year, w.kw) && !done;
-        if (late) anyLate = true;
-        if (!done) allDone = false;
-        const cls = done ? 'done' : late ? 'late' : '';
-        plannedChips.push(\`<span class="tzfr-kw-chip \${cls}">KW\${w.kw}/\${w.year}</span>\`);
-        if (done) {
-          const at = getDoneAt(stage, stageArt, w.year, w.kw);
-          const onTime = at && absWeek(at.year, at.kw) <= absWeek(w.year, w.kw);
-          actualChips.push(\`<span class="tzfr-kw-chip \${onTime?'done':'late'}">KW\${at.kw}/\${at.year}</span>\`);
-        } else {
-          actualChips.push(\`<span class="tzfr-kw-chip">—</span>\`);
-        }
-      });
-
-      let statusIcon;
-      if (allDone) statusIcon = \`<span class="tzfr-status-ontime" title="Erledigt">✓</span>\`;
-      else if (anyLate) statusIcon = \`<span class="tzfr-status-late" title="Verspätet">⚠</span>\`;
-      else statusIcon = \`<span class="tzfr-status-pending" title="Ausstehend">…</span>\`;
-
-      rows.push({ stage, stageLabel, stageArt, artikel: g.artikel.join(', '), plannedChips: plannedChips.join(' '), actualChips: actualChips.join(' '), statusIcon, sortKey: absWeek(weeks[0].year, weeks[0].kw) });
-    });
-  }
-
-  // Montage and Lieferung are per-artikel (not grouped by a shared stage-Art-Nr like TZ/FR)
-  function collectPerArtikel(weeksByArt, stage, stageLabel, labelFn) {
-    Object.keys(PLAN).forEach(art => {
-      const weeks = (weeksByArt[art] || []).filter(w => w.menge).sort((a,b) => absWeek(a.year,a.kw) - absWeek(b.year,b.kw));
-      if (!weeks.length) return;
-
-      let anyLate = false, allDone = true;
-      const plannedChips = [];
-      const actualChips = [];
-      weeks.forEach(w => {
-        const done = isDone(stage, art, w.year, w.kw);
-        const late = isPast(w.year, w.kw) && !done;
-        if (late) anyLate = true;
-        if (!done) allDone = false;
-        const cls = done ? 'done' : late ? 'late' : '';
-        plannedChips.push(\`<span class="tzfr-kw-chip \${cls}">KW\${w.kw}/\${w.year}</span>\`);
-        if (done) {
-          const at = getDoneAt(stage, art, w.year, w.kw);
-          const onTime = at && absWeek(at.year, at.kw) <= absWeek(w.year, w.kw);
-          actualChips.push(\`<span class="tzfr-kw-chip \${onTime?'done':'late'}">KW\${at.kw}/\${at.year}</span>\`);
-        } else {
-          actualChips.push(\`<span class="tzfr-kw-chip">—</span>\`);
-        }
-      });
-
-      let statusIcon;
-      if (allDone) statusIcon = \`<span class="tzfr-status-ontime" title="Erledigt">✓</span>\`;
-      else if (anyLate) statusIcon = \`<span class="tzfr-status-late" title="Verspätet">⚠</span>\`;
-      else statusIcon = \`<span class="tzfr-status-pending" title="Ausstehend">…</span>\`;
-
-      rows.push({ stage, stageLabel, stageArt: labelFn(art), artikel: art, plannedChips: plannedChips.join(' '), actualChips: actualChips.join(' '), statusIcon, sortKey: absWeek(weeks[0].year, weeks[0].kw) });
-    });
-  }
-
-  if (tzfrFilter === 'all' || tzfrFilter === 'TZ') collect(D.tiefziehenGroups, 'TZ', 'Tiefziehen');
-  if (tzfrFilter === 'all' || tzfrFilter === 'FR') collect(D.fraesenGroups, 'FR', 'Fräsen');
-  if (tzfrFilter === 'all' || tzfrFilter === 'MO') collectPerArtikel(D.montageByArt, 'MO', 'Montage', art => PLAN[art].mo_a_platz || '—');
-  if (tzfrFilter === 'all' || tzfrFilter === 'LI') {
-    const liByArt = {};
-    Object.keys(PLAN).forEach(art => { liByArt[art] = PLAN[art].liefertermin; });
-    collectPerArtikel(liByArt, 'LI', 'Lieferung', () => '—');
-  }
-
-  rows.sort((a,b) => a.sortKey - b.sortKey);
-
-  const pillCls = { TZ: 'pill-tz', FR: 'pill-fr', MO: 'pill-mo', LI: 'pill-li' };
-  const body = rows.map(r => \`<tr>
-    <td><span class="stage-pill \${pillCls[r.stage]}">\${r.stage}</span></td>
-    <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;font-weight:600">\${r.stageArt}</td>
-    <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;color:var(--muted);font-size:11px">\${r.artikel}</td>
-    <td>\${r.plannedChips}</td>
-    <td>\${r.actualChips}</td>
-    <td style="text-align:center;font-size:15px">\${r.statusIcon}</td>
-  </tr>\`).join('');
-
-  document.getElementById('tzfrOverviewBody').innerHTML = body || '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Keine Daten</td></tr>';
-}
 
 function renderAll() {
   const { D, moMap } = renderSummary();
