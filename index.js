@@ -2835,6 +2835,23 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .tzfr-kw-chip.late { border-color: var(--danger); color: var(--danger); }
 
   .overload-table thead th { color: var(--danger); }
+
+  /* ── Gantt Modal ────────────────────────────────────────────── */
+  #ganttModal { display:none; position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,.55); backdrop-filter:blur(3px); }
+  #ganttModal.open { display:flex; flex-direction:column; }
+  .gantt-modal-inner { background:var(--bg); margin:20px; border-radius:12px; display:flex; flex-direction:column; flex:1; overflow:hidden; box-shadow:0 8px 40px rgba(0,0,0,.25); }
+  .gantt-modal-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:2px solid var(--accent); background:var(--bg); flex-shrink:0; }
+  .gantt-modal-title { font-size:15px; font-weight:800; color:var(--text); letter-spacing:.5px; text-transform:uppercase; }
+  .gantt-modal-actions { display:flex; align-items:center; gap:10px; }
+  .gantt-modal-close { background:var(--surface); border:1px solid var(--border); border-radius:6px; width:32px; height:32px; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; color:var(--muted); }
+  .gantt-modal-close:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
+  .gantt-modal-body { flex:1; overflow:auto; padding:16px 20px; }
+
+  /* Drag styles */
+  .cb.draggable { cursor:grab; }
+  .cb.draggable:active { cursor:grabbing; }
+  .cb.drag-over { outline:2px dashed var(--accent); outline-offset:2px; }
+  .stage-cell.drag-target { background:rgba(0,110,183,.08); }
   .overload-table tbody tr:hover td { background: rgba(220,38,38,.05); }
   .ov-shift-btn { background: var(--accent); color: #fff; border: none; border-radius: 5px; padding: 5px 10px; font-size: 10.5px; cursor: pointer; white-space: nowrap; }
   .ov-shift-btn:hover { opacity: .85; }
@@ -3142,6 +3159,28 @@ const FRONTEND_HTML = `<!DOCTYPE html>
 </div>
 </div>
 
+<!-- ── Gantt Full-Screen Modal ─────────────────────────────────── -->
+<div id="ganttModal">
+  <div class="gantt-modal-inner">
+    <div class="gantt-modal-header">
+      <div class="gantt-modal-title">📊 Gantt / KW-Übersicht</div>
+      <div class="gantt-modal-actions">
+        <div class="toggle-group" style="margin-right:8px">
+          <button class="toggle-btn gantt-stage-btn active" data-stage="all" onclick="setFilter('all',this)">Alle</button>
+          <button class="toggle-btn gantt-stage-btn" data-stage="TZ" onclick="setFilter('TZ',this)">Tiefziehen</button>
+          <button class="toggle-btn gantt-stage-btn" data-stage="FR" onclick="setFilter('FR',this)">Fräsen</button>
+          <button class="toggle-btn gantt-stage-btn" data-stage="MO" onclick="setFilter('MO',this)">Montage</button>
+          <button class="toggle-btn gantt-stage-btn" data-stage="LI" onclick="setFilter('LI',this)">Lieferung</button>
+        </div>
+        <button class="gantt-modal-close" onclick="closeGanttModal()" title="Schließen">✕</button>
+      </div>
+    </div>
+    <div class="gantt-modal-body">
+      <div class="gantt-wrap"><table class="gantt" id="ganttTableModal"></table></div>
+    </div>
+  </div>
+</div>
+
 <script>
 
 // ═══════════════════════════════════════════════════════════
@@ -3387,6 +3426,45 @@ function toggleDoneAndSave(stage, ident, year, kw) {
 }
 
 // Shift a Liefertermin week by +/- 1 directly from Gantt drag
+// Drag state
+let _dragArt = null, _dragKw = null, _dragYear = null;
+
+function handleGanttDragStart(event, art, kw, year) {
+  _dragArt = art; _dragKw = kw; _dragYear = year;
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', art + '|' + kw + '|' + year);
+}
+
+function handleGanttDrop(event, art, toKw, toYear) {
+  event.preventDefault();
+  if (!_dragArt) return;
+  // Only allow dropping on same artikel's cells
+  if (_dragArt !== art) return;
+  if (_dragKw === toKw && _dragYear === toYear) return;
+  // Move the liefertermin week
+  const arr = PLAN[art].liefertermin;
+  const idx = arr.findIndex(w => w.kw === _dragKw && w.year === _dragYear);
+  if (idx === -1) return;
+  const existing = arr.findIndex(w => w.kw === toKw && w.year === toYear);
+  if (existing !== -1) {
+    arr[existing].menge += arr[idx].menge;
+    arr.splice(idx, 1);
+  } else {
+    arr[idx].kw = toKw;
+    arr[idx].year = toYear;
+  }
+  if (DRAFT[art]) DRAFT[art].liefertermin = JSON.parse(JSON.stringify(arr));
+  _dragArt = null;
+  renderAll();
+  if (typeof apiSavePlan === 'function' && AUTH_TOKEN) {
+    apiSavePlan(PLAN, DONE_STATUS).catch(e => console.warn('Drag save failed:', e.message));
+  }
+}
+
+function handleGanttDropEmpty(event, art, toKw, toYear) {
+  handleGanttDrop(event, art, toKw, toYear);
+}
+
 function shiftLieferterminKW(art, fromKw, fromYear, direction) {
   const arr = PLAN[art].liefertermin;
   const idx = arr.findIndex(w => w.kw === fromKw && w.year === fromYear);
@@ -3469,7 +3547,37 @@ function setFilter(f, btn) {
   });
   renderAll();
 }
+function openGanttModal() {
+  const modal = document.getElementById('ganttModal');
+  if (!modal) return;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Render Gantt into the modal table
+  const D = computeDerived();
+  renderGanttInto(D, 'ganttTableModal');
+}
+
+function closeGanttModal() {
+  const modal = document.getElementById('ganttModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close modal when clicking backdrop
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('ganttModal');
+  if (modal) modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeGanttModal();
+  });
+});
+
 function setView(v, btn) {
+  // Gantt opens as a modal overlay instead of inline
+  if (v === 'gantt') {
+    openGanttModal();
+    return;
+  }
   // If entering an editing tab with no unsaved changes, refresh the draft from
   // PLAN so any changes made elsewhere (e.g. the "1 Woche früher" quick action) are visible.
   if ((v === 'bom' || v === 'input') && !draftDirty) {
@@ -4306,6 +4414,10 @@ function renderCapacityChart(weeks, moMap, cap, capWarn) {
 // GANTT
 // ─────────────────────────────────────────────
 function renderGantt(D) {
+  renderGanttInto(D, 'ganttTable');
+}
+
+function renderGanttInto(D, tableId) {
   const weeks = [];
   for (let i = 0; i < KW_WINDOW; i++) {
     let k = CURRENT_KW + i, y = CURRENT_YEAR;
@@ -4345,13 +4457,24 @@ function renderGantt(D) {
         const w = d.liefertermin.find(x => x.year===year && x.kw===kw);
         const liDone = w && isDone('LI', art, year, kw);
         if (w) {
-          html += \`<td class="stage-cell gantt-li-cell">
+          html += \`<td class="stage-cell gantt-li-cell"
+            ondragover="event.preventDefault();this.classList.add('drag-target')"
+            ondragleave="this.classList.remove('drag-target')"
+            ondrop="this.classList.remove('drag-target');handleGanttDrop(event,'\${art}',\${kw},\${year})">
             <span class="gantt-shift-btn" onclick="shiftLieferterminKW('\${art}',\${kw},\${year},-1)" title="1 Woche früher">◀</span>
-            <span class="cb cb-li\${liDone?' done-cell':''}" title="\${liDone?'Nicht erledigt':'Erledigt markieren'}" onclick="toggleDoneAndSave('LI','\${art}',\${year},\${kw})">LI:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>
+            <span class="cb cb-li\${liDone?' done-cell':''} draggable"
+              draggable="true"
+              ondragstart="handleGanttDragStart(event,'\${art}',\${kw},\${year})"
+              ondragend="document.querySelectorAll('.drag-target').forEach(e=>e.classList.remove('drag-target'))"
+              title="\${liDone?'Nicht erledigt':'Erledigt — zum Verschieben ziehen'}"
+              onclick="toggleDoneAndSave('LI','\${art}',\${year},\${kw})">LI:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>
             <span class="gantt-shift-btn" onclick="shiftLieferterminKW('\${art}',\${kw},\${year},1)" title="1 Woche später">▶</span>
           </td>\`;
         } else {
-          html += \`<td class="stage-cell"></td>\`;
+          html += \`<td class="stage-cell gantt-li-cell"
+            ondragover="event.preventDefault();this.classList.add('drag-target')"
+            ondragleave="this.classList.remove('drag-target')"
+            ondrop="this.classList.remove('drag-target');handleGanttDropEmpty(event,'\${art}',\${kw},\${year})">\</td>\`;
         }
       });
       html += '</tr>';
@@ -4391,7 +4514,7 @@ function renderGantt(D) {
     }
   });
   html += '</tbody>';
-  document.getElementById('ganttTable').innerHTML = html;
+  document.getElementById(tableId).innerHTML = html;
 }
 
 // ─────────────────────────────────────────────
@@ -4700,8 +4823,10 @@ function renderAll() {
   if (activeView === 'dashboard') renderDashboard(D);
   if (activeView === 'bom') renderBomTable();
   if (activeView === 'input') renderInputTable();
-  if (activeView === 'gantt') renderGantt(D);
   if (activeView === 'kwoverview') renderTzFrOverview(D);
+  // Re-render Gantt modal if it's open
+  const modal = document.getElementById('ganttModal');
+  if (modal && modal.classList.contains('open')) renderGanttInto(D, 'ganttTableModal');
 }
 
 if (CURRENT_USER) {
