@@ -2539,8 +2539,14 @@ app.post('/api/logout', auth, (req, res) => {
 });
 
 app.get('/api/plan', async (req, res) => {
-  try { res.json(await githubGet()); }
-  catch(e) { res.status(500).json({ error: e.message }); }
+  try {
+    const data = await githubGet();
+    res.json(data);
+  } catch(e) {
+    console.error('githubGet failed, serving initial data:', e.message);
+    // Always return something so the frontend has data to show
+    res.json({ plan: INITIAL_DATA, done_status: {}, updated_at: new Date().toISOString(), updated_by: 'system' });
+  }
 });
 
 app.post('/api/plan', async (req, res) => {
@@ -3282,11 +3288,18 @@ document.getElementById('currentKW').textContent = 'KW ' + CURRENT_KW + ' / ' + 
 (async function start() {
   try {
     const loaded = await apiLoadPlan();
-    PLAN = loaded.plan;
-    DRAFT = JSON.parse(JSON.stringify(PLAN));
-    if (loaded.done_status && Object.keys(loaded.done_status).length > 0) DONE_STATUS = loaded.done_status;
-    showToast('✓ Daten geladen', false);
+    // Handle different response shapes
+    const planData = loaded.plan || loaded;
+    if (planData && typeof planData === 'object' && Object.keys(planData).length > 0) {
+      PLAN = planData;
+      DRAFT = JSON.parse(JSON.stringify(PLAN));
+    }
+    if (loaded.done_status && Object.keys(loaded.done_status).length > 0) {
+      DONE_STATUS = loaded.done_status;
+    }
+    showToast('✓ Daten geladen — ' + Object.keys(PLAN).length + ' Artikel', false);
   } catch(e) {
+    console.error('Load error:', e);
     showToast('⚠ Konnte Daten nicht laden: ' + e.message, true);
   }
   const saveBtn = document.getElementById('globalSaveBtn');
