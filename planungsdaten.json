@@ -2617,11 +2617,9 @@
       "done": false
     },
     "FR|2341.2013|2026|34": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 24
+      "done": false
     }
   },
-  "updated_at": "2026-08-21T06:37:07.612Z",
+  "updated_at": "2026-08-21T06:37:08.565Z",
   "updated_by": "Modu"
 }
