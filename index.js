@@ -1,9 +1,12 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ─── Initial data (embedded) ──────────────────────────────────
 const INITIAL_DATA = {
   "2341.9011": {
     "liefertermin": [],
@@ -2454,110 +2457,69 @@ const INITIAL_DATA = {
   }
 };
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_REPO  = process.env.GITHUB_REPO || 'vishalmodgill4712-hub/bw-planungstool';
-const DATA_FILE    = 'planungsdaten.json';
-const GITHUB_API   = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE}`;
+// ─── Local file storage ───────────────────────────────────────
+// Data is saved to a local JSON file on the server.
+// On Render free plan this resets when server restarts.
+// Upgrade to Starter + Disk for permanent storage.
+const DATA_FILE = path.join(__dirname, 'planungsdaten.json');
 
-let memoryCache = null;
-const sessions  = {};
-
-async function githubGet() {
-  if (memoryCache) return memoryCache;
-  console.log('Loading from GitHub:', GITHUB_REPO + '/' + DATA_FILE);
-  const r = await fetch(GITHUB_API, {
-    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
-  });
-  console.log('GitHub GET status:', r.status);
-  if (r.status === 404) {
-    console.log('No saved data yet — using initial data');
-    memoryCache = { plan: INITIAL_DATA, done_status: {}, updated_at: new Date().toISOString(), updated_by: 'system', sha: null };
-    return memoryCache;
+function loadData() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      const raw = fs.readFileSync(DATA_FILE, 'utf8');
+      const parsed = JSON.parse(raw);
+      console.log('Loaded saved data:', Object.keys(parsed.plan || {}).length, 'Artikel');
+      return parsed;
+    }
+  } catch(e) {
+    console.error('Error loading data file:', e.message);
   }
-  if (!r.ok) throw new Error('GitHub GET failed: ' + r.status);
-  const file = await r.json();
-  const content = Buffer.from(file.content, 'base64').toString('utf8');
-  const parsed = JSON.parse(content);
-  console.log('Loaded from GitHub — Artikel:', Object.keys(parsed.plan || {}).length, '| By:', parsed.updated_by);
-  memoryCache = { ...parsed, sha: file.sha };
-  return memoryCache;
+  console.log('No saved data found, using initial data');
+  return { plan: INITIAL_DATA, done_status: {}, updated_at: new Date().toISOString(), updated_by: 'system' };
 }
 
-async function githubSave(planData, doneStatus, username) {
-  const now = new Date().toISOString();
-  const payload = { plan: planData, done_status: doneStatus || {}, updated_at: now, updated_by: username };
-  const content = Buffer.from(JSON.stringify(payload, null, 2)).toString('base64');
-  if (!memoryCache || !memoryCache.sha) { try { await githubGet(); } catch(e) {} }
-  const body = {
-    message: `Gespeichert von ${username}`,
-    content,
-    ...(memoryCache && memoryCache.sha ? { sha: memoryCache.sha } : {})
+function saveData(plan, doneStatus, username) {
+  const payload = {
+    plan,
+    done_status: doneStatus || {},
+    updated_at: new Date().toISOString(),
+    updated_by: username || 'user'
   };
-  const r = await fetch(GITHUB_API, {
-    method: 'PUT',
-    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
-    body: JSON.stringify(body)
-  });
-  if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
-  const result = await r.json();
-  memoryCache = { ...payload, sha: result.content.sha };
-  console.log('Saved to GitHub by', username);
-  return { ok: true, saved_at: now };
+  fs.writeFileSync(DATA_FILE, JSON.stringify(payload, null, 2), 'utf8');
+  console.log('Saved data:', Object.keys(plan).length, 'Artikel by', username);
+  return payload;
 }
 
-const USERS = [
-  { name: 'Modu',        password: 'planung2026', role: 'planer' },
-  { name: 'Planer',      password: 'planer123',   role: 'planer' },
-  { name: 'Mitarbeiter', password: 'team123',     role: 'mitarbeiter' },
-];
-
+// ─── Middleware ───────────────────────────────────────────────
 app.use(express.json({ limit: '20mb' }));
 
-function auth(req, res, next) {
-  const s = sessions[req.headers['x-auth-token']];
-  if (!s) return res.status(401).json({ error: 'Not authenticated' });
-  req.user = s;
-  next();
-}
-function planersOnly(req, res, next) {
-  if (req.user.role !== 'planer') return res.status(403).json({ error: 'Planer only' });
-  next();
-}
-
-app.post('/api/login', (req, res) => {
-  const { username='', password='' } = req.body || {};
-  const user = USERS.find(u => u.name.toLowerCase() === username.toLowerCase().trim() && u.password === password);
-  if (!user) return res.status(401).json({ error: 'Benutzername oder Passwort falsch.' });
-  const token = crypto.randomBytes(32).toString('hex');
-  sessions[token] = { username: user.name, role: user.role };
-  res.json({ token, username: user.name, role: user.role });
-});
-
-app.post('/api/logout', auth, (req, res) => {
-  delete sessions[req.headers['x-auth-token']];
-  res.json({ ok: true });
-});
-
-app.get('/api/plan', async (req, res) => {
+// ─── API Routes ───────────────────────────────────────────────
+app.get('/api/plan', (req, res) => {
   try {
-    const data = await githubGet();
-    res.json(data);
+    res.json(loadData());
   } catch(e) {
-    console.error('githubGet failed, serving initial data:', e.message);
-    // Always return something so the frontend has data to show
     res.json({ plan: INITIAL_DATA, done_status: {}, updated_at: new Date().toISOString(), updated_by: 'system' });
   }
 });
 
-app.post('/api/plan', async (req, res) => {
-  const { plan, done_status } = req.body || {};
-  if (!plan) return res.status(400).json({ error: 'No data' });
-  try { res.json(await githubSave(plan, done_status || {}, req.user.username)); }
-  catch(e) { res.status(500).json({ error: e.message }); }
+app.post('/api/plan', (req, res) => {
+  try {
+    const { plan, done_status } = req.body || {};
+    if (!plan || Object.keys(plan).length === 0) {
+      return res.status(400).json({ error: 'No data provided' });
+    }
+    const saved = saveData(plan, done_status, 'user');
+    res.json({ ok: true, saved_at: saved.updated_at });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
-app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true, timestamp: new Date().toISOString() });
+});
 
+// ─── Frontend ─────────────────────────────────────────────────
 const FRONTEND_HTML = `<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -3317,13 +3279,8 @@ app.use((req, res) => {
   res.send(FRONTEND_HTML);
 });
 
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log('BW Planungstool running on port', PORT);
-  if (!GITHUB_TOKEN) { console.error('GITHUB_TOKEN not set!'); return; }
-  try {
-    const data = await githubGet();
-    console.log(data.sha ? 'GitHub connected OK' : 'GitHub connected — no saved data yet');
-  } catch(e) {
-    console.error('GitHub connection failed:', e.message);
-  }
+  const data = loadData();
+  console.log('Ready with', Object.keys(data.plan || {}).length, 'Artikel');
 });
