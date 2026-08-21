@@ -136,7 +136,7 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 37,
+          "kw": 38,
           "menge": 50
         }
       ],
@@ -2620,6 +2620,6 @@
       "done": false
     }
   },
-  "updated_at": "2026-08-21T06:49:36.005Z",
+  "updated_at": "2026-08-21T06:49:37.701Z",
   "updated_by": "Modu"
 }
