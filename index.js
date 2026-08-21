@@ -1,2526 +1,33 @@
 const express = require('express');
 const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
+const DATA_FILE = 'data.json';
 
-// ─── Initial data (embedded) ──────────────────────────────────
-const INITIAL_DATA = {
-  "2341.9011": {
-    "liefertermin": [],
-    "tz_bom": [
-      {
-        "stage_art": "2341.1011",
-        "menge_per_stk": 0.5,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 38
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2341.2011",
-        "menge_per_stk": 1,
-        "maschine": "M3050",
-        "s_zt": 3,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2341.9012": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 25,
-        "menge": 10
-      },
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 10
-      },
-      {
-        "year": 2026,
-        "kw": 28,
-        "menge": 10
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 40
-      },
-      {
-        "year": 2026,
-        "kw": 35,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 37,
-        "menge": 10
-      },
-      {
-        "year": 2026,
-        "kw": 38,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 40,
-        "menge": 10
-      },
-      {
-        "year": 2026,
-        "kw": 41,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 43,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 45,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 46,
-        "menge": 10
-      },
-      {
-        "year": 2026,
-        "kw": 47,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 48,
-        "menge": 10
-      },
-      {
-        "year": 2026,
-        "kw": 49,
-        "menge": 10
-      },
-      {
-        "year": 2026,
-        "kw": 50,
-        "menge": 10
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2341.1011",
-        "menge_per_stk": 0.5,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 38
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2341.2013",
-        "menge_per_stk": 1,
-        "maschine": "M3050",
-        "s_zt": 3,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2342.9012": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 37,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 40,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 47,
-        "menge": 50
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2342.1012",
-        "menge_per_stk": 0.25,
-        "maschine": "M1585",
-        "s_zt": 4,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2342.2012",
-        "menge_per_stk": 1,
-        "maschine": "M3050",
-        "s_zt": 1.5,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2454.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 25,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 28,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 38,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 41,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 47,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 50,
-        "menge": 50
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2454.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 1.5,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2454.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1585",
-        "s_zt": 1.25,
-        "r_zt": 35
-      },
-      {
-        "stage_art": "2454.1003",
-        "menge_per_stk": 1,
-        "maschine": "M1585",
-        "s_zt": 1.25,
-        "r_zt": 35
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2454.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1429",
-        "s_zt": 5.17,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2454.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 1.78,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2454.2003",
-        "menge_per_stk": 1,
-        "maschine": "M1567",
-        "s_zt": 1.78,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "9000001"
-  },
-  "2455.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 24,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 37,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 41,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 47,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 50,
-        "menge": 50
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2455.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1585",
-        "s_zt": 0.75,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2455.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 2.98,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2456.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 24,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 36,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 39,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 43,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 46,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 49,
-        "menge": 50
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2456.1001",
-        "menge_per_stk": 0.5,
-        "maschine": "M1585",
-        "s_zt": 1.5,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2456.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3.08,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2457.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 25,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 28,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 35,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 38,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 42,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 45,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 48,
-        "menge": 50
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2457.1001",
-        "menge_per_stk": 0.5,
-        "maschine": "M2735",
-        "s_zt": 1.5,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2457.2001",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 1.15,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2458.9003": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 23,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 24,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 60
-      },
-      {
-        "year": 2026,
-        "kw": 36,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 37,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 38,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 40,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 41,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 42,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 45,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 46,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 47,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 49,
-        "menge": 20
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2458.1001",
-        "menge_per_stk": 0.25,
-        "maschine": "M2735",
-        "s_zt": 3,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2458.2003",
-        "menge_per_stk": 1,
-        "maschine": "M1429",
-        "s_zt": 1.79,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2459.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 24,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 38,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 40,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 47,
-        "menge": 50
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2459.1001",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 0.75,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2459.2001",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 2.5,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.14,
-    "mo_a_platz": "EG 12"
-  },
-  "2460.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 24,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 37,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 40,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 47,
-        "menge": 50
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2460.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1585",
-        "s_zt": 2.5,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2460.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3.07,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2461.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 25,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 28,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 35,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 38,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 42,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 45,
-        "menge": 50
-      },
-      {
-        "year": 2026,
-        "kw": 48,
-        "menge": 50
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2461.1001",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 1.67,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2461.2001",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 1.4,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2521.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 23,
-        "menge": 24
-      },
-      {
-        "year": 2026,
-        "kw": 48,
-        "menge": 24
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2521.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2521.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2521.1003",
-        "menge_per_stk": 0.25,
-        "maschine": "M435",
-        "s_zt": 1.5,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2521.1004",
-        "menge_per_stk": 0.5,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2521.1005",
-        "menge_per_stk": 0.5,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2521.2001",
-        "menge_per_stk": 1,
-        "maschine": "M2080",
-        "s_zt": 4,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2521.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1429",
-        "s_zt": 2,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2521.2003",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 0.4,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2521.2004",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 4,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2521.2005",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2521.2006",
-        "menge_per_stk": 1,
-        "maschine": "unbekannt",
-        "s_zt": 3,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.875,
-    "mo_a_platz": "EG 12"
-  },
-  "2522.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2522.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1585",
-        "s_zt": 4,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2521.1003",
-        "menge_per_stk": 0.5,
-        "maschine": "M435",
-        "s_zt": 1.5,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2522.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2521.2003",
-        "menge_per_stk": 2,
-        "maschine": "M3045",
-        "s_zt": 0.4,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.28,
-    "mo_a_platz": "EG 12"
-  },
-  "2522.9002": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2521.1003",
-        "menge_per_stk": 0.5,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2522.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2522.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2521.2003",
-        "menge_per_stk": 2,
-        "maschine": "M3045",
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": null
-  },
-  "2522.9003": {
-    "liefertermin": [],
-    "tz_bom": [
-      {
-        "stage_art": "2522.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2521.1003",
-        "menge_per_stk": 0.5,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2522.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2521.2003",
-        "menge_per_stk": 2,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": null
-  },
-  "2523.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 24
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2523.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2523.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2521.1005",
-        "menge_per_stk": 0.5,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2521.1004",
-        "menge_per_stk": 0.5,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2523.2001",
-        "menge_per_stk": 1,
-        "maschine": "M2080",
-        "s_zt": 4,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2523.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 2,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2523.2005",
-        "menge_per_stk": 1,
-        "maschine": "unbekannt",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2523.2006",
-        "menge_per_stk": 1,
-        "maschine": "unbekannt",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2523.2004",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3,
-        "r_zt": 30
-      }
-    ],
-    "mo_s_zt": 0.875,
-    "mo_a_platz": "EG 12"
-  },
-  "2524.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 23,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 39,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 48,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2524.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1585",
-        "s_zt": 3,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2521.1003",
-        "menge_per_stk": 0.25,
-        "maschine": "M435",
-        "s_zt": 1.5,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2524.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3.2,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2521.2003",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 0.4,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.5384615384615384,
-    "mo_a_platz": "EG 12"
-  },
-  "2525.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 38,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 48,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2525.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1585",
-        "s_zt": 4,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2525.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1585",
-        "s_zt": 4,
-        "r_zt": 90
-      },
-      {
-        "stage_art": "2525.1003",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2525.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2525.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1429",
-        "s_zt": 3.5,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2525.2003",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 1.33,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2525.2004",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 1.33,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.5384615384615384,
-    "mo_a_platz": "EG 12"
-  },
-  "2541.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 24,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 28,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 35,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 42,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 47,
-        "menge": 20
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2541.1001",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 3,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2541.2001",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 1.67,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2541.9002": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 25,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 35,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 39,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 44,
-        "menge": 20
-      },
-      {
-        "year": 2026,
-        "kw": 50,
-        "menge": 20
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2541.1001",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 3,
-        "r_zt": 90
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2541.2002",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 1.53,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2544.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 24
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2544.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2544.1002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2544.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2544.2002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.54,
-    "mo_a_platz": "#N/A"
-  },
-  "2601.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 39,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 45,
-        "menge": 15
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2601.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2601.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2601.2001",
-        "menge_per_stk": 1,
-        "maschine": "M2080",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2601.2002",
-        "menge_per_stk": 1,
-        "maschine": "M2080",
-        "s_zt": 3,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2602.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 39,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 46,
-        "menge": 15
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2602.1001",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 3,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2602.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2602.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3.25,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2602.2002",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 2.08,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.4666666666666667,
-    "mo_a_platz": "EG 12"
-  },
-  "2603.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 38,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 45,
-        "menge": 15
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2603.1001",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 3,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2603.2001",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 2.63,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2603.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 1.02,
-        "r_zt": 30
-      }
-    ],
-    "mo_s_zt": 0.875,
-    "mo_a_platz": "EG 12"
-  },
-  "2604.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 28,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 39,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 46,
-        "menge": 15
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2604.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2604.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2604.1003",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2604.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2604.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2604.2003",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 4,
-        "r_zt": 30
-      }
-    ],
-    "mo_s_zt": 1.75,
-    "mo_a_platz": "EG 12"
-  },
-  "2605.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 39,
-        "menge": 15
-      },
-      {
-        "year": 2026,
-        "kw": 46,
-        "menge": 15
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2605.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2605.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2605.1003",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 3,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2605.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 4.17,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2605.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1429",
-        "s_zt": 2.5,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2603.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 1.02,
-        "r_zt": 30
-      },
-      {
-        "stage_art": "2605.2003",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 1.4,
-    "mo_a_platz": "EG 12"
-  },
-  "2664.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 28,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 45,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2664.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 3,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2664.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2664.1003",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2664.1004",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2664.1005",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2664.2001",
-        "menge_per_stk": 1,
-        "maschine": "M2080",
-        "s_zt": 5,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2664.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 2,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2664.2003",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 2,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2664.2004",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 2,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2664.2005",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 1,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.84,
-    "mo_a_platz": "EG 12"
-  },
-  "2665.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 24,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 37,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 50,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2665.1001",
-        "menge_per_stk": 1,
-        "maschine": "M1585",
-        "s_zt": 6,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2665.1002",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2665.1003",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2665.1004",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2665.2001",
-        "menge_per_stk": 1,
-        "maschine": "M2080",
-        "s_zt": 2.3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2665.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 2.03,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2665.2003",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 2,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2665.2004",
-        "menge_per_stk": 1,
-        "maschine": "unbekannt",
-        "s_zt": 2,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.84,
-    "mo_a_platz": "EG 12"
-  },
-  "2666.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 40,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2666.1001",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 2.5,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2666.1002",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 2.5,
-        "r_zt": 60
-      },
-      {
-        "stage_art": "2666.1003",
-        "menge_per_stk": 1,
-        "maschine": "M1055",
-        "s_zt": 4,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2666.2001",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2666.2002",
-        "menge_per_stk": 1,
-        "maschine": "M1056",
-        "s_zt": 3,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2666.2003",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 2,
-        "r_zt": 45
-      },
-      {
-        "stage_art": "2666.2004",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 2,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 1.1666666666666667,
-    "mo_a_platz": "EG 12"
-  },
-  "2667.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 39,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2667.1001",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 3,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2667.2001",
-        "menge_per_stk": 1,
-        "maschine": "M3045",
-        "s_zt": 2.5,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2668.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 25,
-        "menge": 25
-      },
-      {
-        "year": 2026,
-        "kw": 38,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2668.1001",
-        "menge_per_stk": 1,
-        "maschine": "M2735",
-        "s_zt": 3,
-        "r_zt": 60
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2668.2001",
-        "menge_per_stk": 1,
-        "maschine": "unbekannt",
-        "s_zt": 3.5,
-        "r_zt": 45
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": "EG 12"
-  },
-  "2669.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 25
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2669.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2669.1002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2669.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2669.2002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.59,
-    "mo_a_platz": null
-  },
-  "2720.9001": {
-    "liefertermin": [],
-    "tz_bom": [
-      {
-        "stage_art": "2720.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2720.1002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2720.1003",
-        "menge_per_stk": 0.5,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2720.1004",
-        "menge_per_stk": 0.5,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2720.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2720.2002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2720.2003",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2720.2004",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2720.2005",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.88,
-    "mo_a_platz": null
-  },
-  "2721.9001": {
-    "liefertermin": [],
-    "tz_bom": [
-      {
-        "stage_art": "2720.1003",
-        "menge_per_stk": 0.5,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2720.1004",
-        "menge_per_stk": 0.5,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2721.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2721.1002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2721.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2721.2002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2721.2003",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2721.2004",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2721.2005",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.88,
-    "mo_a_platz": null
-  },
-  "2724.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 10
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2724.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2724.1002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2724.1003",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2724.1004",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2724.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2724.2002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2724.2003",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2724.2004",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.42,
-    "mo_a_platz": null
-  },
-  "2725.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 10
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2725.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2725.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": null
-  },
-  "2727.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 24,
-        "menge": 4
-      },
-      {
-        "year": 2026,
-        "kw": 29,
-        "menge": 6
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2727.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2727.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.1,
-    "mo_a_platz": null
-  },
-  "2728.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 27,
-        "menge": 10
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2728.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2728.1002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2728.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      },
-      {
-        "stage_art": "2728.2002",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.1,
-    "mo_a_platz": null
-  },
-  "2729.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 10
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2729.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2729.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": null
-  },
-  "2730.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 10
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2730.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2730.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": null
-  },
-  "2731.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 10
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2731.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2731.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": null
-  },
-  "2732.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 10
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2732.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2732.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": null
-  },
-  "2733.9001": {
-    "liefertermin": [
-      {
-        "year": 2026,
-        "kw": 26,
-        "menge": 10
-      }
-    ],
-    "tz_bom": [
-      {
-        "stage_art": "2733.1001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "fr_bom": [
-      {
-        "stage_art": "2733.2001",
-        "menge_per_stk": 1,
-        "maschine": null,
-        "s_zt": null,
-        "r_zt": null
-      }
-    ],
-    "mo_s_zt": 0.7,
-    "mo_a_platz": null
-  }
-};
+app.use(express.json({limit: '20mb'}));
 
-// ─── Local file storage ───────────────────────────────────────
-// Data is saved to a local JSON file on the server.
-// On Render free plan this resets when server restarts.
-// Upgrade to Starter + Disk for permanent storage.
-const DATA_FILE = path.join(__dirname, 'planungsdaten.json');
-
-function loadData() {
+app.get('/api/load', (req, res) => {
   try {
     if (fs.existsSync(DATA_FILE)) {
-      const raw = fs.readFileSync(DATA_FILE, 'utf8');
-      const parsed = JSON.parse(raw);
-      console.log('Loaded saved data:', Object.keys(parsed.plan || {}).length, 'Artikel');
-      return parsed;
+      res.json(JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')));
+    } else {
+      res.json({});
     }
   } catch(e) {
-    console.error('Error loading data file:', e.message);
+    res.json({});
   }
-  console.log('No saved data found, using initial data');
-  return { plan: INITIAL_DATA, done_status: {}, updated_at: new Date().toISOString(), updated_by: 'system' };
-}
+});
 
-function saveData(plan, doneStatus, username) {
-  const payload = {
-    plan,
-    done_status: doneStatus || {},
-    updated_at: new Date().toISOString(),
-    updated_by: username || 'user'
-  };
-  fs.writeFileSync(DATA_FILE, JSON.stringify(payload, null, 2), 'utf8');
-  console.log('Saved data:', Object.keys(plan).length, 'Artikel by', username);
-  return payload;
-}
-
-// ─── Middleware ───────────────────────────────────────────────
-app.use(express.json({ limit: '20mb' }));
-
-// ─── API Routes ───────────────────────────────────────────────
-app.get('/api/plan', (req, res) => {
+app.post('/api/save', (req, res) => {
   try {
-    res.json(loadData());
+    fs.writeFileSync(DATA_FILE, JSON.stringify(req.body), 'utf8');
+    res.json({ok: true});
   } catch(e) {
-    res.json({ plan: INITIAL_DATA, done_status: {}, updated_at: new Date().toISOString(), updated_by: 'system' });
+    res.status(500).json({error: e.message});
   }
 });
 
-app.post('/api/plan', (req, res) => {
-  try {
-    const { plan, done_status } = req.body || {};
-    if (!plan || Object.keys(plan).length === 0) {
-      return res.status(400).json({ error: 'No data provided' });
-    }
-    const saved = saveData(plan, done_status, 'user');
-    res.json({ ok: true, saved_at: saved.updated_at });
-  } catch(e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-app.get('/api/health', (req, res) => {
-  res.json({ ok: true, timestamp: new Date().toISOString() });
-});
-
-// ─── Frontend ─────────────────────────────────────────────────
-const FRONTEND_HTML = `<!DOCTYPE html>
+const HTML = `<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -2544,7 +51,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   code, .mono { font-family: var(--font-mono); }
   h1, h2, h3, .sec-title, .cap-title, .logo-text { font-family: var(--font-head); }
 
-  header { background: var(--bg); border-bottom: 2px solid var(--accent); padding: 12px 28px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-sm); }
+  header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 28px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-sm); }
   .logo { font-size: 15px; font-weight: 700; letter-spacing: -.1px; color: var(--text); display: flex; align-items: center; gap: 12px; }
   .logo img.logo-mark-img { height: 34px; width: auto; display: block; }
   .logo-text { font-family: var(--font-head); font-weight: 700; font-size: 14px; letter-spacing: .2px; color: var(--text); line-height: 1.25; }
@@ -2560,7 +67,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .main { display: flex; height: calc(100vh - 58px); overflow: hidden; }
 
   .sidebar { width: 252px; min-width: 252px; background: var(--bg); border-right: 1px solid var(--border); overflow-y: auto; padding: 18px 12px; display: flex; flex-direction: column; gap: 18px; }
-  .sb-h { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent); font-weight: 700; padding: 0 6px 0 8px; margin-bottom: 8px; border-left: 2px solid var(--accent); }
+  .sb-h { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted-light); font-weight: 700; padding: 0 4px; margin-bottom: 6px; }
   .filter-group { display: flex; flex-direction: column; gap: 3px; }
   .filter-btn { background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); padding: 7px 10px; color: var(--muted); cursor: pointer; text-align: left; font-size: 12px; font-weight: 500; transition: all .12s; display: flex; align-items: center; gap: 8px; }
   .filter-btn:hover { background: var(--surface); color: var(--text); }
@@ -2590,8 +97,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .content { flex: 1; overflow: auto; padding: 22px 26px; }
 
   .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
-  .sum-card { background: var(--card); border: 1px solid var(--border); border-top: 3px solid transparent; border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow-sm); transition: border-top-color .15s; }
-  .sum-card:hover { border-top-color: var(--accent); }
+  .sum-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow-sm); }
   .sum-card.alert-card { border-color: var(--danger); background: rgba(220,38,38,.04); }
   .sum-card .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
   .sum-card .val { font-size: 21px; font-weight: 700; font-family: var(--font-mono); letter-spacing: -.3px; }
@@ -2615,16 +121,14 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .cap-detail .ok-txt { color: var(--fest); }
   .cap-detail .warn-txt { color: var(--warn); }
 
-  .view-tabs { display: flex; gap: 2px; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px; width: fit-content; }
-  .view-tab { background: transparent; border: none; border-radius: 6px; color: var(--muted); font-size: 12.5px; font-weight: 500; padding: 8px 16px; cursor: pointer; transition: all .12s; position: relative; }
+  .view-tabs { display: flex; gap: 4px; margin-bottom: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px; width: fit-content; }
+  .view-tab { background: transparent; border: none; border-radius: 6px; color: var(--muted); font-size: 12.5px; font-weight: 500; padding: 7px 15px; cursor: pointer; transition: all .12s; }
   .view-tab:hover { color: var(--text); }
-  .view-tab.active { background: var(--bg); color: var(--accent); font-weight: 700; box-shadow: var(--shadow-sm); }
-  .view-tab.active::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 20px; height: 2px; background: var(--accent); border-radius: 2px; }
+  .view-tab.active { background: var(--bg); color: var(--text); font-weight: 600; box-shadow: var(--shadow-sm); }
 
   .gantt-wrap { overflow-x: auto; }
   table.gantt { width: 100%; border-collapse: collapse; min-width: 1300px; }
   .gantt th { background: var(--surface); border: 1px solid var(--border); padding: 7px 8px; font-size: 10.5px; font-weight: 600; text-align: center; color: var(--muted); white-space: nowrap; }
-  #ganttTableModal thead { position: sticky; top: 0; z-index: 10; }
   .gantt th.kw-fest { color: var(--fest); }
   .gantt th.kw-flex { color: var(--warn); }
   .gantt th.kw-curr { color: var(--accent); border-bottom: 2px solid var(--accent); }
@@ -2642,14 +146,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   td.info-cell { text-align: center; color: var(--muted); font-size: 11px; }
   td.stage-cell { text-align: center; padding: 2px 3px; }
 
-  .cb { display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 9.5px; font-weight: 700; padding: 3px 6px; letter-spacing: .2px; min-width: 38px; gap: 2px; margin: 1px; position: relative; cursor: pointer; }
-  .cb:hover { opacity: .8; transform: scale(1.05); transition: all .1s; }
-  .gantt-li-cell { display: flex; align-items: center; justify-content: center; gap: 2px; }
-  .gantt-shift-btn { font-size: 10px; color: var(--muted); cursor: pointer; padding: 2px 3px; border-radius: 3px; opacity: 0; transition: opacity .15s; line-height: 1; }
-  .gantt-li-cell:hover .gantt-shift-btn { opacity: 1; }
-  .gantt-shift-btn:hover { background: var(--accent); color: #fff; opacity: 1 !important; }
-  .cb.done-cell { opacity: .5; }
-  .cb.done-cell::after { content: '✓'; position: absolute; top: -6px; right: -6px; background: var(--fest); color: #fff; border-radius: 50%; width: 14px; height: 14px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+  .cb { display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 9.5px; font-weight: 700; padding: 3px 6px; letter-spacing: .2px; min-width: 38px; gap: 2px; margin: 1px; }
   .cb-wide { flex-direction: column; min-width: 58px; font-family: Calibri, 'Segoe UI', Arial, sans-serif; line-height: 1.5; padding: 4px 6px; text-align: center; }
   .cb-tz { background: rgba(139,92,246,.18); border: 1px solid rgba(139,92,246,.45); color: #6d28d9; }
   .cb-fr { background: rgba(245,158,11,.14); border: 1px solid rgba(245,158,11,.4); color: #92400e; }
@@ -2804,44 +301,6 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   .tzfr-kw-chip.late { border-color: var(--danger); color: var(--danger); }
 
   .overload-table thead th { color: var(--danger); }
-
-  /* ── Gantt Full-Screen Modal ───────────────────────────────── */
-  #ganttModal { display:none; position:fixed; inset:0; z-index:2000; background:rgba(10,15,25,.75); backdrop-filter:blur(4px); }
-  #ganttModal.open { display:flex; flex-direction:column; }
-  .gantt-modal-inner { background:#f4f7fb; margin:16px; border-radius:14px; display:flex; flex-direction:column; flex:1; overflow:hidden; box-shadow:0 16px 64px rgba(0,0,0,.35); }
-  .gantt-modal-header { background:#006EB7; padding:14px 22px; display:flex; align-items:center; gap:14px; flex-shrink:0; }
-  .gantt-modal-title { font-family:Calibri,Arial,sans-serif; font-size:15px; font-weight:800; color:#fff; letter-spacing:.8px; text-transform:uppercase; flex:1; }
-  .gantt-modal-close { background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3); border-radius:8px; width:34px; height:34px; cursor:pointer; font-size:16px; color:#fff; display:flex; align-items:center; justify-content:center; transition:background .12s; }
-  .gantt-modal-close:hover { background:rgba(220,38,38,.85); border-color:transparent; }
-  .gantt-modal-body { flex:1; overflow:auto; background:#fff; }
-  #ganttTableModal { border-collapse:collapse; width:100%; font-family:Calibri,Arial,sans-serif; }
-  #ganttTableModal thead th { position:sticky; top:0; background:#1e293b; color:#fff; font-size:11px; font-weight:700; padding:9px 8px; text-align:center; white-space:nowrap; z-index:10; border-right:1px solid #334155; }
-  #ganttTableModal thead th.col-art { background:#006EB7; text-align:left; padding-left:16px; font-size:12px; letter-spacing:.3px; min-width:130px; }
-  #ganttTableModal thead th.kw-curr { background:#f59e0b; color:#1c1c1c; font-weight:900; }
-  #ganttTableModal .art-cell { background:#f0f6ff; border-right:3px solid #006EB7; font-size:12px; font-weight:800; color:#006EB7; padding:8px 12px; white-space:nowrap; vertical-align:middle; }
-  #ganttTableModal .stage-row-li > td { background:#f0fdf4; border-bottom:1px solid #bbf7d0; }
-  #ganttTableModal .stage-row-mo > td { background:#eff6ff; border-bottom:1px solid #bfdbfe; }
-  #ganttTableModal .stage-row-fr > td { background:#fffbeb; border-bottom:1px solid #fde68a; }
-  #ganttTableModal .stage-row-tz > td { background:#faf5ff; border-bottom:1px solid #e9d5ff; }
-  #ganttTableModal .stage-cell { padding:4px; text-align:center; vertical-align:middle; border-right:1px solid #e2e8f0; min-width:68px; }
-  #ganttTableModal .gantt-li-cell { display:flex; align-items:center; justify-content:center; gap:2px; }
-  #ganttTableModal .cb { display:inline-flex; align-items:center; justify-content:center; border-radius:6px; font-size:10px; font-weight:800; padding:5px 8px; white-space:nowrap; position:relative; cursor:pointer; font-family:Calibri,Arial,sans-serif; transition:transform .1s,box-shadow .1s; }
-  #ganttTableModal .cb:hover { transform:scale(1.1); box-shadow:0 2px 8px rgba(0,0,0,.2); }
-  #ganttTableModal .cb-li { background:#16a34a; color:#fff; }
-  #ganttTableModal .cb-mo { background:#0369a1; color:#fff; }
-  #ganttTableModal .cb-fr { background:#b45309; color:#fff; }
-  #ganttTableModal .cb-tz { background:#6d28d9; color:#fff; }
-  #ganttTableModal .cb.done-cell { opacity:.4; }
-  #ganttTableModal .cb.done-cell::after { content:'✓'; position:absolute; top:-7px; right:-7px; background:#16a34a; color:#fff; border-radius:50%; width:15px; height:15px; font-size:10px; display:flex; align-items:center; justify-content:center; font-weight:900; border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.2); }
-  #ganttTableModal .cb.draggable { cursor:grab; }
-  #ganttTableModal .stage-cell.drag-target { background:rgba(0,110,183,.15) !important; outline:2px dashed #006EB7; outline-offset:-2px; }
-  #ganttTableModal .fm { display:inline-block; width:5px; height:5px; background:#f59e0b; border-radius:50%; margin-left:3px; vertical-align:middle; }
-
-  /* Drag styles */
-  .cb.draggable { cursor:grab; }
-  .cb.draggable:active { cursor:grabbing; }
-  .cb.drag-over { outline:2px dashed var(--accent); outline-offset:2px; }
-  .stage-cell.drag-target { background:rgba(0,110,183,.08); }
   .overload-table tbody tr:hover td { background: rgba(220,38,38,.05); }
   .ov-shift-btn { background: var(--accent); color: #fff; border: none; border-radius: 5px; padding: 5px 10px; font-size: 10.5px; cursor: pointer; white-space: nowrap; }
   .ov-shift-btn:hover { opacity: .85; }
@@ -2914,17 +373,26 @@ const FRONTEND_HTML = `<!DOCTYPE html>
     <div class="kw-nav"><button onclick="shiftCurrentKW(-1)">‹</button><button onclick="shiftCurrentKW(1)">›</button></div>
     <strong id="currentKW">—</strong>
   </div>
-  <div class="user-menu" style="display:none">
+  <div class="user-menu"><button id="globalSaveBtn" onclick="globalSave()" style="background:#006EB7;color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-family:Calibri,Arial,sans-serif;font-weight:700;cursor:pointer;margin-right:8px">💾 Speichern</button>
     <span class="user-name" id="userNameDisplay">—</span>
     <span class="role-badge" id="userRoleBadge">—</span>
-    <button id="globalSaveBtn" class="btn-small btn-primary" onclick="globalSave()">💾 Speichern</button>
     <button class="logout-btn" onclick="logout()">Abmelden</button>
   </div>
 </header>
 
 <div class="main">
   <aside class="sidebar">
-    
+    <div>
+      <div class="sb-h">Produktionsstufe</div>
+      <div class="filter-group">
+        <button class="filter-btn active" data-stage="all" onclick="setFilter('all',this)"><span class="dot" style="background:var(--accent)"></span>Alle Stufen</button>
+        <button class="filter-btn" data-stage="TZ" onclick="setFilter('TZ',this)"><span class="dot" style="background:var(--tz-c)"></span>Tiefziehen</button>
+        <button class="filter-btn" data-stage="FR" onclick="setFilter('FR',this)"><span class="dot" style="background:var(--fr-c)"></span>Fräsen</button>
+        <button class="filter-btn" data-stage="MO" onclick="setFilter('MO',this)"><span class="dot" style="background:var(--mo-c)"></span>Montage</button>
+        <button class="filter-btn" data-stage="LI" onclick="setFilter('LI',this)"><span class="dot" style="background:var(--li-c)"></span>Lieferung</button>
+      </div>
+    </div>
+
     <div>
       <div class="sb-h">Artikel Suche</div>
       <input type="text" class="search-box" id="searchBox" placeholder="z.B. 2341.9012" oninput="renderAll()">
@@ -3003,16 +471,16 @@ const FRONTEND_HTML = `<!DOCTYPE html>
     </div>
 
     <div class="view-tabs">
-      <button class="view-tab" onclick="setView('dashboard',this)">Diese Woche</button>
-      <button class="view-tab" onclick="setView('bom',this)">Stückliste</button>
-      <button class="view-tab" onclick="setView('input',this)">Liefertermin</button>
-      <button class="view-tab active" onclick="setView('gantt',this)">Gantt</button>
-      <button class="view-tab" onclick="setView('kwoverview',this)">Erledigt</button>
-      <button class="view-tab" onclick="setView('overload',this)">Überlast</button>
+      <button class="view-tab active" onclick="setView('dashboard',this)">🏠 Diese Woche</button>
+      <button class="view-tab" onclick="setView('bom',this)">📐 Stückliste</button>
+      <button class="view-tab" onclick="setView('input',this)">✏️ Liefertermin Eingabe</button>
+      <button class="view-tab" onclick="setView('gantt',this)">📊 Gantt / KW-Übersicht</button>
+      <button class="view-tab" onclick="setView('kwoverview',this)">📅 Geplant vs. Erledigt</button>
+      <button class="view-tab" onclick="setView('overload',this)">⚠️ Überlast</button>
     </div>
 
     <!-- DASHBOARD VIEW (default) -->
-    <div id="view-dashboard" class="hidden">
+    <div id="view-dashboard">
       <div class="sec-title">KW <span id="dashKW">—</span> — Was diese Woche zu tun ist</div>
       <div class="dash-grid">
         <div class="dash-col">
@@ -3105,7 +573,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
       </div>
     </div>
 
-    <div id="view-gantt">
+    <div id="view-gantt" class="hidden">
       <div class="input-toolbar">
         <div class="toggle-group">
           <button class="toggle-btn gantt-stage-btn active" data-stage="all" onclick="setFilter('all',this)">Alle</button>
@@ -3149,67 +617,1479 @@ const FRONTEND_HTML = `<!DOCTYPE html>
 </div>
 </div>
 
-<!-- ── Gantt Full-Screen Modal ─────────────────────────────────── -->
-<div id="ganttModal">
-  <div class="gantt-modal-inner">
-    <div class="gantt-modal-header">
-      <div class="gantt-modal-title">📊 Gantt / KW-Übersicht</div>
-      <div class="gantt-modal-actions">
-        <div class="toggle-group" style="margin-right:8px">
-          <button class="toggle-btn gantt-stage-btn active" data-stage="all" onclick="setFilter('all',this)">Alle</button>
-          <button class="toggle-btn gantt-stage-btn" data-stage="TZ" onclick="setFilter('TZ',this)">Tiefziehen</button>
-          <button class="toggle-btn gantt-stage-btn" data-stage="FR" onclick="setFilter('FR',this)">Fräsen</button>
-          <button class="toggle-btn gantt-stage-btn" data-stage="MO" onclick="setFilter('MO',this)">Montage</button>
-          <button class="toggle-btn gantt-stage-btn" data-stage="LI" onclick="setFilter('LI',this)">Lieferung</button>
-        </div>
-        <button class="gantt-modal-close" onclick="closeGanttModal()" title="Schließen">✕</button>
-      </div>
-    </div>
-    <div style="padding:10px 20px 6px;border-bottom:1px solid #e5e7eb;background:#f9fafb;display:flex;align-items:center;gap:16px;flex-shrink:0">
-      <span style="font-size:11px;color:#6b7280;font-weight:600;white-space:nowrap">KW-Fenster:</span>
-      <input type="range" id="ganttSlider" min="-12" max="24" value="6" step="1"
-        style="flex:1;accent-color:#006EB7"
-        oninput="ganttOffset=parseInt(this.value);document.getElementById('ganttSliderLabel').textContent='KW '+(CURRENT_KW+ganttOffset>52?CURRENT_KW+ganttOffset-52:CURRENT_KW+ganttOffset+' – KW '+(CURRENT_KW+ganttOffset+20>52?CURRENT_KW+ganttOffset+20-52:CURRENT_KW+ganttOffset+19));renderGanttInto(computeDerived(),'ganttTableModal')">
-      <span id="ganttSliderLabel" style="font-size:11px;color:#006EB7;font-weight:700;white-space:nowrap;min-width:80px"></span>
-      <button onclick="ganttOffset=0;document.getElementById('ganttSlider').value=0;renderGanttInto(computeDerived(),'ganttTableModal')" style="background:#006EB7;color:#fff;border:none;border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;font-weight:600">Heute</button>
-    </div>
-    <div class="gantt-modal-body" style="overflow:auto;position:relative">
-      <table id="ganttTableModal" style="border-collapse:collapse;width:100%;font-family:Calibri,Arial,sans-serif;table-layout:fixed">
-        <thead id="ganttTableModalHead" style="position:sticky;top:0;z-index:10"></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
 <script>
+const INPUT_DATA = {"2341.9011": {"liefertermin": [], "tz_bom": [{"stage_art": "2341.1011", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 4, "r_zt": 38}], "fr_bom": [{"stage_art": "2341.2011", "menge_per_stk": 1, "maschine": "M3050", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2341.9012": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 10}, {"year": 2026, "kw": 26, "menge": 20}, {"year": 2026, "kw": 27, "menge": 10}, {"year": 2026, "kw": 28, "menge": 10}, {"year": 2026, "kw": 29, "menge": 40}, {"year": 2026, "kw": 35, "menge": 20}, {"year": 2026, "kw": 37, "menge": 10}, {"year": 2026, "kw": 38, "menge": 20}, {"year": 2026, "kw": 40, "menge": 10}, {"year": 2026, "kw": 41, "menge": 20}, {"year": 2026, "kw": 43, "menge": 20}, {"year": 2026, "kw": 44, "menge": 20}, {"year": 2026, "kw": 45, "menge": 20}, {"year": 2026, "kw": 46, "menge": 10}, {"year": 2026, "kw": 47, "menge": 20}, {"year": 2026, "kw": 48, "menge": 10}, {"year": 2026, "kw": 49, "menge": 10}, {"year": 2026, "kw": 50, "menge": 10}], "tz_bom": [{"stage_art": "2341.1011", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 4, "r_zt": 38}], "fr_bom": [{"stage_art": "2341.2013", "menge_per_stk": 1, "maschine": "M3050", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2342.9012": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 37, "menge": 50}, {"year": 2026, "kw": 40, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}], "tz_bom": [{"stage_art": "2342.1012", "menge_per_stk": 0.25, "maschine": "M1585", "s_zt": 4, "r_zt": 90}], "fr_bom": [{"stage_art": "2342.2012", "menge_per_stk": 1, "maschine": "M3050", "s_zt": 1.5, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2454.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 50}, {"year": 2026, "kw": 28, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 41, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}, {"year": 2026, "kw": 50, "menge": 50}], "tz_bom": [{"stage_art": "2454.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 1.5, "r_zt": 90}, {"stage_art": "2454.1002", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 1.25, "r_zt": 35}, {"stage_art": "2454.1003", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 1.25, "r_zt": 35}], "fr_bom": [{"stage_art": "2454.2001", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 5.17, "r_zt": 45}, {"stage_art": "2454.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 1.78, "r_zt": 45}, {"stage_art": "2454.2003", "menge_per_stk": 1, "maschine": "M1567", "s_zt": 1.78, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "9000001"}, "2455.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 37, "menge": 50}, {"year": 2026, "kw": 41, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}, {"year": 2026, "kw": 50, "menge": 50}], "tz_bom": [{"stage_art": "2455.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 0.75, "r_zt": 90}], "fr_bom": [{"stage_art": "2455.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2.98, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2456.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 36, "menge": 50}, {"year": 2026, "kw": 39, "menge": 50}, {"year": 2026, "kw": 43, "menge": 50}, {"year": 2026, "kw": 46, "menge": 50}, {"year": 2026, "kw": 49, "menge": 50}], "tz_bom": [{"stage_art": "2456.1001", "menge_per_stk": 0.5, "maschine": "M1585", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2456.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.08, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2457.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 50}, {"year": 2026, "kw": 28, "menge": 50}, {"year": 2026, "kw": 35, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 42, "menge": 50}, {"year": 2026, "kw": 45, "menge": 50}, {"year": 2026, "kw": 48, "menge": 50}], "tz_bom": [{"stage_art": "2457.1001", "menge_per_stk": 0.5, "maschine": "M2735", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2457.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.15, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2458.9003": {"liefertermin": [{"year": 2026, "kw": 23, "menge": 20}, {"year": 2026, "kw": 24, "menge": 20}, {"year": 2026, "kw": 26, "menge": 20}, {"year": 2026, "kw": 27, "menge": 20}, {"year": 2026, "kw": 29, "menge": 60}, {"year": 2026, "kw": 36, "menge": 20}, {"year": 2026, "kw": 37, "menge": 20}, {"year": 2026, "kw": 38, "menge": 20}, {"year": 2026, "kw": 40, "menge": 20}, {"year": 2026, "kw": 41, "menge": 20}, {"year": 2026, "kw": 42, "menge": 20}, {"year": 2026, "kw": 44, "menge": 20}, {"year": 2026, "kw": 45, "menge": 20}, {"year": 2026, "kw": 46, "menge": 20}, {"year": 2026, "kw": 47, "menge": 20}, {"year": 2026, "kw": 49, "menge": 20}], "tz_bom": [{"stage_art": "2458.1001", "menge_per_stk": 0.25, "maschine": "M2735", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2458.2003", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 1.79, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2459.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 40, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}], "tz_bom": [{"stage_art": "2459.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 0.75, "r_zt": 90}], "fr_bom": [{"stage_art": "2459.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.5, "r_zt": 45}], "mo_s_zt": 0.14, "mo_a_platz": "EG 12"}, "2460.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 50}, {"year": 2026, "kw": 27, "menge": 50}, {"year": 2026, "kw": 29, "menge": 50}, {"year": 2026, "kw": 37, "menge": 50}, {"year": 2026, "kw": 40, "menge": 50}, {"year": 2026, "kw": 44, "menge": 50}, {"year": 2026, "kw": 47, "menge": 50}], "tz_bom": [{"stage_art": "2460.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 2.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2460.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.07, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2461.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 50}, {"year": 2026, "kw": 28, "menge": 50}, {"year": 2026, "kw": 35, "menge": 50}, {"year": 2026, "kw": 38, "menge": 50}, {"year": 2026, "kw": 42, "menge": 50}, {"year": 2026, "kw": 45, "menge": 50}, {"year": 2026, "kw": 48, "menge": 50}], "tz_bom": [{"stage_art": "2461.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 1.67, "r_zt": 90}], "fr_bom": [{"stage_art": "2461.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.4, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2521.9001": {"liefertermin": [{"year": 2026, "kw": 23, "menge": 24}, {"year": 2026, "kw": 48, "menge": 24}], "tz_bom": [{"stage_art": "2521.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1003", "menge_per_stk": 0.25, "maschine": "M435", "s_zt": 1.5, "r_zt": 90}, {"stage_art": "2521.1004", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1005", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2521.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 4, "r_zt": 45}, {"stage_art": "2521.2002", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 2, "r_zt": 45}, {"stage_art": "2521.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 0.4, "r_zt": 45}, {"stage_art": "2521.2004", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 4, "r_zt": 45}, {"stage_art": "2521.2005", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2521.2006", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.875, "mo_a_platz": "EG 12"}, "2522.9001": {"liefertermin": [{"year": 2026, "kw": 29, "menge": 25}], "tz_bom": [{"stage_art": "2522.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 4, "r_zt": 90}, {"stage_art": "2521.1003", "menge_per_stk": 0.5, "maschine": "M435", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2522.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2521.2003", "menge_per_stk": 2, "maschine": "M3045", "s_zt": 0.4, "r_zt": 45}], "mo_s_zt": 0.28, "mo_a_platz": "EG 12"}, "2522.9002": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 25}], "tz_bom": [{"stage_art": "2521.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2522.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2522.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": null, "r_zt": null}, {"stage_art": "2521.2003", "menge_per_stk": 2, "maschine": "M3045", "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2522.9003": {"liefertermin": [], "tz_bom": [{"stage_art": "2522.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2521.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2522.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2521.2003", "menge_per_stk": 2, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2523.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 24}], "tz_bom": [{"stage_art": "2523.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2523.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1005", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1004", "menge_per_stk": 0.5, "maschine": "M1055", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2523.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 4, "r_zt": 45}, {"stage_art": "2523.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2523.2005", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3, "r_zt": 45}, {"stage_art": "2523.2006", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3, "r_zt": 45}, {"stage_art": "2523.2004", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 30}], "mo_s_zt": 0.875, "mo_a_platz": "EG 12"}, "2524.9001": {"liefertermin": [{"year": 2026, "kw": 23, "menge": 25}, {"year": 2026, "kw": 29, "menge": 25}, {"year": 2026, "kw": 39, "menge": 25}, {"year": 2026, "kw": 44, "menge": 25}, {"year": 2026, "kw": 48, "menge": 25}], "tz_bom": [{"stage_art": "2524.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 3, "r_zt": 90}, {"stage_art": "2521.1003", "menge_per_stk": 0.25, "maschine": "M435", "s_zt": 1.5, "r_zt": 90}], "fr_bom": [{"stage_art": "2524.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.2, "r_zt": 45}, {"stage_art": "2521.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 0.4, "r_zt": 45}], "mo_s_zt": 0.5384615384615384, "mo_a_platz": "EG 12"}, "2525.9001": {"liefertermin": [{"year": 2026, "kw": 29, "menge": 25}, {"year": 2026, "kw": 38, "menge": 25}, {"year": 2026, "kw": 44, "menge": 25}, {"year": 2026, "kw": 48, "menge": 25}], "tz_bom": [{"stage_art": "2525.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 4, "r_zt": 90}, {"stage_art": "2525.1002", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 4, "r_zt": 90}, {"stage_art": "2525.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2525.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2525.2002", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 3.5, "r_zt": 45}, {"stage_art": "2525.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.33, "r_zt": 45}, {"stage_art": "2525.2004", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.33, "r_zt": 45}], "mo_s_zt": 0.5384615384615384, "mo_a_platz": "EG 12"}, "2541.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 20}, {"year": 2026, "kw": 28, "menge": 20}, {"year": 2026, "kw": 35, "menge": 20}, {"year": 2026, "kw": 42, "menge": 20}, {"year": 2026, "kw": 47, "menge": 20}], "tz_bom": [{"stage_art": "2541.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2541.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.67, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2541.9002": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 20}, {"year": 2026, "kw": 29, "menge": 20}, {"year": 2026, "kw": 35, "menge": 20}, {"year": 2026, "kw": 39, "menge": 20}, {"year": 2026, "kw": 44, "menge": 20}, {"year": 2026, "kw": 50, "menge": 20}], "tz_bom": [{"stage_art": "2541.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 90}], "fr_bom": [{"stage_art": "2541.2002", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1.53, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2544.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 24}], "tz_bom": [{"stage_art": "2544.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2544.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2544.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2544.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.54, "mo_a_platz": "#N/A"}, "2601.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 45, "menge": 15}], "tz_bom": [{"stage_art": "2601.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2601.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2601.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 3, "r_zt": 45}, {"stage_art": "2601.2002", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2602.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 46, "menge": 15}], "tz_bom": [{"stage_art": "2602.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}, {"stage_art": "2602.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2602.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3.25, "r_zt": 45}, {"stage_art": "2602.2002", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.08, "r_zt": 45}], "mo_s_zt": 0.4666666666666667, "mo_a_platz": "EG 12"}, "2603.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 38, "menge": 15}, {"year": 2026, "kw": 45, "menge": 15}], "tz_bom": [{"stage_art": "2603.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2603.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.63, "r_zt": 45}, {"stage_art": "2603.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 1.02, "r_zt": 30}], "mo_s_zt": 0.875, "mo_a_platz": "EG 12"}, "2604.9001": {"liefertermin": [{"year": 2026, "kw": 28, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 46, "menge": 15}], "tz_bom": [{"stage_art": "2604.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2604.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2604.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2604.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2604.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2604.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 4, "r_zt": 30}], "mo_s_zt": 1.75, "mo_a_platz": "EG 12"}, "2605.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 15}, {"year": 2026, "kw": 39, "menge": 15}, {"year": 2026, "kw": 46, "menge": 15}], "tz_bom": [{"stage_art": "2605.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2605.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2605.1003", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2605.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 4.17, "r_zt": 45}, {"stage_art": "2605.2002", "menge_per_stk": 1, "maschine": "M1429", "s_zt": 2.5, "r_zt": 45}, {"stage_art": "2603.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 1.02, "r_zt": 30}, {"stage_art": "2605.2003", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}], "mo_s_zt": 1.4, "mo_a_platz": "EG 12"}, "2664.9001": {"liefertermin": [{"year": 2026, "kw": 28, "menge": 25}, {"year": 2026, "kw": 45, "menge": 25}], "tz_bom": [{"stage_art": "2664.1001", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 3, "r_zt": 60}, {"stage_art": "2664.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2664.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2664.1004", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2664.1005", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2664.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 5, "r_zt": 45}, {"stage_art": "2664.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2664.2003", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2664.2004", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2664.2005", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 1, "r_zt": 45}], "mo_s_zt": 0.84, "mo_a_platz": "EG 12"}, "2665.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 25}, {"year": 2026, "kw": 37, "menge": 25}, {"year": 2026, "kw": 50, "menge": 25}], "tz_bom": [{"stage_art": "2665.1001", "menge_per_stk": 1, "maschine": "M1585", "s_zt": 6, "r_zt": 60}, {"stage_art": "2665.1002", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2665.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}, {"stage_art": "2665.1004", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2665.2001", "menge_per_stk": 1, "maschine": "M2080", "s_zt": 2.3, "r_zt": 45}, {"stage_art": "2665.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2.03, "r_zt": 45}, {"stage_art": "2665.2003", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 2, "r_zt": 45}, {"stage_art": "2665.2004", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 2, "r_zt": 45}], "mo_s_zt": 0.84, "mo_a_platz": "EG 12"}, "2666.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 25}, {"year": 2026, "kw": 40, "menge": 25}], "tz_bom": [{"stage_art": "2666.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 2.5, "r_zt": 60}, {"stage_art": "2666.1002", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 2.5, "r_zt": 60}, {"stage_art": "2666.1003", "menge_per_stk": 1, "maschine": "M1055", "s_zt": 4, "r_zt": 60}], "fr_bom": [{"stage_art": "2666.2001", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2666.2002", "menge_per_stk": 1, "maschine": "M1056", "s_zt": 3, "r_zt": 45}, {"stage_art": "2666.2003", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2, "r_zt": 45}, {"stage_art": "2666.2004", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2, "r_zt": 45}], "mo_s_zt": 1.1666666666666667, "mo_a_platz": "EG 12"}, "2667.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 25}, {"year": 2026, "kw": 39, "menge": 25}], "tz_bom": [{"stage_art": "2667.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2667.2001", "menge_per_stk": 1, "maschine": "M3045", "s_zt": 2.5, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2668.9001": {"liefertermin": [{"year": 2026, "kw": 25, "menge": 25}, {"year": 2026, "kw": 38, "menge": 25}], "tz_bom": [{"stage_art": "2668.1001", "menge_per_stk": 1, "maschine": "M2735", "s_zt": 3, "r_zt": 60}], "fr_bom": [{"stage_art": "2668.2001", "menge_per_stk": 1, "maschine": "unbekannt", "s_zt": 3.5, "r_zt": 45}], "mo_s_zt": 0.7, "mo_a_platz": "EG 12"}, "2669.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 25}], "tz_bom": [{"stage_art": "2669.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2669.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2669.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2669.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.59, "mo_a_platz": null}, "2720.9001": {"liefertermin": [], "tz_bom": [{"stage_art": "2720.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1004", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2720.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.2005", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.88, "mo_a_platz": null}, "2721.9001": {"liefertermin": [], "tz_bom": [{"stage_art": "2720.1003", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2720.1004", "menge_per_stk": 0.5, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2721.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2721.2005", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.88, "mo_a_platz": null}, "2724.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 10}], "tz_bom": [{"stage_art": "2724.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.1003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.1004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2724.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.2003", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2724.2004", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.42, "mo_a_platz": null}, "2725.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2725.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2725.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2727.9001": {"liefertermin": [{"year": 2026, "kw": 24, "menge": 4}, {"year": 2026, "kw": 29, "menge": 6}], "tz_bom": [{"stage_art": "2727.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2727.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.1, "mo_a_platz": null}, "2728.9001": {"liefertermin": [{"year": 2026, "kw": 27, "menge": 10}], "tz_bom": [{"stage_art": "2728.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2728.1002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2728.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}, {"stage_art": "2728.2002", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.1, "mo_a_platz": null}, "2729.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2729.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2729.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2730.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2730.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2730.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2731.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2731.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2731.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2732.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2732.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2732.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}, "2733.9001": {"liefertermin": [{"year": 2026, "kw": 26, "menge": 10}], "tz_bom": [{"stage_art": "2733.1001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "fr_bom": [{"stage_art": "2733.2001", "menge_per_stk": 1, "maschine": null, "s_zt": null, "r_zt": null}], "mo_s_zt": 0.7, "mo_a_platz": null}};
 
-// ═══════════════════════════════════════════════════════════
-// DIRECT ACCESS — no login required
-let AUTH_TOKEN = 'open';
+// INPUT_DATA: { artikel: { liefertermin:[{year,kw,menge}], tz_bom:[{stage_art,menge_per_stk,maschine,s_zt,r_zt}], fr_bom:[...], mo_s_zt, mo_a_platz } }
 
-async function apiLoadPlan() {
-  const r = await fetch('/api/plan');
-  if (!r.ok) throw new Error('Failed to load');
-  return await r.json();
+// ─────────────────────────────────────────────
+// LOGIN / USERS — simple soft access gate, NOT real security.
+// Anyone who views the page source can read this list. This only deters
+// accidental edits by colleagues; it does not protect sensitive data.
+// Add or edit users here. role: 'planer' (full access) | 'mitarbeiter' (read-only)
+// ─────────────────────────────────────────────
+const USERS = [
+  { name: 'Modu', password: 'planung2026', role: 'planer' },
+  { name: 'Planer', password: 'planer123', role: 'planer' },
+  { name: 'Mitarbeiter', password: 'team123', role: 'mitarbeiter' },
+];
+
+let CURRENT_USER = null; // { name, role }
+
+function attemptLogin() {
+  const nameInput = document.getElementById('loginUser').value.trim();
+  const passInput = document.getElementById('loginPass').value;
+  const match = USERS.find(u => u.name.toLowerCase() === nameInput.toLowerCase() && u.password === passInput);
+  const errorEl = document.getElementById('loginError');
+  if (!match) {
+    errorEl.classList.add('show');
+    return;
+  }
+  errorEl.classList.remove('show');
+  CURRENT_USER = { name: match.name, role: match.role };
+  sessionStorage.setItem('planungUser', JSON.stringify(CURRENT_USER));
+  showApp();
 }
 
-async function apiSavePlan(plan, doneStatus) {
-  const r = await fetch('/api/plan', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({plan, done_status: doneStatus || {}})
+function logout() {
+  CURRENT_USER = null;
+  sessionStorage.removeItem('planungUser');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('appRoot').classList.add('hidden');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+function showApp() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appRoot').classList.remove('hidden');
+  document.getElementById('userNameDisplay').textContent = CURRENT_USER.name;
+  const badge = document.getElementById('userRoleBadge');
+  badge.textContent = CURRENT_USER.role === 'planer' ? 'Planer' : 'Mitarbeiter';
+  badge.className = 'role-badge ' + CURRENT_USER.role;
+  applyRolePermissions();
+  renderAll();
+}
+
+function isReadOnly() {
+  return !CURRENT_USER || CURRENT_USER.role !== 'planer';
+}
+
+function applyRolePermissions() {
+  const readOnly = isReadOnly();
+  const bomNote = document.getElementById('bomReadonlyNote');
+  const inputNote = document.getElementById('inputReadonlyNote');
+  const inputToolbar = document.getElementById('inputToolbarActions');
+  const bomToolbar = document.getElementById('bomToolbarActions');
+  const bomWrap = document.getElementById('bomTableWrap');
+  const inputWrap = document.getElementById('inputTableWrap');
+  const bomSaveBar = document.getElementById('bomSaveBar');
+  const inputSaveBar = document.getElementById('inputSaveBar');
+  const noteHtml = '<div class="readonly-note">🔒 Sie sind als Mitarbeiter angemeldet (nur ansehen). Änderungen sind in diesem Bereich nicht möglich.</div>';
+  if (bomNote) bomNote.innerHTML = readOnly ? noteHtml : '';
+  if (inputNote) inputNote.innerHTML = readOnly ? noteHtml : '';
+  if (inputToolbar) inputToolbar.style.display = readOnly ? 'none' : 'flex';
+  if (bomToolbar) {
+    // keep the explanatory text visible, just hide the action buttons for read-only users
+    bomToolbar.querySelectorAll('button').forEach(btn => {
+      btn.style.display = readOnly ? 'none' : 'inline-block';
+    });
+  }
+  if (bomWrap) bomWrap.classList.toggle('readonly-locked', readOnly);
+  if (inputWrap) inputWrap.classList.toggle('readonly-locked', readOnly);
+  if (bomSaveBar) bomSaveBar.style.display = readOnly ? 'none' : 'flex';
+  if (inputSaveBar) inputSaveBar.style.display = readOnly ? 'none' : 'flex';
+}
+
+// On page load, check if a session is already active (so refreshing the page doesn't log out)
+(function restoreSession() {
+  try {
+    const saved = sessionStorage.getItem('planungUser');
+    if (saved) {
+      CURRENT_USER = JSON.parse(saved);
+    }
+  } catch (e) {}
+})();
+
+let CURRENT_KW = 24;
+let CURRENT_YEAR = 2026;
+const FEST_WEEKS = 6;
+const KW_WINDOW = 14;
+
+let PLAN = JSON.parse(JSON.stringify(INPUT_DATA));
+
+// DRAFT is a working copy used only by the "Stückliste" and "Liefertermin Eingabe"
+// tabs. Edits there only touch DRAFT; PLAN (which drives every calculation, chart,
+// and other tab) is only updated when the user explicitly clicks "Speichern".
+let DRAFT = JSON.parse(JSON.stringify(PLAN));
+let draftDirty = false;
+
+function markDraftDirty() {
+  draftDirty = true;
+  updateSaveBarState();
+}
+
+function updateSaveBarState() {
+  ['bom', 'input'].forEach(view => {
+    const bar = document.getElementById(view + 'SaveBar');
+    if (!bar) return;
+    bar.classList.toggle('dirty', draftDirty);
+    const status = document.getElementById(view + 'SaveStatus');
+    if (status) status.textContent = draftDirty ? 'Ungespeicherte Änderungen' : 'Alles gespeichert';
   });
-  if (!r.ok) { const d = await r.json(); throw new Error(d.error || 'Save failed'); }
-  return await r.json();
+}
+
+function saveDraft() {
+  PLAN = JSON.parse(JSON.stringify(DRAFT));
+  draftDirty = false;
+  updateSaveBarState();
+  renderAll();
+}
+
+function discardDraft() {
+  if (draftDirty && !confirm('Ungespeicherte Änderungen verwerfen?')) return;
+  DRAFT = JSON.parse(JSON.stringify(PLAN));
+  draftDirty = false;
+  updateSaveBarState();
+  renderAll();
+}
+
+// Tracks manual "erledigt" checkmarks: key = "stage|stageArtOrArt|year|kw" -> {done, doneAtYear, doneAtKw}
+let DONE_STATUS = {};
+
+function doneKey(stage, ident, year, kw) {
+  return stage + '|' + ident + '|' + year + '|' + kw;
+}
+function isDone(stage, ident, year, kw) {
+  const entry = DONE_STATUS[doneKey(stage, ident, year, kw)];
+  return !!(entry && entry.done);
+}
+function getDoneAt(stage, ident, year, kw) {
+  const entry = DONE_STATUS[doneKey(stage, ident, year, kw)];
+  return (entry && entry.done) ? { year: entry.doneAtYear, kw: entry.doneAtKw } : null;
+}
+function toggleDone(stage, ident, year, kw) {
+  const k = doneKey(stage, ident, year, kw);
+  const wasDone = DONE_STATUS[k] && DONE_STATUS[k].done;
+  if (wasDone) {
+    DONE_STATUS[k] = { done: false };
+  } else {
+    DONE_STATUS[k] = { done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
+  }
+  renderAll();
+}
+function isPast(year, kw) {
+  return absWeek(year, kw) < absWeek(CURRENT_YEAR, CURRENT_KW);
+}
+function getMoSzt(art) {
+  // Returns the Montage S-Zt for an artikel. Respects an explicitly-set 0; only falls back
+  // to the 0.5 default when the value is missing entirely (undefined/null).
+  const v = PLAN[art].mo_s_zt;
+  return (typeof v === 'number') ? v : 0.5;
+}
+function isLate(stage, ident, year, kw) {
+  return isPast(year, kw) && !isDone(stage, ident, year, kw);
+}
+function weeksOverdue(year, kw) {
+  return absWeek(CURRENT_YEAR, CURRENT_KW) > absWeek(year,kw)
+    ? (CURRENT_YEAR - year) * 52 + (CURRENT_KW - kw)
+    : 0;
+}
+
+function isFest(year, kw) {
+  const diffWeeks = (year - CURRENT_YEAR)*52 + (kw - CURRENT_KW);
+  return diffWeeks < FEST_WEEKS;
+}
+function absWeek(year, kw) { return year*100 + kw; }
+function kwMinus(year, kw, n) {
+  let k = kw - n, y = year;
+  while (k < 1) { k += 52; y -= 1; }
+  return {year:y, kw:k};
+}
+
+function shiftCurrentKW(delta) {
+  let k = CURRENT_KW + delta, y = CURRENT_YEAR;
+  if (k < 1) { k += 52; y -= 1; }
+  if (k > 52) { k -= 52; y += 1; }
+  CURRENT_KW = k; CURRENT_YEAR = y;
+  document.getElementById('currentKW').textContent = \`KW \${CURRENT_KW} / \${CURRENT_YEAR}\`;
+  renderAll();
+}
+
+let activeFilter = 'all';
+let activeView = 'dashboard';
+let tzfrFilter = 'all';
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.gantt-stage-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // keep the sidebar filter button in sync with whichever control was clicked
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    if (b.getAttribute('data-stage') === f) b.classList.add('active');
+  });
+  document.querySelectorAll('.gantt-stage-btn').forEach(b => {
+    if (b.getAttribute('data-stage') === f) b.classList.add('active');
+  });
+  renderAll();
+}
+function setView(v, btn) {
+  // If entering an editing tab with no unsaved changes, refresh the draft from
+  // PLAN so any changes made elsewhere (e.g. the "1 Woche früher" quick action) are visible.
+  if ((v === 'bom' || v === 'input') && !draftDirty) {
+    DRAFT = JSON.parse(JSON.stringify(PLAN));
+  }
+  activeView = v;
+  document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('view-dashboard').classList.toggle('hidden', v !== 'dashboard');
+  document.getElementById('view-bom').classList.toggle('hidden', v !== 'bom');
+  document.getElementById('view-input').classList.toggle('hidden', v !== 'input');
+  document.getElementById('view-gantt').classList.toggle('hidden', v !== 'gantt');
+  document.getElementById('view-kwoverview').classList.toggle('hidden', v !== 'kwoverview');
+  document.getElementById('view-overload').classList.toggle('hidden', v !== 'overload');
+  renderAll();
+}
+
+function getOffsets() {
+  // Global default lead times (weeks): used only when a Liefertermin-week has no individual override set.
+  return { mo: 1, fr: 1, tz: 1 };
+}
+
+function getArtikelList() {
+  const q = (document.getElementById('searchBox')?.value || '').trim().toLowerCase();
+  let arts = Object.keys(PLAN);
+  if (q) arts = arts.filter(a => a.toLowerCase().includes(q));
+  arts.sort();
+  return arts;
+}
+
+function getArtikelListFrom(source) {
+  const q = (document.getElementById('searchBox')?.value || '').trim().toLowerCase();
+  let arts = Object.keys(source);
+  if (q) arts = arts.filter(a => a.toLowerCase().includes(q));
+  arts.sort();
+  return arts;
+}
+
+function ensureBomDefault(art, field, source) {
+  source = source || PLAN;
+  // if an artikel has no BOM rows at all, give it one default row with auto-derived stage_art
+  if (source[art][field].length === 0) {
+    const prefix = field === 'tz_bom' ? '1' : '2';
+    const parts = art.split('.');
+    const base = parts[0];
+    const suffix = (parts[1] || '0001').slice(-3).padStart(3,'0');
+    source[art][field].push({ stage_art: base + '.' + prefix + suffix, menge_per_stk: 1, maschine: null, s_zt: null, r_zt: null });
+  }
+  return source[art][field];
+}
+
+// ─────────────────────────────────────────────
+// DERIVATION ENGINE
+// Liefertermin (manual) -> Montage (Lief - offMO)
+// For each BOM-Teil in fr_bom / tz_bom: KW = Montage(or Fräsen) - offset, Menge = Montage-Menge * menge_per_stk
+// Tiefziehen is derived from Fräsen's own timing (Fräsen - offTZ), using the SAME factor chain as if it fed Fräsen quantity (factor applied at TZ's own bom)
+// Combine: when multiple Liefer-Artikel share the same stage_art, their computed quantities are SUMMED
+// ─────────────────────────────────────────────
+function computeDerived(source) {
+  source = source || PLAN;
+  const off = getOffsets();
+  const arts = Object.keys(source);
+
+  function getWeekOffset(w, field) {
+    // field: 'mo_offset', 'fr_offset', 'tz_offset' - per-Liefertermin-week override, falls back to global
+    const override = w[field];
+    if (typeof override === 'number') return override;
+    return field === 'mo_offset' ? off.mo : field === 'fr_offset' ? off.fr : off.tz;
+  }
+
+  const montageByArt = {}; // art -> [{year,kw,menge}]
+  arts.forEach(art => {
+    montageByArt[art] = source[art].liefertermin.map(w => {
+      const moOff = getWeekOffset(w, 'mo_offset');
+      const mw = kwMinus(w.year, w.kw, moOff);
+      return {year: mw.year, kw: mw.kw, menge: w.menge, srcWeek: w};
+    });
+  });
+
+  // For each artikel, for each BOM line, compute its own weekly quantities (KW shifted, qty = montage qty * factor)
+  // fraesenLines: art -> [{stage_art, factor, maschine, s_zt, r_zt, weeks:[{year,kw,menge}]}]
+  function computeBomLines(field, offsetField, baseWeeksByArt) {
+    const out = {}; // art -> array of line objects (own contribution)
+    arts.forEach(art => {
+      ensureBomDefault(art, field, source);
+      const lines = source[art][field];
+      out[art] = lines.map(line => {
+        const factor = (typeof line.menge_per_stk === 'number') ? line.menge_per_stk : 1;
+        const weeks = baseWeeksByArt[art].map(w => {
+          const weekOffset = getWeekOffset(w.srcWeek, offsetField);
+          const sw = kwMinus(w.year, w.kw, weekOffset);
+          return {year: sw.year, kw: sw.kw, menge: +(w.menge * factor).toFixed(4), srcWeek: w.srcWeek};
+        });
+        return { stage_art: line.stage_art, factor, maschine: line.maschine, s_zt: line.s_zt, r_zt: line.r_zt, weeks };
+      });
+    });
+    return out;
+  }
+
+  const fraesenLines = computeBomLines('fr_bom', 'fr_offset', montageByArt);
+  // Tiefziehen timing is based on Fräsen's own KW per artikel, using each Liefertermin-week's own fr_offset
+  const montageShiftedForTz = {};
+  arts.forEach(art => {
+    montageShiftedForTz[art] = montageByArt[art].map(w => {
+      const frOff = getWeekOffset(w.srcWeek, 'fr_offset');
+      const fw = kwMinus(w.year, w.kw, frOff);
+      return {year: fw.year, kw: fw.kw, menge: w.menge, srcWeek: w.srcWeek};
+    });
+  });
+  const tiefziehenLines = computeBomLines('tz_bom', 'tz_offset', montageShiftedForTz);
+
+  // Build combined groups by stage_art across ALL lines of ALL artikel
+  function buildCombinedGroups(linesByArt) {
+    const groups = {}; // stage_art -> { artikel: Set, weeksMap: {year-kw: total}, maschine, s_zt, r_zt }
+    Object.entries(linesByArt).forEach(([art, lines]) => {
+      lines.forEach(line => {
+        const sa = line.stage_art;
+        if (!groups[sa]) groups[sa] = { artikel: new Set(), weeksMap: {}, maschine: line.maschine, s_zt: line.s_zt, r_zt: line.r_zt };
+        groups[sa].artikel.add(art);
+        line.weeks.forEach(w => {
+          const key = w.year + '-' + w.kw;
+          groups[sa].weeksMap[key] = (groups[sa].weeksMap[key] || 0) + w.menge;
+        });
+      });
+    });
+    // convert sets to arrays
+    Object.values(groups).forEach(g => g.artikel = Array.from(g.artikel));
+    return groups;
+  }
+
+  const fraesenGroups = buildCombinedGroups(fraesenLines);
+  const tiefziehenGroups = buildCombinedGroups(tiefziehenLines);
+
+  return { montageByArt, fraesenLines, tiefziehenLines, fraesenGroups, tiefziehenGroups };
+}
+
+// ─────────────────────────────────────────────
+// BOM MASTER TABLE — Stückliste (drives capacity calc)
+// ─────────────────────────────────────────────
+function renderBomTable() {
+  const arts = getArtikelListFrom(DRAFT);
+  let html = '';
+
+  arts.forEach(art => {
+    const d = DRAFT[art];
+    ensureBomDefault(art, 'tz_bom', DRAFT);
+    ensureBomDefault(art, 'fr_bom', DRAFT);
+
+    const tzHtml = d.tz_bom.map((line, idx) => \`
+      <div class="bom-master-row">
+        <div class="bmf"><label>Nr</label><input class="w-art" type="text" value="\${line.stage_art||''}" onchange="updateBom('\${art}','tz_bom',\${idx},'stage_art',this.value)"></div>
+        <div class="bmf"><label>Masch.</label><input class="w-masch" type="text" value="\${line.maschine||''}" onchange="updateBom('\${art}','tz_bom',\${idx},'maschine',this.value)"></div>
+        <div class="bmf"><label>S-Zt.</label><input class="w-time" type="number" step="0.01" value="\${line.s_zt??''}" onchange="updateBom('\${art}','tz_bom',\${idx},'s_zt',this.value)"></div>
+        <div class="bmf"><label>R-Zt.</label><input class="w-time" type="number" step="1" value="\${line.r_zt??''}" onchange="updateBom('\${art}','tz_bom',\${idx},'r_zt',this.value)"></div>
+        <div class="bmf"><label>Faktor</label><input class="w-time" type="number" step="0.01" value="\${line.menge_per_stk??1}" onchange="updateBom('\${art}','tz_bom',\${idx},'menge_per_stk',this.value)"></div>
+        <span class="x-btn" onclick="removeBomLine('\${art}','tz_bom',\${idx})">×</span>
+      </div>\`).join('') + \`<span class="bom-add-btn" onclick="addBomLine('\${art}','tz_bom')">+ Tiefziehen-Teil</span>\`;
+
+    const frHtml = d.fr_bom.map((line, idx) => \`
+      <div class="bom-master-row">
+        <div class="bmf"><label>Nr</label><input class="w-art" type="text" value="\${line.stage_art||''}" onchange="updateBom('\${art}','fr_bom',\${idx},'stage_art',this.value)"></div>
+        <div class="bmf"><label>Masch.</label><input class="w-masch" type="text" value="\${line.maschine||''}" onchange="updateBom('\${art}','fr_bom',\${idx},'maschine',this.value)"></div>
+        <div class="bmf"><label>S-Zt.</label><input class="w-time" type="number" step="0.01" value="\${line.s_zt??''}" onchange="updateBom('\${art}','fr_bom',\${idx},'s_zt',this.value)"></div>
+        <div class="bmf"><label>R-Zt.</label><input class="w-time" type="number" step="1" value="\${line.r_zt??''}" onchange="updateBom('\${art}','fr_bom',\${idx},'r_zt',this.value)"></div>
+        <div class="bmf"><label>Faktor</label><input class="w-time" type="number" step="0.01" value="\${line.menge_per_stk??1}" onchange="updateBom('\${art}','fr_bom',\${idx},'menge_per_stk',this.value)"></div>
+        <span class="x-btn" onclick="removeBomLine('\${art}','fr_bom',\${idx})">×</span>
+      </div>\`).join('') + \`<span class="bom-add-btn" onclick="addBomLine('\${art}','fr_bom')">+ Fräsen-Teil</span>\`;
+
+    const moHtml = \`<div class="mo-master-box">
+      <div class="mo-field"><label>S-Zt. (h/Stk)</label><input type="number" step="0.01" value="\${d.mo_s_zt??''}" onchange="updateMoField('\${art}','mo_s_zt',this.value)"></div>
+      <div class="mo-field"><label>Arbeitsplatz</label><input type="text" value="\${d.mo_a_platz||''}" onchange="updateMoField('\${art}','mo_a_platz',this.value)"></div>
+    </div>\`;
+
+    html += \`<tr>
+      <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;font-weight:600">\${art}</td>
+      <td>\${tzHtml}</td>
+      <td>\${frHtml}</td>
+      <td>\${moHtml}</td>
+      <td><span class="row-del" onclick="clearArtikelBom('\${art}')" title="Stückliste für diesen Artikel löschen (Liefertermine bleiben erhalten)">🗑</span></td>
+    </tr>\`;
+  });
+
+  document.getElementById('bomBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">Keine Artikel</td></tr>';
+  updateSaveBarState();
+}
+
+// ─────────────────────────────────────────────
+// INPUT TABLE
+// ─────────────────────────────────────────────
+function renderInputTable() {
+  const D = computeDerived(DRAFT);
+  const off = getOffsets();
+  const arts = getArtikelListFrom(DRAFT);
+  let html = '';
+
+  arts.forEach(art => {
+    const d = DRAFT[art];
+    ensureBomDefault(art, 'fr_bom', DRAFT);
+    ensureBomDefault(art, 'tz_bom', DRAFT);
+
+    const liefRowsHtml = d.liefertermin.map((w, idx) => {
+      const moW = D.montageByArt[art][idx];
+      const frWeeksForThis = (D.fraesenLines[art]||[]).map(line => line.weeks[idx]).filter(Boolean);
+      const tzWeeksForThis = (D.tiefziehenLines[art]||[]).map(line => line.weeks[idx]).filter(Boolean);
+
+      const moOffVal = (typeof w.mo_offset === 'number') ? w.mo_offset : '';
+      const frOffVal = (typeof w.fr_offset === 'number') ? w.fr_offset : '';
+      const tzOffVal = (typeof w.tz_offset === 'number') ? w.tz_offset : '';
+
+      const frChips = (D.fraesenLines[art]||[]).map((line,i) => {
+        const lw = line.weeks[idx];
+        if (!lw) return '';
+        return \`<span class="derived-chip fr">\${line.stage_art}: KW\${lw.kw}=\${lw.menge}</span>\`;
+      }).join(' ') || '<span class="derived-cell">—</span>';
+
+      const tzChips = (D.tiefziehenLines[art]||[]).map((line,i) => {
+        const lw = line.weeks[idx];
+        if (!lw) return '';
+        return \`<span class="derived-chip tz">\${line.stage_art}: KW\${lw.kw}=\${lw.menge}</span>\`;
+      }).join(' ') || '<span class="derived-cell">—</span>';
+
+      return \`<div class="lief-week-block">
+        <div class="lief-week-head">
+          <span class="kw-chip">
+            KW<input type="number" value="\${w.kw}" min="1" max="53" onchange="updateLiefWeek('\${art}',\${idx},'kw',this.value)" style="width:30px">
+            /<input type="number" value="\${w.year}" onchange="updateLiefWeek('\${art}',\${idx},'year',this.value)" style="width:40px">
+            :<input class="menge-in" type="number" value="\${w.menge}" min="0" onchange="updateLiefWeek('\${art}',\${idx},'menge',this.value)">
+            <span class="x-btn" onclick="removeLiefWeek('\${art}',\${idx})">×</span>
+          </span>
+        </div>
+        <div class="lief-week-stages">
+          <div class="lws-col">
+            <div class="offset-row"><label>MO Vorlauf (Wo.):</label><input class="offset-in" type="number" min="0" max="8" placeholder="\${off.mo}" value="\${moOffVal}" onchange="updateWeekOffset('\${art}',\${idx},'mo_offset',this.value)"></div>
+            <span class="derived-chip mo">KW\${moW.kw}=\${moW.menge}</span>
+          </div>
+          <div class="lws-col">
+            <div class="offset-row"><label>FR Vorlauf (Wo.):</label><input class="offset-in" type="number" min="0" max="8" placeholder="\${off.fr}" value="\${frOffVal}" onchange="updateWeekOffset('\${art}',\${idx},'fr_offset',this.value)"></div>
+            \${frChips}
+          </div>
+          <div class="lws-col">
+            <div class="offset-row"><label>TZ Vorlauf (Wo.):</label><input class="offset-in" type="number" min="0" max="8" placeholder="\${off.tz}" value="\${tzOffVal}" onchange="updateWeekOffset('\${art}',\${idx},'tz_offset',this.value)"></div>
+            \${tzChips}
+          </div>
+        </div>
+      </div>\`;
+    }).join('');
+
+    html += \`<tr>
+      <td>
+        <input type="text" value="\${art}" onchange="renameArtikel('\${art}', this.value)" style="font-weight:600">
+      </td>
+      <td colspan="4">
+        \${liefRowsHtml}
+        <span class="add-kw-btn" onclick="addLiefWeek('\${art}')">+ Liefertermin-KW</span>
+      </td>
+      <td><span class="row-del" onclick="deleteArtikel('\${art}')">🗑</span></td>
+    </tr>\`;
+  });
+
+  document.getElementById('inputBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Keine Artikel</td></tr>';
+  updateSaveBarState();
+}
+
+function renderDraftView() {
+  if (activeView === 'bom') renderBomTable();
+  if (activeView === 'input') renderInputTable();
+  markDraftDirty();
+}
+function updateLiefWeek(art, idx, field, value) {
+  const w = DRAFT[art].liefertermin[idx];
+  if (field === 'menge') w.menge = parseFloat(value) || 0;
+  else w[field] = parseInt(value) || w[field];
+  renderDraftView();
+}
+function removeLiefWeek(art, idx) {
+  DRAFT[art].liefertermin.splice(idx, 1);
+  renderDraftView();
+}
+function addLiefWeek(art) {
+  DRAFT[art].liefertermin.push({year: CURRENT_YEAR, kw: CURRENT_KW + 4, menge: 10});
+  renderDraftView();
+}
+function updateBom(art, field, idx, key, value) {
+  const line = DRAFT[art][field][idx];
+  if (key === 'menge_per_stk' || key === 's_zt' || key === 'r_zt') {
+    line[key] = value.trim() === '' ? null : (parseFloat(value) || 0);
+  } else {
+    line[key] = value.trim();
+  }
+  renderDraftView();
+}
+function updateMoField(art, key, value) {
+  if (key === 'mo_s_zt') {
+    const v = value.trim();
+    DRAFT[art][key] = v === '' ? 0.5 : (parseFloat(v) === 0 ? 0 : (parseFloat(v) || 0.5));
+  }
+  else DRAFT[art][key] = value.trim();
+  renderDraftView();
+}
+function updateWeekOffset(art, idx, field, value) {
+  // field: 'mo_offset' | 'fr_offset' | 'tz_offset' - applies to a specific liefertermin week entry
+  const v = value.trim();
+  DRAFT[art].liefertermin[idx][field] = v === '' ? null : (parseInt(v) || 0);
+  renderDraftView();
+}
+function addBomLine(art, field) {
+  const prefix = field === 'tz_bom' ? '1' : '2';
+  const parts = art.split('.');
+  const base = parts[0];
+  const suffix = (parts[1] || '0001').slice(-3).padStart(3,'0');
+  DRAFT[art][field].push({ stage_art: base + '.' + prefix + suffix + 'b', menge_per_stk: 1, maschine: null, s_zt: null, r_zt: null });
+  renderDraftView();
+}
+function removeBomLine(art, field, idx) {
+  DRAFT[art][field].splice(idx, 1);
+  renderDraftView();
+}
+function clearAllBom() {
+  if (!confirm('Wirklich die komplette Stückliste (Tiefziehen, Fräsen, Montage-Zeiten) für ALLE Artikel löschen? Artikel-Nr und Liefertermine bleiben erhalten — beide Bereiche sind getrennt. Dies betrifft den aktuellen Entwurf — solange Sie nicht auf "Speichern" klicken, bleiben die Originaldaten erhalten und können mit "Verwerfen" wiederhergestellt werden.')) return;
+  Object.keys(DRAFT).forEach(art => {
+    DRAFT[art].tz_bom = [];
+    DRAFT[art].fr_bom = [];
+    DRAFT[art].mo_s_zt = 0.5;
+    DRAFT[art].mo_a_platz = null;
+  });
+  renderDraftView();
+}
+function clearAllLiefertermin() {
+  if (!confirm('Wirklich ALLE Liefertermin-Einträge für ALLE Artikel löschen? Die Stückliste (Tiefziehen/Fräsen/Montage) bleibt erhalten. Dies betrifft den aktuellen Entwurf — solange Sie nicht auf "Speichern" klicken, bleiben die Originaldaten erhalten und können mit "Verwerfen" wiederhergestellt werden.')) return;
+  Object.keys(DRAFT).forEach(art => {
+    DRAFT[art].liefertermin = [];
+  });
+  renderDraftView();
+}
+function addNewArtikelRow() {
+  let n = 1;
+  let newKey = 'NEU-' + n;
+  while (DRAFT[newKey]) { n++; newKey = 'NEU-' + n; }
+  DRAFT[newKey] = {
+    liefertermin: [{year: CURRENT_YEAR, kw: CURRENT_KW + 4, menge: 10}],
+    tz_bom: [], fr_bom: [],
+    mo_s_zt: 0.7, mo_a_platz: null
+  };
+  renderDraftView();
+}
+
+// ─────────────────────────────────────────────
+// EXCEL IMPORT — Liefertermin (KW, Artikel-Nr, Menge)
+// Replaces all existing liefertermin entries for each artikel found in the file.
+// New artikel not yet in DRAFT are created automatically (no BOM data yet).
+// Imported rows go into the DRAFT, just like manual edits — review and click
+// "Speichern" to apply them.
+// ─────────────────────────────────────────────
+function showImportStatus(message, isError, targetId) {
+  const el = document.getElementById(targetId || 'excelImportStatus');
+  el.innerHTML = \`<div class="import-status \${isError ? 'error' : 'success'}">\${message}</div>\`;
+}
+
+function findColumnIndex(headerRow, candidates) {
+  for (let i = 0; i < headerRow.length; i++) {
+    const cell = (headerRow[i] || '').toString().trim().toLowerCase();
+    if (candidates.some(c => cell === c || cell.includes(c))) return i;
+  }
+  return -1;
+}
+
+function normalizeArtikelKey(v) {
+  if (v === null || v === undefined) return null;
+  if (typeof v === 'number') {
+    // Excel sometimes stores "2341.9012" as a float; format consistently
+    return Number.isInteger(v) ? String(v) : v.toString();
+  }
+  return v.toString().trim();
+}
+
+function handleExcelImport(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true });
+
+      if (!rows.length) { showImportStatus('Die Datei enthält keine Zeilen.', true); return; }
+
+      const header = rows[0];
+      const kwIdx = findColumnIndex(header, ['kw', 'woche', 'week']);
+      const artIdx = findColumnIndex(header, ['artikel', 'artikel-nr', 'artikelnummer', 'article']);
+      const mengeIdx = findColumnIndex(header, ['menge', 'qty', 'quantity', 'stück', 'stueck']);
+
+      if (kwIdx === -1 || artIdx === -1 || mengeIdx === -1) {
+        showImportStatus('Spalten nicht erkannt. Bitte stellen Sie sicher, dass die Datei Spalten für KW, Artikel-Nr und Menge enthält (Reihenfolge egal).', true);
+        return;
+      }
+
+      // Group imported rows by artikel: art -> [{year, kw, menge}]
+      const importedByArt = {};
+      let skipped = 0;
+      for (let r = 1; r < rows.length; r++) {
+        const row = rows[r];
+        if (!row || row.length === 0) continue;
+        const art = normalizeArtikelKey(row[artIdx]);
+        const kw = parseInt(row[kwIdx]);
+        const menge = parseFloat(row[mengeIdx]);
+        if (!art || !kw || isNaN(menge)) { skipped++; continue; }
+        if (!importedByArt[art]) importedByArt[art] = [];
+        importedByArt[art].push({ year: CURRENT_YEAR, kw, menge });
+      }
+
+      const importedArts = Object.keys(importedByArt);
+      if (!importedArts.length) {
+        showImportStatus('Keine gültigen Zeilen gefunden (KW, Artikel-Nr und Menge müssen ausgefüllt sein).', true);
+        return;
+      }
+
+      let newCount = 0, updatedCount = 0;
+      importedArts.forEach(art => {
+        // sort each artikel's imported weeks chronologically
+        importedByArt[art].sort((a,b) => absWeek(a.year,a.kw) - absWeek(b.year,b.kw));
+        if (DRAFT[art]) {
+          // Replace existing liefertermin entries entirely, per artikel
+          DRAFT[art].liefertermin = importedByArt[art];
+          updatedCount++;
+        } else {
+          // Create new artikel with empty BOM (to be filled in later via Stückliste tab)
+          DRAFT[art] = {
+            liefertermin: importedByArt[art],
+            tz_bom: [], fr_bom: [],
+            mo_s_zt: 0.5, mo_a_platz: null
+          };
+          newCount++;
+        }
+      });
+
+      let msg = \`Import in Entwurf übernommen: \${updatedCount} Artikel aktualisiert, \${newCount} neue Artikel angelegt. Bitte prüfen und auf "Speichern" klicken, um die Änderungen zu übernehmen.\`;
+      if (skipped > 0) msg += \` \${skipped} Zeile(n) übersprungen (unvollständig).\`;
+      showImportStatus(msg, false);
+      renderDraftView();
+    } catch (err) {
+      showImportStatus('Fehler beim Lesen der Datei: ' + err.message, true);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  // reset the file input so the same file can be re-selected if needed
+  document.getElementById('excelImportInput').value = '';
+}
+
+// ─────────────────────────────────────────────
+// EXCEL IMPORT — Stückliste (BOM): one row per Artikel (or multiple rows for
+// multi-part BOM), columns: Artikel-Nr, Tiefziehen-Nr, TZ-Maschine, TZ-S-Zt,
+// TZ-R-Zt, TZ-Faktor, Fräsen-Nr, FR-Maschine, FR-S-Zt, FR-R-Zt, FR-Faktor,
+// Montage-S-Zt, Arbeitsplatz. Replaces the complete BOM for each artikel found.
+// ─────────────────────────────────────────────
+function parseNumOrNull(v) {
+  if (v === null || v === undefined || v === '') return null;
+  const n = parseFloat(v);
+  return isNaN(n) ? null : n;
+}
+
+function handleBomExcelImport(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true });
+
+      if (!rows.length) { showImportStatus('Die Datei enthält keine Zeilen.', true, 'bomExcelImportStatus'); return; }
+
+      const header = rows[0];
+      const artIdx = findColumnIndex(header, ['artikel-nr', 'artikelnummer', 'artikel', 'article']);
+      const tzNrIdx = findColumnIndex(header, ['tiefziehen-nr', 'tiefziehennr', 'tiefziehen nr', 'tz-nr', 'tz nr']);
+      const tzMaschIdx = findColumnIndex(header, ['tz-maschine', 'tz maschine', 'tiefziehen-maschine']);
+      const tzSztIdx = findColumnIndex(header, ['tz-s-zt', 'tz s-zt', 'tz szt']);
+      const tzRztIdx = findColumnIndex(header, ['tz-r-zt', 'tz r-zt', 'tz rzt']);
+      const tzFaktorIdx = findColumnIndex(header, ['tz-faktor', 'tz faktor']);
+      const frNrIdx = findColumnIndex(header, ['fräsen-nr', 'fraesen-nr', 'fräsennr', 'fr-nr', 'fr nr']);
+      const frMaschIdx = findColumnIndex(header, ['fr-maschine', 'fr maschine', 'fräsen-maschine', 'fraesen-maschine']);
+      const frSztIdx = findColumnIndex(header, ['fr-s-zt', 'fr s-zt', 'fr szt']);
+      const frRztIdx = findColumnIndex(header, ['fr-r-zt', 'fr r-zt', 'fr rzt']);
+      const frFaktorIdx = findColumnIndex(header, ['fr-faktor', 'fr faktor']);
+      const moSztIdx = findColumnIndex(header, ['montage-s-zt', 'montage s-zt', 'mo-s-zt', 'montage szt']);
+      const aPlatzIdx = findColumnIndex(header, ['arbeitsplatz', 'a-platz']);
+
+      if (artIdx === -1) {
+        showImportStatus('Spalte "Artikel-Nr" nicht erkannt. Bitte prüfen Sie die Spaltenüberschriften.', true, 'bomExcelImportStatus');
+        return;
+      }
+
+      // Group imported rows by artikel: art -> { tz_bom:[...], fr_bom:[...], mo_s_zt, mo_a_platz }
+      const importedByArt = {};
+      let skipped = 0;
+      for (let r = 1; r < rows.length; r++) {
+        const row = rows[r];
+        if (!row || row.length === 0) continue;
+        const art = normalizeArtikelKey(row[artIdx]);
+        if (!art) { skipped++; continue; }
+
+        if (!importedByArt[art]) importedByArt[art] = { tz_bom: [], fr_bom: [], mo_s_zt: null, mo_a_platz: null };
+        const entry = importedByArt[art];
+
+        const tzNr = tzNrIdx > -1 ? normalizeArtikelKey(row[tzNrIdx]) : null;
+        if (tzNr) {
+          entry.tz_bom.push({
+            stage_art: tzNr,
+            maschine: tzMaschIdx > -1 ? (row[tzMaschIdx] || null) : null,
+            s_zt: tzSztIdx > -1 ? parseNumOrNull(row[tzSztIdx]) : null,
+            r_zt: tzRztIdx > -1 ? parseNumOrNull(row[tzRztIdx]) : null,
+            menge_per_stk: tzFaktorIdx > -1 ? (parseNumOrNull(row[tzFaktorIdx]) ?? 1) : 1,
+          });
+        }
+        const frNr = frNrIdx > -1 ? normalizeArtikelKey(row[frNrIdx]) : null;
+        if (frNr) {
+          entry.fr_bom.push({
+            stage_art: frNr,
+            maschine: frMaschIdx > -1 ? (row[frMaschIdx] || null) : null,
+            s_zt: frSztIdx > -1 ? parseNumOrNull(row[frSztIdx]) : null,
+            r_zt: frRztIdx > -1 ? parseNumOrNull(row[frRztIdx]) : null,
+            menge_per_stk: frFaktorIdx > -1 ? (parseNumOrNull(row[frFaktorIdx]) ?? 1) : 1,
+          });
+        }
+        if (moSztIdx > -1) {
+          const v = parseNumOrNull(row[moSztIdx]);
+          if (v !== null) entry.mo_s_zt = v;
+        }
+        if (aPlatzIdx > -1 && row[aPlatzIdx]) {
+          entry.mo_a_platz = row[aPlatzIdx].toString().trim();
+        }
+      }
+
+      const importedArts = Object.keys(importedByArt);
+      if (!importedArts.length) {
+        showImportStatus('Keine gültigen Zeilen gefunden (Artikel-Nr muss ausgefüllt sein).', true, 'bomExcelImportStatus');
+        return;
+      }
+
+      let newCount = 0, updatedCount = 0;
+      importedArts.forEach(art => {
+        const imp = importedByArt[art];
+        if (DRAFT[art]) {
+          // Replace the complete BOM for this artikel
+          DRAFT[art].tz_bom = imp.tz_bom;
+          DRAFT[art].fr_bom = imp.fr_bom;
+          if (imp.mo_s_zt !== null) DRAFT[art].mo_s_zt = imp.mo_s_zt;
+          if (imp.mo_a_platz !== null) DRAFT[art].mo_a_platz = imp.mo_a_platz;
+          updatedCount++;
+        } else {
+          // New artikel from BOM import has no Liefertermin yet — can be added later
+          DRAFT[art] = {
+            liefertermin: [],
+            tz_bom: imp.tz_bom,
+            fr_bom: imp.fr_bom,
+            mo_s_zt: imp.mo_s_zt !== null ? imp.mo_s_zt : 0.5,
+            mo_a_platz: imp.mo_a_platz,
+          };
+          newCount++;
+        }
+      });
+
+      let msg = \`Import in Entwurf übernommen: \${updatedCount} Artikel aktualisiert, \${newCount} neue Artikel angelegt. Bitte prüfen und auf "Speichern" klicken, um die Änderungen zu übernehmen.\`;
+      if (skipped > 0) msg += \` \${skipped} Zeile(n) übersprungen (Artikel-Nr fehlte).\`;
+      showImportStatus(msg, false, 'bomExcelImportStatus');
+      renderDraftView();
+    } catch (err) {
+      showImportStatus('Fehler beim Lesen der Datei: ' + err.message, true, 'bomExcelImportStatus');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  document.getElementById('bomExcelImportInput').value = '';
+}
+
+function deleteArtikel(art) {
+  if (confirm('Artikel ' + art + ' wirklich löschen?')) {
+    delete DRAFT[art];
+    renderDraftView();
+  }
+}
+function clearArtikelBom(art) {
+  if (confirm('Stückliste (Tiefziehen, Fräsen, Montage) für Artikel ' + art + ' löschen? Artikel-Nr und Liefertermine bleiben erhalten.')) {
+    DRAFT[art].tz_bom = [];
+    DRAFT[art].fr_bom = [];
+    DRAFT[art].mo_s_zt = 0.5;
+    DRAFT[art].mo_a_platz = null;
+    renderDraftView();
+  }
+}
+function renameArtikel(oldKey, newKey) {
+  newKey = newKey.trim();
+  if (!newKey || newKey === oldKey) { renderDraftView(); return; }
+  if (DRAFT[newKey]) { alert('Artikel ' + newKey + ' existiert bereits!'); renderDraftView(); return; }
+  DRAFT[newKey] = DRAFT[oldKey];
+  delete DRAFT[oldKey];
+  renderDraftView();
+}
+
+// ─────────────────────────────────────────────
+// SUMMARY
+// ─────────────────────────────────────────────
+function renderSummary() {
+  const cap = parseFloat(document.getElementById('capInput').value) || 40;
+  const capWarn = parseFloat(document.getElementById('capWarnInput').value) || (cap + 10);
+  const D = computeDerived();
+  const arts = Object.keys(PLAN);
+
+  document.getElementById('s-total').textContent = arts.length;
+  document.getElementById('s-kw-lbl').textContent = \`KW \${CURRENT_KW}/\${CURRENT_YEAR} aktiv\`;
+
+  const curKey = CURRENT_YEAR + '-' + CURRENT_KW;
+  let tzSum = 0, frSum = 0;
+  Object.values(D.tiefziehenGroups).forEach(g => { tzSum += g.weeksMap[curKey] || 0; });
+  Object.values(D.fraesenGroups).forEach(g => { frSum += g.weeksMap[curKey] || 0; });
+  document.getElementById('s-tz').textContent = tzSum ? tzSum.toFixed(1) : '—';
+  document.getElementById('s-fr').textContent = frSum ? frSum.toFixed(1) : '—';
+
+  const moMap = {};
+  arts.forEach(art => {
+    const szt = getMoSzt(art);
+    (D.montageByArt[art] || []).forEach(w => {
+      const key = w.year + '-' + w.kw;
+      moMap[key] = (moMap[key] || 0) + szt * w.menge;
+    });
+  });
+  document.getElementById('s-mo').textContent = (moMap[curKey] || 0).toFixed(1) + ' h';
+
+  // Only consider the same visible 12-week window as the capacity chart/cards below,
+  // so the warning card always matches what's actually shown on screen.
+  const visibleWeeks = [];
+  for (let i = 0; i < 12; i++) {
+    let k = CURRENT_KW + i, y = CURRENT_YEAR;
+    if (k > 52) { k -= 52; y += 1; }
+    visibleWeeks.push(y + '-' + k);
+  }
+  let worstKey = null, worstDiff = 0;
+  visibleWeeks.forEach(key => {
+    const h = moMap[key] || 0;
+    const diff = h - capWarn;
+    if (diff > worstDiff) { worstDiff = diff; worstKey = key; }
+  });
+  const overCard = document.getElementById('s-over-card');
+  if (worstKey) {
+    const kwNum = worstKey.split('-')[1];
+    overCard.classList.add('alert-card');
+    document.getElementById('s-over-kw').textContent = kwNum;
+    document.getElementById('s-over-val').style.color = 'var(--danger)';
+    document.getElementById('s-over-val').textContent = '+' + worstDiff.toFixed(1) + 'h';
+    document.getElementById('s-over-sub').textContent = 'Überlast — Umplanung nötig';
+  } else {
+    overCard.classList.remove('alert-card');
+    document.getElementById('s-over-kw').textContent = '—';
+    document.getElementById('s-over-val').style.color = 'var(--fest)';
+    document.getElementById('s-over-val').textContent = 'OK';
+    document.getElementById('s-over-sub').textContent = 'Keine Überlast';
+  }
+
+  document.getElementById('stat-total-art').textContent = arts.length;
+
+  return { D, moMap };
+}
+
+function renderCapacity(moMap, D) {
+  const cap = parseFloat(document.getElementById('capInput').value) || 40;
+  const capWarn = parseFloat(document.getElementById('capWarnInput').value) || (cap + 10);
+  const weeks = [];
+  for (let i = 0; i < 12; i++) {
+    let k = CURRENT_KW + i, y = CURRENT_YEAR;
+    if (k > 52) { k -= 52; y += 1; }
+    weeks.push({year:y, kw:k});
+  }
+  const grid = document.getElementById('capGrid');
+  grid.innerHTML = weeks.map(({year,kw}) => {
+    const key = year + '-' + kw;
+    const used = moMap[key] || 0;
+    const pct = Math.min((used / capWarn) * 100, 100);
+    const over = used > capWarn;
+    const nearFull = !over && used > cap;
+    const festKW = isFest(year, kw);
+    const barColor = over ? 'var(--danger)' : nearFull ? 'var(--warn)' : 'var(--mo-c)';
+    const cardCls = over ? 'cap-card over' : nearFull ? 'cap-card warn' : 'cap-card';
+    const statusTxt = over
+      ? \`<span class="over-txt">+\${(used-capWarn).toFixed(1)}h ÜBERLAST</span>\`
+      : nearFull ? \`<span class="warn-txt">+\${(used-cap).toFixed(1)}h Warnung (\${used.toFixed(1)}h)</span>\`
+      : used > 0 ? \`<span class="ok-txt">\${used.toFixed(1)}h / \${cap}h</span>\`
+      : \`<span style="color:var(--muted)">frei</span>\`;
+    return \`<div class="\${cardCls}">
+      <div class="cap-kw">KW \${kw} \${festKW?'🔒':''}<span>\${used>0?Math.round(pct)+'%':''}</span></div>
+      <div class="cap-bar-bg"><div class="cap-bar-fill" style="width:\${pct}%;background:\${barColor}"></div></div>
+      <div class="cap-detail">\${statusTxt}</div>
+    </div>\`;
+  }).join('');
+
+  renderCapacityChart(weeks, moMap, cap, capWarn);
+  renderOverloadPanel(weeks, moMap, cap, capWarn, D);
+}
+
+function renderOverloadPanel(weeks, moMap, cap, capWarn, D) {
+  const panel = document.getElementById('overloadActionPanel');
+  const overloadedWeeks = weeks.filter(({year,kw}) => (moMap[(year+'-'+kw)]||0) > capWarn);
+  if (!overloadedWeeks.length) { panel.innerHTML = ''; return; }
+
+  const rows = [];
+  overloadedWeeks.forEach(({year,kw}) => {
+    const key = year+'-'+kw;
+    const used = moMap[key];
+    const over = used - capWarn;
+    // find artikel + specific liefertermin week contributing montage hours this week
+    const contributors = [];
+    Object.keys(PLAN).forEach(art => {
+      const w = (D.montageByArt[art]||[]).find(x => x.year===year && x.kw===kw);
+      if (w && w.menge) {
+        const szt = getMoSzt(art);
+        const liefIdx = PLAN[art].liefertermin.indexOf(w.srcWeek);
+        contributors.push({ art, hours: szt * w.menge, liefIdx, liefKw: w.srcWeek.kw, liefYear: w.srcWeek.year });
+      }
+    });
+    contributors.sort((a,b) => b.hours - a.hours);
+
+    contributors.forEach((c, i) => {
+      rows.push(\`<tr>
+        <td style="font-weight:700;color:var(--danger)">\${i===0 ? 'KW'+kw+'/'+year : ''}</td>
+        <td><span class="late-badge">+\${over.toFixed(1)}h Überlast</span></td>
+        <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;font-weight:600">\${c.art}</td>
+        <td style="text-align:center">KW\${c.liefKw}/\${c.liefYear}</td>
+        <td style="text-align:center">\${c.hours.toFixed(1)}h</td>
+        <td><button class="ov-shift-btn" onclick="shiftArtikelEarlier('\${c.art}',\${c.liefIdx})">→ Fräsen/Tiefziehen 1 Woche früher</button></td>
+      </tr>\`);
+    });
+  });
+
+  panel.innerHTML = \`
+    <table class="detail overload-table">
+      <thead><tr>
+        <th>KW</th><th>Warnung</th><th>Artikel</th><th>Liefertermin</th><th>Montage Std.</th><th>Aktion</th>
+      </tr></thead>
+      <tbody>\${rows.join('')}</tbody>
+    </table>\`;
+}
+
+function shiftArtikelEarlier(art, liefIdx) {
+  const off = getOffsets();
+  const w = PLAN[art].liefertermin[liefIdx];
+  if (!w) return;
+  const curFr = (typeof w.fr_offset === 'number') ? w.fr_offset : off.fr;
+  const curTz = (typeof w.tz_offset === 'number') ? w.tz_offset : off.tz;
+  w.fr_offset = curFr + 1;
+  w.tz_offset = curTz + 1;
+  // Keep the draft copy in sync so a later "Speichern" in Liefertermin Eingabe
+  // doesn't silently undo this quick fix.
+  if (DRAFT[art] && DRAFT[art].liefertermin[liefIdx]) {
+    DRAFT[art].liefertermin[liefIdx].fr_offset = w.fr_offset;
+    DRAFT[art].liefertermin[liefIdx].tz_offset = w.tz_offset;
+  }
+  renderAll();
+}
+
+function renderCapacityChart(weeks, moMap, cap, capWarn) {
+  const svg = document.getElementById('capChart');
+  if (!svg) return;
+
+  const W = 900, H = 220;
+  const padL = 40, padR = 16, padT = 18, padB = 30;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const n = weeks.length;
+  const barSlot = chartW / n;
+  const barW = Math.min(barSlot * 0.55, 36);
+
+  const values = weeks.map(({year,kw}) => moMap[(year+'-'+kw)] || 0);
+  const maxVal = Math.max(capWarn * 1.2, ...values, 1);
+
+  function yFor(v) { return padT + chartH - (v / maxVal) * chartH; }
+
+  // background zone bands: green (0..cap), yellow (cap..capWarn), red (capWarn..max)
+  const capY = yFor(cap);
+  const capWarnY = yFor(capWarn);
+  const chartTop = padT;
+  const chartBottom = padT + chartH;
+  const zoneBands = \`
+    <rect x="\${padL}" y="\${chartTop.toFixed(1)}" width="\${chartW.toFixed(1)}" height="\${Math.max(capWarnY-chartTop,0).toFixed(1)}" fill="var(--danger)" opacity="0.06"/>
+    <rect x="\${padL}" y="\${capWarnY.toFixed(1)}" width="\${chartW.toFixed(1)}" height="\${Math.max(capY-capWarnY,0).toFixed(1)}" fill="var(--warn)" opacity="0.08"/>
+    <rect x="\${padL}" y="\${capY.toFixed(1)}" width="\${chartW.toFixed(1)}" height="\${Math.max(chartBottom-capY,0).toFixed(1)}" fill="var(--fest)" opacity="0.06"/>\`;
+
+  // gridlines (4 horizontal)
+  let gridLines = '';
+  const steps = 4;
+  for (let i = 0; i <= steps; i++) {
+    const v = (maxVal / steps) * i;
+    const y = yFor(v);
+    gridLines += \`<line x1="\${padL}" y1="\${y}" x2="\${W-padR}" y2="\${y}" stroke="var(--border)" stroke-width="1"/>\`;
+    gridLines += \`<text x="\${padL-8}" y="\${y+3}" text-anchor="end" font-size="9" fill="var(--muted)">\${Math.round(v)}</text>\`;
+  }
+
+  // bars
+  let bars = '';
+  let labels = '';
+  weeks.forEach(({year,kw}, i) => {
+    const v = values[i];
+    const x = padL + i * barSlot + (barSlot - barW)/2;
+    const y = yFor(v);
+    const barH = (padT + chartH) - y;
+    const over = v > capWarn;
+    const nearFull = !over && v > cap;
+    const color = over ? 'var(--danger)' : nearFull ? 'var(--warn)' : 'var(--mo-c)';
+    const isCur = (year===CURRENT_YEAR && kw===CURRENT_KW);
+    bars += \`<rect x="\${x.toFixed(1)}" y="\${y.toFixed(1)}" width="\${barW.toFixed(1)}" height="\${Math.max(barH,0).toFixed(1)}" fill="\${color}" rx="2" opacity="\${isCur?1:0.85}"/>\`;
+    if (v > 0) {
+      bars += \`<text x="\${(x+barW/2).toFixed(1)}" y="\${(y-4).toFixed(1)}" text-anchor="middle" font-size="9" fill="var(--text)" font-weight="600">\${v.toFixed(0)}</text>\`;
+    }
+    const labelColor = isCur ? 'var(--accent)' : 'var(--muted)';
+    labels += \`<text x="\${(x+barW/2).toFixed(1)}" y="\${H-padB+14}" text-anchor="middle" font-size="9.5" fill="\${labelColor}" font-weight="\${isCur?700:400}">KW\${kw}</text>\`;
+  });
+
+  // two threshold lines (dashed): normal/warning boundary, and warning/overload boundary
+  const capLine = \`<line x1="\${padL}" y1="\${capY.toFixed(1)}" x2="\${W-padR}" y2="\${capY.toFixed(1)}" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <text x="\${W-padR}" y="\${(capY-5).toFixed(1)}" text-anchor="end" font-size="9.5" fill="var(--warn)" font-weight="700">Normal: \${cap}h</text>
+    <line x1="\${padL}" y1="\${capWarnY.toFixed(1)}" x2="\${W-padR}" y2="\${capWarnY.toFixed(1)}" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <text x="\${W-padR}" y="\${(capWarnY-5).toFixed(1)}" text-anchor="end" font-size="9.5" fill="var(--danger)" font-weight="700">Überlast: \${capWarn}h</text>\`;
+
+  svg.innerHTML = \`
+    \${zoneBands}
+    \${gridLines}
+    \${bars}
+    \${capLine}
+    \${labels}
+    <line x1="\${padL}" y1="\${padT}" x2="\${padL}" y2="\${padT+chartH}" stroke="var(--border)" stroke-width="1"/>
+    <line x1="\${padL}" y1="\${padT+chartH}" x2="\${W-padR}" y2="\${padT+chartH}" stroke="var(--border)" stroke-width="1"/>
+  \`;
+}
+
+// ─────────────────────────────────────────────
+// GANTT
+// ─────────────────────────────────────────────
+function renderGantt(D) {
+  const weeks = [];
+  for (let i = 0; i < KW_WINDOW; i++) {
+    let k = CURRENT_KW + i, y = CURRENT_YEAR;
+    if (k > 52) { k -= 52; y += 1; }
+    weeks.push({year:y, kw:k});
+  }
+  const arts = getArtikelList();
+  const showTZ = activeFilter === 'all' || activeFilter === 'TZ';
+  const showFR = activeFilter === 'all' || activeFilter === 'FR';
+  const showMO = activeFilter === 'all' || activeFilter === 'MO';
+  const showLI = activeFilter === 'all' || activeFilter === 'LI';
+
+  let html = '<thead><tr><th class="col-art">Artikel / Stufe</th>';
+  weeks.forEach(({year,kw}) => {
+    const isCur = (year===CURRENT_YEAR && kw===CURRENT_KW);
+    const cls = isCur ? 'kw-curr' : isFest(year,kw) ? 'kw-fest' : 'kw-flex';
+    html += \`<th class="\${cls}">KW\${kw}\${isCur?' ◀':isFest(year,kw)?' 🔒':''}</th>\`;
+  });
+  html += '</tr></thead><tbody>';
+
+  arts.forEach(art => {
+    const d = PLAN[art];
+    const rowCount = (showLI?1:0) + (showMO?1:0) + (showFR?Math.max(d.fr_bom.length,1):0) + (showTZ?Math.max(d.tz_bom.length,1):0);
+    let firstRow = true;
+
+    function artCell() {
+      if (firstRow) {
+        firstRow = false;
+        return \`<td class="art-cell" rowspan="\${rowCount}"><span class="art-name">\${art}</span></td>\`;
+      }
+      return '';
+    }
+
+    if (showLI) {
+      html += \`<tr class="stage-row-li">\${artCell()}\`;
+      weeks.forEach(({year,kw}) => {
+        const w = d.liefertermin.find(x => x.year===year && x.kw===kw);
+        html += \`<td class="stage-cell">\${w ? \`<span class="cb cb-li">LI:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+      });
+      html += '</tr>';
+    }
+    if (showMO) {
+      html += \`<tr class="stage-row-mo">\${artCell()}\`;
+      weeks.forEach(({year,kw}) => {
+        const w = (D.montageByArt[art]||[]).find(x => x.year===year && x.kw===kw);
+        html += \`<td class="stage-cell">\${w ? \`<span class="cb cb-mo">MO:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+      });
+      html += '</tr>';
+    }
+    if (showFR) {
+      const frLines = D.fraesenLines[art] && D.fraesenLines[art].length ? D.fraesenLines[art] : [{stage_art:'—', weeks:[]}];
+      frLines.forEach(line => {
+        html += \`<tr class="stage-row-fr">\${artCell()}\`;
+        weeks.forEach(({year,kw}) => {
+          const w = line.weeks.find(x => x.year===year && x.kw===kw);
+          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-fr cb-wide">\${line.stage_art}<br>FR:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+        });
+        html += '</tr>';
+      });
+    }
+    if (showTZ) {
+      const tzLines = D.tiefziehenLines[art] && D.tiefziehenLines[art].length ? D.tiefziehenLines[art] : [{stage_art:'—', weeks:[]}];
+      tzLines.forEach(line => {
+        html += \`<tr class="stage-row-tz">\${artCell()}\`;
+        weeks.forEach(({year,kw}) => {
+          const w = line.weeks.find(x => x.year===year && x.kw===kw);
+          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-tz cb-wide">\${line.stage_art}<br>TZ:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+        });
+        html += '</tr>';
+      });
+    }
+  });
+  html += '</tbody>';
+  document.getElementById('ganttTable').innerHTML = html;
+}
+
+// ─────────────────────────────────────────────
+// DETAIL TABLE
+// ─────────────────────────────────────────────
+function renderDetail(D) {
+  const arts = getArtikelList();
+  let rows = '';
+  const seenFrStage = new Set(), seenTzStage = new Set();
+
+  arts.forEach(art => {
+    const d = PLAN[art];
+
+    if (activeFilter === 'all' || activeFilter === 'LI') {
+      d.liefertermin.forEach(w => {
+        const fest = isFest(w.year, w.kw);
+        rows += rowHtml(art, 'LI', 'Lieferung', 'pill-li', '—', w.menge, '—', w.kw, w.year, fest, null);
+      });
+    }
+    if (activeFilter === 'all' || activeFilter === 'MO') {
+      (D.montageByArt[art]||[]).forEach(w => {
+        const fest = isFest(w.year, w.kw);
+        const std = (getMoSzt(art) * w.menge).toFixed(1) + 'h';
+        rows += rowHtml(art, 'MO', 'Montage', 'pill-mo', d.mo_a_platz||'—', w.menge, std, w.kw, w.year, fest, null);
+      });
+    }
+    if (activeFilter === 'all' || activeFilter === 'FR') {
+      (D.fraesenLines[art]||[]).forEach(line => {
+        if (seenFrStage.has(line.stage_art)) return;
+        seenFrStage.add(line.stage_art);
+        const g = D.fraesenGroups[line.stage_art];
+        Object.entries(g.weeksMap).sort().forEach(([key,menge]) => {
+          const [year,kw] = key.split('-').map(Number);
+          const fest = isFest(year, kw);
+          const label = g.artikel.length > 1 ? g.artikel.join('+') : art;
+          rows += rowHtml(label, 'FR', 'Fräsen', 'pill-fr', line.stage_art+' / '+(line.maschine||'—'), menge.toFixed(2), '—', kw, year, fest, null);
+        });
+      });
+    }
+    if (activeFilter === 'all' || activeFilter === 'TZ') {
+      (D.tiefziehenLines[art]||[]).forEach(line => {
+        if (seenTzStage.has(line.stage_art)) return;
+        seenTzStage.add(line.stage_art);
+        const g = D.tiefziehenGroups[line.stage_art];
+        Object.entries(g.weeksMap).sort().forEach(([key,menge]) => {
+          const [year,kw] = key.split('-').map(Number);
+          const fest = isFest(year, kw);
+          const label = g.artikel.length > 1 ? g.artikel.join('+') : art;
+          rows += rowHtml(label, 'TZ', 'Tiefziehen', 'pill-tz', line.stage_art+' / '+(line.maschine||'—'), menge.toFixed(2), '—', kw, year, fest, null);
+        });
+      });
+    }
+  });
+  document.getElementById('detailBody').innerHTML = rows || '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">Keine Daten</td></tr>';
+}
+
+function rowHtml(art, stKey, stLabel, pillCls, stageInfo, menge, std, kw, year, fest, kombi) {
+  return \`<tr>
+    <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;font-size:11px">\${art}</td>
+    <td><span class="stage-pill \${pillCls}">\${stKey} · \${stLabel}</span></td>
+    <td style="font-size:11px;color:var(--muted)">\${stageInfo}</td>
+    <td style="text-align:center">\${menge}</td>
+    <td style="text-align:center;color:var(--mo-c)">\${std}</td>
+    <td style="text-align:center;font-weight:600">KW\${kw}/\${year}</td>
+    <td style="text-align:center">—</td>
+    <td class="\${fest?'st-fest':'st-flex'}">\${fest?'🔒 FEST':'~ FLEX'}</td>
+    <td style="text-align:center;font-size:10px;color:var(--accent2)">\${kombi || '—'}</td>
+  </tr>\`;
+}
+
+// ─────────────────────────────────────────────
+// DASHBOARD — "Diese Woche" view + late detection
+// ─────────────────────────────────────────────
+function renderDashboard(D) {
+  document.getElementById('dashKW').textContent = \`\${CURRENT_KW} / \${CURRENT_YEAR}\`;
+  const curKey = CURRENT_YEAR + '-' + CURRENT_KW;
+  const arts = getArtikelList();
+
+  // TZ this week (deduplicated by stage_art)
+  const tzItems = [];
+  const seenTz = new Set();
+  arts.forEach(art => {
+    (D.tiefziehenLines[art]||[]).forEach(line => {
+      if (seenTz.has(line.stage_art)) return;
+      const g = D.tiefziehenGroups[line.stage_art];
+      const menge = g.weeksMap[curKey];
+      if (menge) {
+        seenTz.add(line.stage_art);
+        tzItems.push({ ident: line.stage_art, stageArt: line.stage_art, label: g.artikel.join('+'), menge, maschine: line.maschine });
+      }
+    });
+  });
+
+  // FR this week
+  const frItems = [];
+  const seenFr = new Set();
+  arts.forEach(art => {
+    (D.fraesenLines[art]||[]).forEach(line => {
+      if (seenFr.has(line.stage_art)) return;
+      const g = D.fraesenGroups[line.stage_art];
+      const menge = g.weeksMap[curKey];
+      if (menge) {
+        seenFr.add(line.stage_art);
+        frItems.push({ ident: line.stage_art, stageArt: line.stage_art, label: g.artikel.join('+'), menge, maschine: line.maschine });
+      }
+    });
+  });
+
+  // MO this week (per artikel, not combined)
+  const moItems = [];
+  arts.forEach(art => {
+    const w = (D.montageByArt[art]||[]).find(x => x.year===CURRENT_YEAR && x.kw===CURRENT_KW);
+    if (w) moItems.push({ ident: art, stageArt: null, label: art, menge: w.menge, maschine: PLAN[art].mo_a_platz });
+  });
+
+  // LI this week
+  const liItems = [];
+  arts.forEach(art => {
+    const w = PLAN[art].liefertermin.find(x => x.year===CURRENT_YEAR && x.kw===CURRENT_KW);
+    if (w) liItems.push({ ident: art, stageArt: null, label: art, menge: w.menge, maschine: null });
+  });
+
+  function renderDashList(containerId, items, stage) {
+    const el = document.getElementById(containerId);
+    if (!items.length) { el.innerHTML = '<div class="dash-empty">Keine Posten diese Woche</div>'; return; }
+    el.innerHTML = items.map(it => {
+      const done = isDone(stage, it.ident, CURRENT_YEAR, CURRENT_KW);
+      const stageArtLine = it.stageArt ? \`<span class="di-stageart">\${it.stageArt}</span>\` : '';
+      return \`<div class="dash-item \${done?'done':''}">
+        \${stageArtLine}
+        <span class="di-art">\${it.label}\${it.maschine ? ' <span style="color:var(--muted);font-weight:400">/ '+it.maschine+'</span>' : ''}</span>
+        <div class="di-meta">
+          <span>Menge: \${typeof it.menge==='number' ? it.menge.toFixed(it.menge%1?2:0) : it.menge}</span>
+          <label class="di-check"><input type="checkbox" \${done?'checked':''} onchange="toggleDone('\${stage}','\${it.ident}',\${CURRENT_YEAR},\${CURRENT_KW})"> erledigt</label>
+        </div>
+      </div>\`;
+    }).join('');
+  }
+
+  renderDashList('dashTZ', tzItems, 'TZ');
+  renderDashList('dashFR', frItems, 'FR');
+  renderDashList('dashMO', moItems, 'MO');
+  renderDashList('dashLI', liItems, 'LI');
+
+  // ── Late items: scan all stages, all weeks in the past, not done ──
+  const lateRows = [];
+  function scanLate(stage, label, pillCls, groupsOrItems, isGrouped) {
+    if (isGrouped) {
+      Object.entries(groupsOrItems).forEach(([stageArt, g]) => {
+        Object.entries(g.weeksMap).forEach(([key, menge]) => {
+          const [year, kw] = key.split('-').map(Number);
+          if (isLate(stage, stageArt, year, kw) && menge) {
+            lateRows.push({ art: g.artikel.join('+'), stage, label, pillCls, stageArt, menge, year, kw });
+          }
+        });
+      });
+    }
+  }
+  scanLate('TZ', 'Tiefziehen', 'pill-tz', D.tiefziehenGroups, true);
+  scanLate('FR', 'Fräsen', 'pill-fr', D.fraesenGroups, true);
+  // MO per artikel
+  Object.keys(PLAN).forEach(art => {
+    (D.montageByArt[art]||[]).forEach(w => {
+      if (isLate('MO', art, w.year, w.kw) && w.menge) {
+        lateRows.push({ art, stage:'MO', label:'Montage', pillCls:'pill-mo', stageArt: PLAN[art].mo_a_platz||'—', menge: w.menge, year:w.year, kw:w.kw });
+      }
+    });
+  });
+  // LI per artikel
+  Object.keys(PLAN).forEach(art => {
+    PLAN[art].liefertermin.forEach(w => {
+      if (isLate('LI', art, w.year, w.kw) && w.menge) {
+        lateRows.push({ art, stage:'LI', label:'Lieferung', pillCls:'pill-li', stageArt:'—', menge: w.menge, year:w.year, kw:w.kw });
+      }
+    });
+  });
+
+  lateRows.sort((a,b) => weeksOverdue(b.year,b.kw) - weeksOverdue(a.year,a.kw));
+
+  const lateBody = document.getElementById('lateBody');
+  if (!lateRows.length) {
+    lateBody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--fest);padding:16px">✓ Keine Verspätungen — alles im Plan</td></tr>';
+  } else {
+    lateBody.innerHTML = lateRows.map(r => {
+      const ov = weeksOverdue(r.year, r.kw);
+      return \`<tr class="late-row">
+        <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif">\${r.art}</td>
+        <td><span class="stage-pill \${r.pillCls}">\${r.stage} · \${r.label}</span></td>
+        <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;color:var(--muted)">\${r.stageArt}</td>
+        <td style="text-align:center">\${typeof r.menge==='number' ? r.menge.toFixed(r.menge%1?2:0) : r.menge}</td>
+        <td style="text-align:center">KW\${r.kw}/\${r.year}</td>
+        <td style="text-align:center"><span class="late-badge">+\${ov} Wo.</span></td>
+        <td style="text-align:center"><label class="di-check"><input type="checkbox" onchange="toggleDone('\${r.stage}','\${r.stage==='MO'||r.stage==='LI'?r.art:r.stageArt}',\${r.year},\${r.kw})"> erledigt</label></td>
+      </tr>\`;
+    }).join('');
+  }
+}
+
+function setTzFrFilter(f, btn) {
+  tzfrFilter = f;
+  btn.parentElement.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTzFrOverview(computeDerived());
+}
+
+function renderTzFrOverview(D) {
+  const rows = [];
+
+  function collect(groups, stage, stageLabel) {
+    Object.entries(groups).forEach(([stageArt, g]) => {
+      const weeks = Object.keys(g.weeksMap)
+        .map(key => { const [year,kw] = key.split('-').map(Number); return {year,kw,menge:g.weeksMap[key]}; })
+        .filter(w => w.menge)
+        .sort((a,b) => absWeek(a.year,a.kw) - absWeek(b.year,b.kw));
+      if (!weeks.length) return;
+
+      let anyLate = false, allDone = true;
+      const plannedChips = [];
+      const actualChips = [];
+      weeks.forEach(w => {
+        const done = isDone(stage, stageArt, w.year, w.kw);
+        const late = isPast(w.year, w.kw) && !done;
+        if (late) anyLate = true;
+        if (!done) allDone = false;
+        const cls = done ? 'done' : late ? 'late' : '';
+        plannedChips.push(\`<span class="tzfr-kw-chip \${cls}">KW\${w.kw}/\${w.year}</span>\`);
+        if (done) {
+          const at = getDoneAt(stage, stageArt, w.year, w.kw);
+          const onTime = at && absWeek(at.year, at.kw) <= absWeek(w.year, w.kw);
+          actualChips.push(\`<span class="tzfr-kw-chip \${onTime?'done':'late'}">KW\${at.kw}/\${at.year}</span>\`);
+        } else {
+          actualChips.push(\`<span class="tzfr-kw-chip">—</span>\`);
+        }
+      });
+
+      let statusIcon;
+      if (allDone) statusIcon = \`<span class="tzfr-status-ontime" title="Erledigt">✓</span>\`;
+      else if (anyLate) statusIcon = \`<span class="tzfr-status-late" title="Verspätet">⚠</span>\`;
+      else statusIcon = \`<span class="tzfr-status-pending" title="Ausstehend">…</span>\`;
+
+      rows.push({ stage, stageLabel, stageArt, artikel: g.artikel.join(', '), plannedChips: plannedChips.join(' '), actualChips: actualChips.join(' '), statusIcon, sortKey: absWeek(weeks[0].year, weeks[0].kw) });
+    });
+  }
+
+  // Montage and Lieferung are per-artikel (not grouped by a shared stage-Art-Nr like TZ/FR)
+  function collectPerArtikel(weeksByArt, stage, stageLabel, labelFn) {
+    Object.keys(PLAN).forEach(art => {
+      const weeks = (weeksByArt[art] || []).filter(w => w.menge).sort((a,b) => absWeek(a.year,a.kw) - absWeek(b.year,b.kw));
+      if (!weeks.length) return;
+
+      let anyLate = false, allDone = true;
+      const plannedChips = [];
+      const actualChips = [];
+      weeks.forEach(w => {
+        const done = isDone(stage, art, w.year, w.kw);
+        const late = isPast(w.year, w.kw) && !done;
+        if (late) anyLate = true;
+        if (!done) allDone = false;
+        const cls = done ? 'done' : late ? 'late' : '';
+        plannedChips.push(\`<span class="tzfr-kw-chip \${cls}">KW\${w.kw}/\${w.year}</span>\`);
+        if (done) {
+          const at = getDoneAt(stage, art, w.year, w.kw);
+          const onTime = at && absWeek(at.year, at.kw) <= absWeek(w.year, w.kw);
+          actualChips.push(\`<span class="tzfr-kw-chip \${onTime?'done':'late'}">KW\${at.kw}/\${at.year}</span>\`);
+        } else {
+          actualChips.push(\`<span class="tzfr-kw-chip">—</span>\`);
+        }
+      });
+
+      let statusIcon;
+      if (allDone) statusIcon = \`<span class="tzfr-status-ontime" title="Erledigt">✓</span>\`;
+      else if (anyLate) statusIcon = \`<span class="tzfr-status-late" title="Verspätet">⚠</span>\`;
+      else statusIcon = \`<span class="tzfr-status-pending" title="Ausstehend">…</span>\`;
+
+      rows.push({ stage, stageLabel, stageArt: labelFn(art), artikel: art, plannedChips: plannedChips.join(' '), actualChips: actualChips.join(' '), statusIcon, sortKey: absWeek(weeks[0].year, weeks[0].kw) });
+    });
+  }
+
+  if (tzfrFilter === 'all' || tzfrFilter === 'TZ') collect(D.tiefziehenGroups, 'TZ', 'Tiefziehen');
+  if (tzfrFilter === 'all' || tzfrFilter === 'FR') collect(D.fraesenGroups, 'FR', 'Fräsen');
+  if (tzfrFilter === 'all' || tzfrFilter === 'MO') collectPerArtikel(D.montageByArt, 'MO', 'Montage', art => PLAN[art].mo_a_platz || '—');
+  if (tzfrFilter === 'all' || tzfrFilter === 'LI') {
+    const liByArt = {};
+    Object.keys(PLAN).forEach(art => { liByArt[art] = PLAN[art].liefertermin; });
+    collectPerArtikel(liByArt, 'LI', 'Lieferung', () => '—');
+  }
+
+  rows.sort((a,b) => a.sortKey - b.sortKey);
+
+  const pillCls = { TZ: 'pill-tz', FR: 'pill-fr', MO: 'pill-mo', LI: 'pill-li' };
+  const body = rows.map(r => \`<tr>
+    <td><span class="stage-pill \${pillCls[r.stage]}">\${r.stage}</span></td>
+    <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;font-weight:600">\${r.stageArt}</td>
+    <td style="font-family:Calibri,'Segoe UI',Arial,sans-serif;color:var(--muted);font-size:11px">\${r.artikel}</td>
+    <td>\${r.plannedChips}</td>
+    <td>\${r.actualChips}</td>
+    <td style="text-align:center;font-size:15px">\${r.statusIcon}</td>
+  </tr>\`).join('');
+
+  document.getElementById('tzfrOverviewBody').innerHTML = body || '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Keine Daten</td></tr>';
+}
+
+function renderAll() {
+  const { D, moMap } = renderSummary();
+  renderCapacity(moMap, D);
+  if (activeView === 'dashboard') renderDashboard(D);
+  if (activeView === 'bom') renderBomTable();
+  if (activeView === 'input') renderInputTable();
+  if (activeView === 'gantt') renderGantt(D);
+  if (activeView === 'kwoverview') renderTzFrOverview(D);
+}
+
+if (CURRENT_USER) {
+  showApp();
+} else {
+  document.getElementById('currentKW').textContent = \`KW \${CURRENT_KW} / \${CURRENT_YEAR}\`;
+}
+
+// ── Server save/load (minimal) ────────────────────────────────
+async function globalSave() {
+  const btn = document.getElementById('globalSaveBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
+  try {
+    const r = await fetch('/api/save', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({plan: PLAN, done_status: DONE_STATUS})
+    });
+    const d = await r.json();
+    if (d.ok) {
+      showToast('✓ Gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
+      if (btn) { btn.textContent = '✓'; setTimeout(() => { btn.disabled=false; btn.textContent='💾 Speichern'; }, 2000); }
+    }
+  } catch(e) {
+    showToast('⚠ Fehler: ' + e.message, true);
+    if (btn) { btn.disabled=false; btn.textContent='💾 Speichern'; }
+  }
 }
 
 function showToast(msg, isError) {
-  let el = document.getElementById('_toast');
+  let el = document.getElementById('_sv_toast');
   if (!el) {
     el = document.createElement('div');
-    el.id = '_toast';
-    el.style.cssText = 'position:fixed;bottom:22px;right:24px;padding:11px 18px;border-radius:8px;font-size:14px;font-family:Calibri,Arial,sans-serif;font-weight:600;z-index:9999;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:opacity .4s';
+    el.id = '_sv_toast';
+    el.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:8px;font-size:13px;font-family:Calibri,Arial,sans-serif;font-weight:700;z-index:9999;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:opacity .4s';
     document.body.appendChild(el);
   }
   el.textContent = msg;
@@ -3217,70 +2097,26 @@ function showToast(msg, isError) {
   el.style.color = '#fff';
   el.style.opacity = '1';
   clearTimeout(el._t);
-  el._t = setTimeout(() => el.style.opacity = '0', 3500);
+  el._t = setTimeout(() => el.style.opacity='0', 3500);
 }
 
-async function globalSave() {
-  const btn = document.getElementById('globalSaveBtn');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird gespeichert...'; }
+// Load saved data from server on startup
+(async function loadSaved() {
   try {
-    await apiSavePlan(PLAN, DONE_STATUS);
-    showToast('✓ Gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
-    if (btn) { btn.textContent = '✓ Gespeichert'; }
-    setTimeout(() => { if (btn) { btn.disabled = false; btn.textContent = '💾 Speichern'; } }, 2000);
-  } catch(e) {
-    showToast('⚠ Fehler: ' + e.message, true);
-    if (btn) { btn.disabled = false; btn.textContent = '💾 Speichern'; }
-  }
-}
-
-const _sd = saveDraft;
-saveDraft = async function() {
-  _sd();
-  try {
-    await apiSavePlan(PLAN, DONE_STATUS);
-    showToast('✓ Gespeichert — ' + new Date().toLocaleTimeString('de-DE'), false);
-  } catch(e) {
-    showToast('⚠ Fehler: ' + e.message, true);
-  }
-};
-
-// Initialize PLAN with embedded data so tool shows something immediately
-if (typeof PLAN === 'undefined' || !PLAN || Object.keys(PLAN).length === 0) {
-  PLAN = JSON.parse(JSON.stringify(INITIAL_DATA));
-}
-if (typeof DRAFT === 'undefined' || !DRAFT) {
-  DRAFT = JSON.parse(JSON.stringify(PLAN));
-}
-if (typeof DONE_STATUS === 'undefined') {
-  DONE_STATUS = {};
-}
-document.getElementById('currentKW').textContent = 'KW ' + CURRENT_KW + ' / ' + CURRENT_YEAR;
-
-(async function start() {
-  // Show initial data immediately so screen is not empty
-  renderAll();
-
-  try {
-    const loaded = await apiLoadPlan();
-    // Handle different response shapes
-    const planData = loaded.plan || loaded;
-    if (planData && typeof planData === 'object' && Object.keys(planData).length > 0) {
-      PLAN = planData;
-      DRAFT = JSON.parse(JSON.stringify(PLAN));
+    const r = await fetch('/api/load');
+    if (r.ok) {
+      const d = await r.json();
+      if (d.plan && Object.keys(d.plan).length > 0) {
+        PLAN = d.plan;
+        DRAFT = JSON.parse(JSON.stringify(PLAN));
+        if (d.done_status) DONE_STATUS = d.done_status;
+        renderAll();
+        showToast('✓ ' + Object.keys(PLAN).length + ' Artikel geladen', false);
+      }
     }
-    if (loaded.done_status && Object.keys(loaded.done_status).length > 0) {
-      DONE_STATUS = loaded.done_status;
-    }
-    showToast('✓ Daten geladen — ' + Object.keys(PLAN).length + ' Artikel', false);
-    // Re-render with loaded data
-    renderAll();
   } catch(e) {
-    console.error('Load error:', e);
-    showToast('⚠ Konnte Daten nicht laden: ' + e.message, true);
+    console.log('No saved data, using default');
   }
-  const saveBtn = document.getElementById('globalSaveBtn');
-  if (saveBtn) saveBtn.style.display = 'inline-block';
 })();
 
 </script>
@@ -3290,11 +2126,7 @@ document.getElementById('currentKW').textContent = 'KW ' + CURRENT_KW + ' / ' + 
 
 app.use((req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.send(FRONTEND_HTML);
+  res.send(HTML);
 });
 
-app.listen(PORT, () => {
-  console.log('BW Planungstool running on port', PORT);
-  const data = loadData();
-  console.log('Ready with', Object.keys(data.plan || {}).length, 'Artikel');
-});
+app.listen(PORT, () => console.log('Running on port', PORT));
