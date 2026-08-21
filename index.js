@@ -3245,9 +3245,22 @@ saveDraft = async function() {
   }
 };
 
+// Initialize PLAN with embedded data so tool shows something immediately
+if (typeof PLAN === 'undefined' || !PLAN || Object.keys(PLAN).length === 0) {
+  PLAN = JSON.parse(JSON.stringify(INITIAL_DATA));
+}
+if (typeof DRAFT === 'undefined' || !DRAFT) {
+  DRAFT = JSON.parse(JSON.stringify(PLAN));
+}
+if (typeof DONE_STATUS === 'undefined') {
+  DONE_STATUS = {};
+}
 document.getElementById('currentKW').textContent = 'KW ' + CURRENT_KW + ' / ' + CURRENT_YEAR;
 
 (async function start() {
+  // Show initial data immediately so screen is not empty
+  renderAll();
+
   try {
     const loaded = await apiLoadPlan();
     // Handle different response shapes
@@ -3260,13 +3273,14 @@ document.getElementById('currentKW').textContent = 'KW ' + CURRENT_KW + ' / ' + 
       DONE_STATUS = loaded.done_status;
     }
     showToast('✓ Daten geladen — ' + Object.keys(PLAN).length + ' Artikel', false);
+    // Re-render with loaded data
+    renderAll();
   } catch(e) {
     console.error('Load error:', e);
     showToast('⚠ Konnte Daten nicht laden: ' + e.message, true);
   }
   const saveBtn = document.getElementById('globalSaveBtn');
   if (saveBtn) saveBtn.style.display = 'inline-block';
-  renderAll();
 })();
 
 </script>
