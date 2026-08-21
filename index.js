@@ -2673,7 +2673,12 @@ const FRONTEND_HTML = `<!DOCTYPE html>
   td.info-cell { text-align: center; color: var(--muted); font-size: 11px; }
   td.stage-cell { text-align: center; padding: 2px 3px; }
 
-  .cb { display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 9.5px; font-weight: 700; padding: 3px 6px; letter-spacing: .2px; min-width: 38px; gap: 2px; margin: 1px; position: relative; }
+  .cb { display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 9.5px; font-weight: 700; padding: 3px 6px; letter-spacing: .2px; min-width: 38px; gap: 2px; margin: 1px; position: relative; cursor: pointer; }
+  .cb:hover { opacity: .8; transform: scale(1.05); transition: all .1s; }
+  .gantt-li-cell { display: flex; align-items: center; justify-content: center; gap: 2px; }
+  .gantt-shift-btn { font-size: 10px; color: var(--muted); cursor: pointer; padding: 2px 3px; border-radius: 3px; opacity: 0; transition: opacity .15s; line-height: 1; }
+  .gantt-li-cell:hover .gantt-shift-btn { opacity: 1; }
+  .gantt-shift-btn:hover { background: var(--accent); color: #fff; opacity: 1 !important; }
   .cb.done-cell { opacity: .5; }
   .cb.done-cell::after { content: '✓'; position: absolute; top: -6px; right: -6px; background: var(--fest); color: #fff; border-radius: 50%; width: 14px; height: 14px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
   .cb-wide { flex-direction: column; min-width: 58px; font-family: Calibri, 'Segoe UI', Arial, sans-serif; line-height: 1.5; padding: 4px 6px; text-align: center; }
@@ -2991,16 +2996,16 @@ const FRONTEND_HTML = `<!DOCTYPE html>
     </div>
 
     <div class="view-tabs">
-      <button class="view-tab active" onclick="setView('dashboard',this)">Diese Woche</button>
+      <button class="view-tab" onclick="setView('dashboard',this)">Diese Woche</button>
       <button class="view-tab" onclick="setView('bom',this)">Stückliste</button>
       <button class="view-tab" onclick="setView('input',this)">Liefertermin</button>
-      <button class="view-tab" onclick="setView('gantt',this)">Gantt</button>
+      <button class="view-tab active" onclick="setView('gantt',this)">Gantt</button>
       <button class="view-tab" onclick="setView('kwoverview',this)">Erledigt</button>
       <button class="view-tab" onclick="setView('overload',this)">Überlast</button>
     </div>
 
     <!-- DASHBOARD VIEW (default) -->
-    <div id="view-dashboard">
+    <div id="view-dashboard" class="hidden">
       <div class="sec-title">KW <span id="dashKW">—</span> — Was diese Woche zu tun ist</div>
       <div class="dash-grid">
         <div class="dash-col">
@@ -3093,7 +3098,7 @@ const FRONTEND_HTML = `<!DOCTYPE html>
       </div>
     </div>
 
-    <div id="view-gantt" class="hidden">
+    <div id="view-gantt">
       <div class="input-toolbar">
         <div class="toggle-group">
           <button class="toggle-btn gantt-stage-btn active" data-stage="all" onclick="setFilter('all',this)">Alle</button>
@@ -3371,9 +3376,41 @@ function toggleDone(stage, ident, year, kw) {
     DONE_STATUS[k] = { done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
   }
   renderAll();
-  // Auto-save erledigt status to GitHub immediately so it's never lost on reload
   if (typeof apiSavePlan === 'function' && AUTH_TOKEN) {
     apiSavePlan(PLAN, DONE_STATUS).catch(e => console.warn('Auto-save erledigt failed:', e.message));
+  }
+}
+
+// Click directly on Gantt cell to toggle erledigt + save immediately
+function toggleDoneAndSave(stage, ident, year, kw) {
+  toggleDone(stage, ident, year, kw);
+}
+
+// Shift a Liefertermin week by +/- 1 directly from Gantt drag
+function shiftLieferterminKW(art, fromKw, fromYear, direction) {
+  const arr = PLAN[art].liefertermin;
+  const idx = arr.findIndex(w => w.kw === fromKw && w.year === fromYear);
+  if (idx === -1) return;
+  let newKw = fromKw + direction;
+  let newYear = fromYear;
+  if (newKw > 52) { newKw -= 52; newYear++; }
+  if (newKw < 1)  { newKw += 52; newYear--; }
+  // Check if target KW already has an entry — if so, merge quantities
+  const existing = arr.findIndex(w => w.kw === newKw && w.year === newYear);
+  if (existing !== -1) {
+    arr[existing].menge += arr[idx].menge;
+    arr.splice(idx, 1);
+  } else {
+    arr[idx].kw = newKw;
+    arr[idx].year = newYear;
+  }
+  // Keep DRAFT in sync
+  if (DRAFT[art]) {
+    DRAFT[art].liefertermin = JSON.parse(JSON.stringify(PLAN[art].liefertermin));
+  }
+  renderAll();
+  if (typeof apiSavePlan === 'function' && AUTH_TOKEN) {
+    apiSavePlan(PLAN, DONE_STATUS).catch(e => console.warn('Auto-save shift failed:', e.message));
   }
 }
 function isPast(year, kw) {
@@ -3415,7 +3452,7 @@ function shiftCurrentKW(delta) {
 }
 
 let activeFilter = 'all';
-let activeView = 'dashboard';
+let activeView = 'gantt';
 let tzfrFilter = 'all';
 
 function setFilter(f, btn) {
@@ -4307,7 +4344,15 @@ function renderGantt(D) {
       weeks.forEach(({year,kw}) => {
         const w = d.liefertermin.find(x => x.year===year && x.kw===kw);
         const liDone = w && isDone('LI', art, year, kw);
-        html += \`<td class="stage-cell">\${w ? \`<span class="cb cb-li\${liDone?' done-cell':''}">LI:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+        if (w) {
+          html += \`<td class="stage-cell gantt-li-cell">
+            <span class="gantt-shift-btn" onclick="shiftLieferterminKW('\${art}',\${kw},\${year},-1)" title="1 Woche früher">◀</span>
+            <span class="cb cb-li\${liDone?' done-cell':''}" title="\${liDone?'Nicht erledigt':'Erledigt markieren'}" onclick="toggleDoneAndSave('LI','\${art}',\${year},\${kw})">LI:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>
+            <span class="gantt-shift-btn" onclick="shiftLieferterminKW('\${art}',\${kw},\${year},1)" title="1 Woche später">▶</span>
+          </td>\`;
+        } else {
+          html += \`<td class="stage-cell"></td>\`;
+        }
       });
       html += '</tr>';
     }
@@ -4316,7 +4361,7 @@ function renderGantt(D) {
       weeks.forEach(({year,kw}) => {
         const w = (D.montageByArt[art]||[]).find(x => x.year===year && x.kw===kw);
         const moDone = w && isDone('MO', art, year, kw);
-        html += \`<td class="stage-cell">\${w ? \`<span class="cb cb-mo\${moDone?' done-cell':''}">MO:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+        html += \`<td class="stage-cell">\${w ? \`<span class="cb cb-mo\${moDone?' done-cell':''}" title="\${moDone?'Als nicht erledigt markieren':'Als erledigt markieren'}" onclick="toggleDoneAndSave('MO','\${art}',\${year},\${kw})">MO:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
       });
       html += '</tr>';
     }
@@ -4327,7 +4372,7 @@ function renderGantt(D) {
         weeks.forEach(({year,kw}) => {
           const w = line.weeks.find(x => x.year===year && x.kw===kw);
           const frDone = (w && w.menge) && isDone('FR', line.stage_art, year, kw);
-          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-fr cb-wide\${frDone?' done-cell':''}">\${line.stage_art}<br>FR:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-fr cb-wide\${frDone?' done-cell':''}" title="\${frDone?'Als nicht erledigt markieren':'Als erledigt markieren'}" onclick="toggleDoneAndSave('FR','\${line.stage_art}',\${year},\${kw})">\${line.stage_art}<br>FR:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
         });
         html += '</tr>';
       });
@@ -4339,7 +4384,7 @@ function renderGantt(D) {
         weeks.forEach(({year,kw}) => {
           const w = line.weeks.find(x => x.year===year && x.kw===kw);
           const tzDone = (w && w.menge) && isDone('TZ', line.stage_art, year, kw);
-          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-tz cb-wide\${tzDone?' done-cell':''}">\${line.stage_art}<br>TZ:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
+          html += \`<td class="stage-cell">\${(w && w.menge) ? \`<span class="cb cb-tz cb-wide\${tzDone?' done-cell':''}" title="\${tzDone?'Als nicht erledigt markieren':'Als erledigt markieren'}" onclick="toggleDoneAndSave('TZ','\${line.stage_art}',\${year},\${kw})">\${line.stage_art}<br>TZ:\${w.menge}\${isFest(year,kw)?'<span class="fm"></span>':''}</span>\` : ''}</td>\`;
         });
         html += '</tr>';
       });
