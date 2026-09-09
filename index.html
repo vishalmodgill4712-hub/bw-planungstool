@@ -314,8 +314,8 @@
   #ganttModal{display:none;position:fixed;inset:0;z-index:2000;background:rgba(10,15,25,.75)}
   #ganttModal.open{display:flex}
   .gm-box{background:#fff;margin:12px;border-radius:12px;display:flex;flex-direction:column;flex:1;overflow:hidden;box-shadow:0 12px 50px rgba(0,0,0,.3)}
-  .gm-head{background:#006EB7;padding:12px 20px;display:flex;align-items:center;gap:14px}
-  .gm-head-t{font:800 15px Calibri,Arial,sans-serif;color:#fff;letter-spacing:.8px;text-transform:uppercase;flex:1}
+  .gm-head{background:linear-gradient(135deg,#006EB7,#004d80);padding:14px 22px;display:flex;align-items:center;gap:14px}
+  .gm-head-t{font:800 17px Calibri,Arial,sans-serif;color:#fff;letter-spacing:1px;text-transform:uppercase;flex:1}
   .gm-head-kw{font-size:12px;color:rgba(255,255,255,.75);font-weight:600}
   .gm-close{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:16px;color:#fff;display:flex;align-items:center;justify-content:center}
   .gm-close:hover{background:rgba(220,38,38,.85)}
@@ -330,24 +330,25 @@
   .gm-sld .rng{font:800 12px Calibri,Arial,sans-serif;color:#006EB7;min-width:110px;text-align:right}
   .gm-body{flex:1;overflow:auto;background:#fff}
   .gm-body .gantt{width:100%;border-collapse:collapse;font-family:Calibri,Arial,sans-serif}
-  .gm-body .gantt th{position:sticky;top:0;z-index:10;background:#1e293b;color:#fff;font-size:11px;font-weight:700;padding:8px 6px;text-align:center;border-right:1px solid #334155;white-space:nowrap}
-  .gm-body .gantt th.ca{background:#006EB7;text-align:left;padding-left:14px;min-width:120px;font-size:12px}
+  .gm-body .gantt th{position:sticky;top:0;z-index:10;background:#1e293b;color:#fff;font-size:12px;font-weight:800;padding:10px 8px;text-align:center;border-right:1px solid #334155;white-space:nowrap}
+  .gm-body .gantt th.ca{background:#006EB7;text-align:left;padding-left:14px;min-width:140px;font-size:13px;letter-spacing:.4px}
   .gm-body .gantt th.kc{background:#f59e0b;color:#1c1c1c;font-weight:900}
   .gm-body .gantt th.kf{background:#374151}
-  .gm-body .gantt .ac{background:#f0f6ff;border-right:3px solid #006EB7;font-size:12px;font-weight:800;color:#006EB7;padding:6px 10px;white-space:nowrap;vertical-align:middle}
-  .gm-body .gantt .sr-li td{background:#f0fdf4;border-bottom:1px solid #bbf7d0}
-  .gm-body .gantt .sr-mo td{background:#eff6ff;border-bottom:1px solid #bfdbfe}
-  .gm-body .gantt .sr-fr td{background:#fffbeb;border-bottom:1px solid #fde68a}
-  .gm-body .gantt .sr-tz td{background:#faf5ff;border-bottom:1px solid #e9d5ff}
-  .gm-body .sc{padding:3px 4px;text-align:center;vertical-align:middle;border-right:1px solid #e2e8f0;min-width:66px}
+  .gm-body .gantt .ac{background:#e0f2fe;border-right:4px solid #006EB7;font:800 13px Calibri,Arial,sans-serif;color:#006EB7;padding:8px 12px;white-space:nowrap;vertical-align:middle;letter-spacing:.3px;border-top:3px solid #006EB7}
+  .gm-body .gantt .art-sep td{border-top:3px solid #006EB7}
+  .gm-body .gantt .sr-li td{background:#dcfce7;border-bottom:2px solid #86efac}
+  .gm-body .gantt .sr-mo td{background:#dbeafe;border-bottom:2px solid #93c5fd}
+  .gm-body .gantt .sr-fr td{background:#fef3c7;border-bottom:2px solid #fcd34d}
+  .gm-body .gantt .sr-tz td{background:#ede9fe;border-bottom:2px solid #c4b5fd}
+  .gm-body .sc{padding:4px 5px;text-align:center;vertical-align:middle;border-right:1px solid #cbd5e1;min-width:72px}
   .gm-body .sc.drok{background:rgba(0,110,183,.12)!important;outline:2px dashed #006EB7}
   .gm-body .liw{display:flex;align-items:center;justify-content:center;gap:2px}
-  .gm-body .gp{display:inline-flex;align-items:center;justify-content:center;border-radius:5px;font:800 10px Calibri,Arial,sans-serif;padding:4px 7px;white-space:nowrap;position:relative;cursor:pointer;transition:transform .1s}
-  .gm-body .gp:hover{transform:scale(1.08);box-shadow:0 2px 6px rgba(0,0,0,.15)}
-  .gm-body .gp.li{background:#16a34a;color:#fff;cursor:grab}.gm-body .gp.mo{background:#0369a1;color:#fff}.gm-body .gp.fr{background:#b45309;color:#fff}.gm-body .gp.tz{background:#6d28d9;color:#fff}
-  .gm-body .gp.wd{font-size:9px;line-height:1.25}
-  .gm-body .gp.dn{opacity:.4}
-  .gm-body .gp.dn::after{content:'\2713';position:absolute;top:-6px;right:-6px;background:#16a34a;color:#fff;border-radius:50%;width:14px;height:14px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:900;border:2px solid #fff}
+  .gm-body .gp{display:inline-flex;align-items:center;justify-content:center;border-radius:6px;font:800 11px Calibri,Arial,sans-serif;padding:5px 9px;white-space:nowrap;position:relative;cursor:pointer;transition:transform .1s;box-shadow:0 1px 3px rgba(0,0,0,.15);letter-spacing:.3px}
+  .gm-body .gp:hover{transform:scale(1.12);box-shadow:0 3px 10px rgba(0,0,0,.25)}
+  .gm-body .gp.li{background:#15803d;color:#fff;cursor:grab;font-size:12px}.gm-body .gp.mo{background:#0c4a6e;color:#fff;font-size:12px}.gm-body .gp.fr{background:#92400e;color:#fff}.gm-body .gp.tz{background:#5b21b6;color:#fff}
+  .gm-body .gp.wd{font-size:10px;line-height:1.3;padding:4px 8px}
+  .gm-body .gp.dn{opacity:.35}
+  .gm-body .gp.dn::after{content:'\2713';position:absolute;top:-7px;right:-7px;background:#15803d;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:900;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
   .gm-body .gs{font-size:10px;color:#006EB7;cursor:pointer;padding:2px 4px;border-radius:3px;opacity:0;transition:opacity .12s;font-weight:900}
   .liw:hover .gs{opacity:1}
   .gs:hover{background:#006EB7;color:#fff}
@@ -2080,7 +2081,7 @@ function gmW(v){_gs=parseInt(v);var e=_gs+13;if(e>52)e-=52;document.getElementBy
 function gmB(){
   var D=computeDerived(),wks=[],i,k,y;
   for(i=0;i<14;i++){k=_gs+i;y=CURRENT_YEAR;while(k>52){k-=52;y++;}wks.push({year:y,kw:k});}
-  var arts=getArtikelList(),sT=_gf==='all'||_gf==='TZ',sF=_gf==='all'||_gf==='FR',sM=_gf==='all'||_gf==='MO',sL=_gf==='all'||_gf==='LI';
+  var arts=getArtikelList().sort(),sT=_gf==='all'||_gf==='TZ',sF=_gf==='all'||_gf==='FR',sM=_gf==='all'||_gf==='MO',sL=_gf==='all'||_gf==='LI';
   var h='<thead><tr><th class="ca">Artikel</th>';
   for(i=0;i<wks.length;i++){var w=wks[i],c=w.year===CURRENT_YEAR&&w.kw===CURRENT_KW;h+='<th class="'+(c?'kc':isFest(w.year,w.kw)?'kf':'')+'">KW'+w.kw+(c?' \u25c0':'')+'</th>';}
   h+='</tr></thead><tbody>';
@@ -2089,7 +2090,7 @@ function gmB(){
     var rc=(sL?1:0)+(sM?1:0)+(sF?Math.max(d.fr_bom.length,1):0)+(sT?Math.max(d.tz_bom.length,1):0);if(rc===0)continue;
     var first=true;
     function _a(){if(first){first=false;return'<td class="ac" rowspan="'+rc+'">'+art+'</td>';}return'';}
-    if(sL){h+='<tr class="sr-li">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<d.liefertermin.length;j++){if(d.liefertermin[j].year===w.year&&d.liefertermin[j].kw===w.kw){e=d.liefertermin[j];break;}}
+    if(sL){h+='<tr class="sr-li art-sep">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<d.liefertermin.length;j++){if(d.liefertermin[j].year===w.year&&d.liefertermin[j].kw===w.kw){e=d.liefertermin[j];break;}}
       if(e){var dn=isDone('LI',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',-1)">\u25c0</span><span class="gp li'+(dn?' dn':'')+'" draggable="true" ondragstart="_da=\''+art+'\';_dk='+w.kw+';_dy='+w.year+'" onclick="gmTg(\'LI\',\''+art+'\','+w.year+','+w.kw+')">LI:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',1)">\u25b6</span></div></td>';}
       else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}
     if(sM){h+='<tr class="sr-mo">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null,ma=D.montageByArt[art]||[];for(var j=0;j<ma.length;j++){if(ma[j].year===w.year&&ma[j].kw===w.kw){e=ma[j];break;}}
