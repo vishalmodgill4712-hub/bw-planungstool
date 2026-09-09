@@ -2094,15 +2094,35 @@ function gmB(){
       if(e){var dn=isDone('LI',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',-1)">\u25c0</span><span class="gp li'+(dn?' dn':'')+'" draggable="true" ondragstart="_da=\''+art+'\';_dk='+w.kw+';_dy='+w.year+'" onclick="gmTg(\'LI\',\''+art+'\','+w.year+','+w.kw+')">LI:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',1)">\u25b6</span></div></td>';}
       else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}
     if(sM){h+='<tr class="sr-mo">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null,ma=D.montageByArt[art]||[];for(var j=0;j<ma.length;j++){if(ma[j].year===w.year&&ma[j].kw===w.kw){e=ma[j];break;}}
-      if(e){var dn=isDone('MO',art,w.year,w.kw);h+='<td class="sc"><span class="gp mo'+(dn?' dn':'')+'" onclick="gmTg(\'MO\',\''+art+'\','+w.year+','+w.kw+')">MO:'+e.menge+'</span></td>';}else{h+='<td class="sc"></td>';}}h+='</tr>';}
+      if(e){var dn=isDone('MO',art,w.year,w.kw);h+='<td class="sc"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',-1)">◀</span><span class="gp mo'+(dn?' dn':'')+'" onclick="gmTg(\'MO\',\''+art+'\','+w.year+','+w.kw+')">MO:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc"></td>';}}h+='</tr>';}
     if(sF){var fl=D.fraesenLines[art]&&D.fraesenLines[art].length?D.fraesenLines[art]:[{stage_art:'-',weeks:[]}];for(var fi=0;fi<fl.length;fi++){var ln=fl[fi];h+='<tr class="sr-fr">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<ln.weeks.length;j++){if(ln.weeks[j].year===w.year&&ln.weeks[j].kw===w.kw){e=ln.weeks[j];break;}}
-      if(e&&e.menge){var dn=isDone('FR',ln.stage_art,w.year,w.kw);h+='<td class="sc"><span class="gp fr wd'+(dn?' dn':'')+'" onclick="gmTg(\'FR\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>FR:'+e.menge+'</span></td>';}else{h+='<td class="sc"></td>';}}h+='</tr>';}}
+      if(e&&e.menge){var dn=isDone('FR',ln.stage_art,w.year,w.kw);h+='<td class="sc"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',-1)">◀</span><span class="gp fr wd'+(dn?' dn':'')+'" onclick="gmTg(\'FR\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>FR:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc"></td>';}}h+='</tr>';}}
     if(sT){var tl=D.tiefziehenLines[art]&&D.tiefziehenLines[art].length?D.tiefziehenLines[art]:[{stage_art:'-',weeks:[]}];for(var ti=0;ti<tl.length;ti++){var ln=tl[ti];h+='<tr class="sr-tz">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<ln.weeks.length;j++){if(ln.weeks[j].year===w.year&&ln.weeks[j].kw===w.kw){e=ln.weeks[j];break;}}
-      if(e&&e.menge){var dn=isDone('TZ',ln.stage_art,w.year,w.kw);h+='<td class="sc"><span class="gp tz wd'+(dn?' dn':'')+'" onclick="gmTg(\'TZ\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>TZ:'+e.menge+'</span></td>';}else{h+='<td class="sc"></td>';}}h+='</tr>';}}
+      if(e&&e.menge){var dn=isDone('TZ',ln.stage_art,w.year,w.kw);h+='<td class="sc"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',-1)">◀</span><span class="gp tz wd'+(dn?' dn':'')+'" onclick="gmTg(\'TZ\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>TZ:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc"></td>';}}h+='</tr>';}}
   }
   h+='</tbody>';document.getElementById('gmT').innerHTML=h;
 }
 function gmTg(s,id,y,k){toggleDone(s,id,y,k);gmB();}
+function gmShStage(art,stage,kw,yr,dir){
+  // Shift a MO/FR/TZ stage by adjusting the offset on the liefertermin that produced it
+  var d=PLAN[art];if(!d)return;
+  // Find which liefertermin entry this stage week belongs to
+  var offKey=stage==='MO'?'mo_offset':stage==='FR'?'fr_offset':'tz_offset';
+  var defOff=1;
+  for(var i=0;i<d.liefertermin.length;i++){
+    var lt=d.liefertermin[i];
+    var off=lt[offKey]||defOff;
+    var stageKw=lt.kw-off,stageYr=lt.year;
+    if(stageKw<1){stageKw+=52;stageYr--;}
+    if(stageKw===kw&&stageYr===yr){
+      lt[offKey]=(lt[offKey]||defOff)-dir;
+      if(lt[offKey]<0)lt[offKey]=0;
+      break;
+    }
+  }
+  if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(d.liefertermin));
+  renderAll();gmB();
+}
 function gmSh(art,kw,yr,dir){var a=PLAN[art].liefertermin,idx=-1,i;for(i=0;i<a.length;i++){if(a[i].kw===kw&&a[i].year===yr){idx=i;break;}}if(idx===-1)return;var nk=kw+dir,ny=yr;if(nk>52){nk-=52;ny++;}if(nk<1){nk+=52;ny--;}var ex=-1;for(i=0;i<a.length;i++){if(a[i].kw===nk&&a[i].year===ny){ex=i;break;}}if(ex!==-1){a[ex].menge+=a[idx].menge;a.splice(idx,1);}else{a[idx].kw=nk;a[idx].year=ny;}if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(a));renderAll();gmB();}
 function gmDr(art,toKw,toYr){if(!_da||_da!==art)return;if(_dk===toKw&&_dy===toYr)return;var a=PLAN[art].liefertermin,idx=-1,i;for(i=0;i<a.length;i++){if(a[i].kw===_dk&&a[i].year===_dy){idx=i;break;}}if(idx===-1)return;var ex=-1;for(i=0;i<a.length;i++){if(a[i].kw===toKw&&a[i].year===toYr){ex=i;break;}}if(ex!==-1){a[ex].menge+=a[idx].menge;a.splice(idx,1);}else{a[idx].kw=toKw;a[idx].year=toYr;}if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(a));_da=null;renderAll();gmB();}
 
@@ -2114,13 +2134,21 @@ function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.c
 <div id="ganttModal" onclick="if(event.target===this)closeGantt()">
 <div class="gm-box">
 <div class="gm-head"><div class="gm-head-t">Gantt / KW-Übersicht</div><div class="gm-head-kw" id="gmKwL"></div><button class="gm-close" onclick="closeGantt()">✕</button></div>
-<div class="gm-bar"><span style="font:700 11px Calibri,sans-serif;color:#5a6472">Stufe:</span>
+<div class="gm-bar">
+<span style="font:700 11px Calibri,sans-serif;color:#5a6472">Filter:</span>
 <button class="gm-fb fa act" onclick="gmF('all',this)">Alle</button>
 <button class="gm-fb ft" onclick="gmF('TZ',this)">Tiefziehen</button>
 <button class="gm-fb ff" onclick="gmF('FR',this)">Fräsen</button>
 <button class="gm-fb fm" onclick="gmF('MO',this)">Montage</button>
 <button class="gm-fb fl" onclick="gmF('LI',this)">Lieferung</button>
-<span style="font-size:10px;color:#94a3b8;margin-left:auto">Klick = Erledigt · Ziehen = Verschieben</span></div>
+<span style="width:1px;height:20px;background:#d0d9e3;margin:0 8px"></span>
+<span style="font:700 11px Calibri,sans-serif;color:#5a6472">Legende:</span>
+<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#5b21b6"></span><span style="font:600 11px Calibri,sans-serif;color:#334155">TZ</span></span>
+<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#92400e"></span><span style="font:600 11px Calibri,sans-serif;color:#334155">FR</span></span>
+<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#0c4a6e"></span><span style="font:600 11px Calibri,sans-serif;color:#334155">MO</span></span>
+<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#15803d"></span><span style="font:600 11px Calibri,sans-serif;color:#334155">LI</span></span>
+<span style="font-size:10px;color:#94a3b8;margin-left:auto">◀▶ = Woche verschieben · Klick = Erledigt</span>
+</div>
 <div class="gm-sld"><label>KW-Fenster:</label><input type="range" id="gmSl" min="1" max="52" value="24" oninput="gmW(this.value)"><span class="rng" id="gmR"></span>
 <button onclick="gmW(CURRENT_KW);document.getElementById('gmSl').value=CURRENT_KW" style="background:#006EB7;color:#fff;border:none;border-radius:5px;padding:3px 10px;font:700 11px Calibri,sans-serif;cursor:pointer">Heute</button></div>
 <div class="gm-body"><table class="gantt" id="gmT"></table></div>
