@@ -319,8 +319,8 @@
   .gm-head-kw{font-size:12px;color:rgba(255,255,255,.75);font-weight:600}
   .gm-close{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:16px;color:#fff;display:flex;align-items:center;justify-content:center}
   .gm-close:hover{background:rgba(220,38,38,.85)}
-  .gm-bar{background:#f0f4f8;border-bottom:1px solid #dce4ed;padding:8px 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .gm-fb{background:#fff;border:1.5px solid #d0d9e3;border-radius:6px;padding:4px 12px;font:700 11px Calibri,Arial,sans-serif;cursor:pointer;color:#5a6472}
+  .gm-bar{background:#f0f4f8;border-bottom:1px solid #dce4ed;padding:8px 16px;display:flex;align-items:center;gap:6px;overflow-x:auto}
+  .gm-fb{background:#fff;border:1.5px solid #d0d9e3;border-radius:6px;padding:4px 10px;font:700 11px Calibri,Arial,sans-serif;cursor:pointer;color:#5a6472;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;flex-shrink:0}
   .gm-fb:hover{border-color:#006EB7;color:#006EB7}
   .gm-fb.act{color:#fff;border-color:transparent}
   .gm-fb.fa.act{background:#006EB7}.gm-fb.ft.act{background:#6d28d9}.gm-fb.ff.act{background:#b45309}.gm-fb.fm.act{background:#0369a1}.gm-fb.fl.act{background:#16a34a}
@@ -345,7 +345,7 @@
   .gm-body .liw{display:flex;align-items:center;justify-content:center;gap:2px}
   .gm-body .gp{display:inline-flex;align-items:center;justify-content:center;border-radius:6px;font:800 11px Calibri,Arial,sans-serif;padding:5px 9px;white-space:nowrap;position:relative;cursor:pointer;transition:transform .1s;box-shadow:0 1px 3px rgba(0,0,0,.15);letter-spacing:.3px}
   .gm-body .gp:hover{transform:scale(1.12);box-shadow:0 3px 10px rgba(0,0,0,.25)}
-  .gm-body .gp.li{background:#15803d;color:#fff;cursor:grab;font-size:12px}.gm-body .gp.mo{background:#0c4a6e;color:#fff;font-size:12px}.gm-body .gp.fr{background:#92400e;color:#fff}.gm-body .gp.tz{background:#5b21b6;color:#fff}
+  .gm-body .gp.li{background:#15803d;color:#fff;cursor:grab;font-size:12px}.gm-body .gp.mo{background:#0c4a6e;color:#fff;font-size:12px;cursor:grab}.gm-body .gp.fr{background:#92400e;color:#fff;cursor:grab}.gm-body .gp.tz{background:#5b21b6;color:#fff;cursor:grab}
   .gm-body .gp.wd{font-size:10px;line-height:1.3;padding:4px 8px}
   .gm-body .gp.dn{opacity:.35}
   .gm-body .gp.dn::after{content:'\2713';position:absolute;top:-7px;right:-7px;background:#15803d;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:900;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
@@ -2094,11 +2094,11 @@ function gmB(){
       if(e){var dn=isDone('LI',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',-1)">\u25c0</span><span class="gp li'+(dn?' dn':'')+'" draggable="true" ondragstart="_da=\''+art+'\';_dk='+w.kw+';_dy='+w.year+'" onclick="gmTg(\'LI\',\''+art+'\','+w.year+','+w.kw+')">LI:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',1)">\u25b6</span></div></td>';}
       else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}
     if(sM){h+='<tr class="sr-mo">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null,ma=D.montageByArt[art]||[];for(var j=0;j<ma.length;j++){if(ma[j].year===w.year&&ma[j].kw===w.kw){e=ma[j];break;}}
-      if(e){var dn=isDone('MO',art,w.year,w.kw);h+='<td class="sc"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',-1)">◀</span><span class="gp mo'+(dn?' dn':'')+'" onclick="gmTg(\'MO\',\''+art+'\','+w.year+','+w.kw+')">MO:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc"></td>';}}h+='</tr>';}
+      if(e){var dn=isDone('MO',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'MO\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',-1)">◀</span><span class="gp mo'+(dn?' dn':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'MO\','+w.kw+','+w.year+')" onclick="gmTg(\'MO\',\''+art+'\','+w.year+','+w.kw+')">MO:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'MO\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}
     if(sF){var fl=D.fraesenLines[art]&&D.fraesenLines[art].length?D.fraesenLines[art]:[{stage_art:'-',weeks:[]}];for(var fi=0;fi<fl.length;fi++){var ln=fl[fi];h+='<tr class="sr-fr">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<ln.weeks.length;j++){if(ln.weeks[j].year===w.year&&ln.weeks[j].kw===w.kw){e=ln.weeks[j];break;}}
-      if(e&&e.menge){var dn=isDone('FR',ln.stage_art,w.year,w.kw);h+='<td class="sc"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',-1)">◀</span><span class="gp fr wd'+(dn?' dn':'')+'" onclick="gmTg(\'FR\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>FR:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc"></td>';}}h+='</tr>';}}
+      if(e&&e.menge){var dn=isDone('FR',ln.stage_art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'FR\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',-1)">◀</span><span class="gp fr wd'+(dn?' dn':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'FR\','+w.kw+','+w.year+')" onclick="gmTg(\'FR\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>FR:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'FR\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}}
     if(sT){var tl=D.tiefziehenLines[art]&&D.tiefziehenLines[art].length?D.tiefziehenLines[art]:[{stage_art:'-',weeks:[]}];for(var ti=0;ti<tl.length;ti++){var ln=tl[ti];h+='<tr class="sr-tz">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<ln.weeks.length;j++){if(ln.weeks[j].year===w.year&&ln.weeks[j].kw===w.kw){e=ln.weeks[j];break;}}
-      if(e&&e.menge){var dn=isDone('TZ',ln.stage_art,w.year,w.kw);h+='<td class="sc"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',-1)">◀</span><span class="gp tz wd'+(dn?' dn':'')+'" onclick="gmTg(\'TZ\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>TZ:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc"></td>';}}h+='</tr>';}}
+      if(e&&e.menge){var dn=isDone('TZ',ln.stage_art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'TZ\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',-1)">◀</span><span class="gp tz wd'+(dn?' dn':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'TZ\','+w.kw+','+w.year+')" onclick="gmTg(\'TZ\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>TZ:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'TZ\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}}
   }
   h+='</tbody>';document.getElementById('gmT').innerHTML=h;
 }
@@ -2126,6 +2126,18 @@ function gmShStage(art,stage,kw,yr,dir){
 function gmSh(art,kw,yr,dir){var a=PLAN[art].liefertermin,idx=-1,i;for(i=0;i<a.length;i++){if(a[i].kw===kw&&a[i].year===yr){idx=i;break;}}if(idx===-1)return;var nk=kw+dir,ny=yr;if(nk>52){nk-=52;ny++;}if(nk<1){nk+=52;ny--;}var ex=-1;for(i=0;i<a.length;i++){if(a[i].kw===nk&&a[i].year===ny){ex=i;break;}}if(ex!==-1){a[ex].menge+=a[idx].menge;a.splice(idx,1);}else{a[idx].kw=nk;a[idx].year=ny;}if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(a));renderAll();gmB();}
 function gmDr(art,toKw,toYr){if(!_da||_da!==art)return;if(_dk===toKw&&_dy===toYr)return;var a=PLAN[art].liefertermin,idx=-1,i;for(i=0;i<a.length;i++){if(a[i].kw===_dk&&a[i].year===_dy){idx=i;break;}}if(idx===-1)return;var ex=-1;for(i=0;i<a.length;i++){if(a[i].kw===toKw&&a[i].year===toYr){ex=i;break;}}if(ex!==-1){a[ex].menge+=a[idx].menge;a.splice(idx,1);}else{a[idx].kw=toKw;a[idx].year=toYr;}if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(a));_da=null;renderAll();gmB();}
 
+// Stage drag (MO/FR/TZ) - dragging adjusts offset
+var _sdArt=null,_sdStage=null,_sdKw=null,_sdYr=null;
+function gmStageDragStart(ev,art,stage,kw,yr){_sdArt=art;_sdStage=stage;_sdKw=kw;_sdYr=yr;ev.dataTransfer.effectAllowed='move';}
+function gmStageDrop(art,stage,toKw,toYr){
+  if(!_sdArt||_sdArt!==art||_sdStage!==stage)return;
+  if(_sdKw===toKw&&_sdYr===toYr)return;
+  var diff=toKw-_sdKw;
+  if(Math.abs(diff)>26)diff=diff>0?diff-52:diff+52;
+  for(var n=0;n<Math.abs(diff);n++){gmShStage(art,stage,_sdKw+(diff>0?n:-(n)),_sdYr,diff>0?1:-1);}
+  _sdArt=null;renderAll();gmB();
+}
+
 // ══ SERVER SAVE/LOAD ════════════════════════════
 async function globalSave(){var b=document.getElementById('globalSaveBtn');if(b){b.disabled=true;b.textContent='\u23f3...';}try{var r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:PLAN,done_status:DONE_STATUS})});var d=await r.json();if(d.ok){_msg('\u2713 Gespeichert \u2014 '+new Date().toLocaleTimeString('de-DE'));if(b){b.textContent='\u2713';setTimeout(function(){b.disabled=false;b.textContent='\ud83d\udcbe Speichern';},2000);}}}catch(e){_msg('\u26a0 Fehler: '+e.message,1);if(b){b.disabled=false;b.textContent='\ud83d\udcbe Speichern';}}}
 function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.createElement('div');el.id='_sv';el.style.cssText='position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:8px;font:700 13px Calibri,Arial,sans-serif;z-index:9999;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:opacity .4s';document.body.appendChild(el);}el.textContent=m;el.style.background=err?'#dc2626':'#16a34a';el.style.color='#fff';el.style.opacity='1';clearTimeout(el._t);el._t=setTimeout(function(){el.style.opacity='0';},3500);}
@@ -2137,16 +2149,10 @@ function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.c
 <div class="gm-bar">
 <span style="font:700 11px Calibri,sans-serif;color:#5a6472">Filter:</span>
 <button class="gm-fb fa act" onclick="gmF('all',this)">Alle</button>
-<button class="gm-fb ft" onclick="gmF('TZ',this)">Tiefziehen</button>
-<button class="gm-fb ff" onclick="gmF('FR',this)">Fräsen</button>
-<button class="gm-fb fm" onclick="gmF('MO',this)">Montage</button>
-<button class="gm-fb fl" onclick="gmF('LI',this)">Lieferung</button>
-<span style="width:1px;height:20px;background:#d0d9e3;margin:0 8px"></span>
-<span style="font:700 11px Calibri,sans-serif;color:#5a6472">Legende:</span>
-<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#5b21b6"></span><span style="font:600 11px Calibri,sans-serif;color:#334155">TZ</span></span>
-<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#92400e"></span><span style="font:600 11px Calibri,sans-serif;color:#334155">FR</span></span>
-<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#0c4a6e"></span><span style="font:600 11px Calibri,sans-serif;color:#334155">MO</span></span>
-<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:#15803d"></span><span style="font:600 11px Calibri,sans-serif;color:#334155">LI</span></span>
+<button class="gm-fb ft" onclick="gmF('TZ',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#5b21b6;margin-right:4px;vertical-align:middle"></span>Tiefziehen</button>
+<button class="gm-fb ff" onclick="gmF('FR',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#92400e;margin-right:4px;vertical-align:middle"></span>Fräsen</button>
+<button class="gm-fb fm" onclick="gmF('MO',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#0c4a6e;margin-right:4px;vertical-align:middle"></span>Montage</button>
+<button class="gm-fb fl" onclick="gmF('LI',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#15803d;margin-right:4px;vertical-align:middle"></span>Lieferung</button>
 <span style="font-size:10px;color:#94a3b8;margin-left:auto">◀▶ = Woche verschieben · Klick = Erledigt</span>
 </div>
 <div class="gm-sld"><label>KW-Fenster:</label><input type="range" id="gmSl" min="1" max="52" value="24" oninput="gmW(this.value)"><span class="rng" id="gmR"></span>
