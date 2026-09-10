@@ -323,7 +323,7 @@
   .gm-fb{background:#fff;border:1.5px solid #d0d9e3;border-radius:6px;padding:4px 10px;font:700 11px Calibri,Arial,sans-serif;cursor:pointer;color:#5a6472;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;flex-shrink:0}
   .gm-fb:hover{border-color:#006EB7;color:#006EB7}
   .gm-fb.act{color:#fff;border-color:transparent}
-  .gm-fb.fa.act{background:#006EB7}.gm-fb.ft.act{background:#6d28d9}.gm-fb.ff.act{background:#b45309}.gm-fb.fm.act{background:#0369a1}.gm-fb.fl.act{background:#16a34a}
+  .gm-fb.gfa.act{background:#006EB7}.gm-fb.gft.act{background:#6d28d9}.gm-fb.gff.act{background:#b45309}.gm-fb.gfm.act{background:#0369a1}.gm-fb.gfl.act{background:#16a34a}
   .gm-sld{background:#fff;border-bottom:1px solid #e2e8f0;padding:8px 20px;display:flex;align-items:center;gap:14px}
   .gm-sld label{font:700 11px Calibri,Arial,sans-serif;color:#6b7380}
   .gm-sld input[type=range]{flex:1;accent-color:#006EB7}
@@ -2104,21 +2104,16 @@ function gmB(){
 }
 function gmTg(s,id,y,k){toggleDone(s,id,y,k);gmB();}
 function gmShStage(art,stage,kw,yr,dir){
-  // Shift a MO/FR/TZ stage by adjusting the offset on the liefertermin that produced it
   var d=PLAN[art];if(!d)return;
-  // Find which liefertermin entry this stage week belongs to
   var offKey=stage==='MO'?'mo_offset':stage==='FR'?'fr_offset':'tz_offset';
-  var defOff=1;
+  // Shift the offset for all liefertermin entries of this artikel
+  // dir=1 means move stage 1 week later (increase offset), dir=-1 means earlier (decrease offset)
   for(var i=0;i<d.liefertermin.length;i++){
     var lt=d.liefertermin[i];
-    var off=lt[offKey]||defOff;
-    var stageKw=lt.kw-off,stageYr=lt.year;
-    if(stageKw<1){stageKw+=52;stageYr--;}
-    if(stageKw===kw&&stageYr===yr){
-      lt[offKey]=(lt[offKey]||defOff)-dir;
-      if(lt[offKey]<0)lt[offKey]=0;
-      break;
-    }
+    var curOff=lt[offKey]||1;
+    var newOff=curOff-dir;
+    if(newOff<0)newOff=0;
+    lt[offKey]=newOff;
   }
   if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(d.liefertermin));
   renderAll();gmB();
@@ -2131,10 +2126,22 @@ var _sdArt=null,_sdStage=null,_sdKw=null,_sdYr=null;
 function gmStageDragStart(ev,art,stage,kw,yr){_sdArt=art;_sdStage=stage;_sdKw=kw;_sdYr=yr;ev.dataTransfer.effectAllowed='move';}
 function gmStageDrop(art,stage,toKw,toYr){
   if(!_sdArt||_sdArt!==art||_sdStage!==stage)return;
-  if(_sdKw===toKw&&_sdYr===toYr)return;
+  if(_sdKw===toKw&&_sdYr===toYr){_sdArt=null;return;}
+  // Calculate how many weeks to shift
   var diff=toKw-_sdKw;
-  if(Math.abs(diff)>26)diff=diff>0?diff-52:diff+52;
-  for(var n=0;n<Math.abs(diff);n++){gmShStage(art,stage,_sdKw+(diff>0?n:-(n)),_sdYr,diff>0?1:-1);}
+  if(toYr>_sdYr)diff+=52*(toYr-_sdYr);
+  if(toYr<_sdYr)diff-=52*(_sdYr-toYr);
+  // Apply the offset change to all matching liefertermin entries
+  var offKey=stage==='MO'?'mo_offset':stage==='FR'?'fr_offset':'tz_offset';
+  var d=PLAN[art];if(!d){_sdArt=null;return;}
+  for(var i=0;i<d.liefertermin.length;i++){
+    var lt=d.liefertermin[i];
+    var curOff=lt[offKey]||1;
+    var newOff=curOff-diff;
+    if(newOff<0)newOff=0;
+    lt[offKey]=newOff;
+  }
+  if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(d.liefertermin));
   _sdArt=null;renderAll();gmB();
 }
 
@@ -2148,11 +2155,11 @@ function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.c
 <div class="gm-head"><div class="gm-head-t">Gantt / KW-Übersicht</div><div class="gm-head-kw" id="gmKwL"></div><button class="gm-close" onclick="closeGantt()">✕</button></div>
 <div class="gm-bar">
 <span style="font:700 11px Calibri,sans-serif;color:#5a6472">Filter:</span>
-<button class="gm-fb fa act" onclick="gmF('all',this)">Alle</button>
-<button class="gm-fb ft" onclick="gmF('TZ',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#5b21b6;margin-right:4px;vertical-align:middle"></span>Tiefziehen</button>
-<button class="gm-fb ff" onclick="gmF('FR',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#92400e;margin-right:4px;vertical-align:middle"></span>Fräsen</button>
-<button class="gm-fb fm" onclick="gmF('MO',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#0c4a6e;margin-right:4px;vertical-align:middle"></span>Montage</button>
-<button class="gm-fb fl" onclick="gmF('LI',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#15803d;margin-right:4px;vertical-align:middle"></span>Lieferung</button>
+<button class="gm-fb gfa act" onclick="gmF('all',this)">Alle</button>
+<button class="gm-fb gft" onclick="gmF('TZ',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#5b21b6;margin-right:4px;vertical-align:middle"></span>Tiefziehen</button>
+<button class="gm-fb gff" onclick="gmF('FR',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#92400e;margin-right:4px;vertical-align:middle"></span>Fräsen</button>
+<button class="gm-fb gfm" onclick="gmF('MO',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#0c4a6e;margin-right:4px;vertical-align:middle"></span>Montage</button>
+<button class="gm-fb gfl" onclick="gmF('LI',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#15803d;margin-right:4px;vertical-align:middle"></span>Lieferung</button>
 <span style="font-size:10px;color:#94a3b8;margin-left:auto">◀▶ = Woche verschieben · Klick = Erledigt</span>
 </div>
 <div class="gm-sld"><label>KW-Fenster:</label><input type="range" id="gmSl" min="1" max="52" value="24" oninput="gmW(this.value)"><span class="rng" id="gmR"></span>
