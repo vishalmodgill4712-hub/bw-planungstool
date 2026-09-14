@@ -1984,5 +1984,26 @@
       "mo_a_platz": null
     }
   },
-  "done_status": {}
+  "done_status": {
+    "TZ|2664.1002|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 24
+    },
+    "TZ|2664.1003|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 24
+    },
+    "TZ|2664.1004|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 24
+    },
+    "TZ|2664.1005|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 24
+    }
+  }
 }
