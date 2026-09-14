@@ -2016,9 +2016,7 @@
       "doneAtKw": 35
     },
     "TZ|2665.1003|2026|36": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 35
+      "done": false
     },
     "TZ|2665.1004|2026|36": {
       "done": true,
