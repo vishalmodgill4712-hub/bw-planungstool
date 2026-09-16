@@ -726,7 +726,13 @@
       "mo_a_platz": "EG 12"
     },
     "2522.9002": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 43,
+          "menge": 25
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2521.1003",
@@ -763,7 +769,13 @@
       "mo_a_platz": null
     },
     "2522.9003": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 39,
+          "menge": 24
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2522.1001",
@@ -1082,7 +1094,18 @@
       "mo_a_platz": "EG 12"
     },
     "2544.9001": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 39,
+          "menge": 16
+        },
+        {
+          "year": 2026,
+          "kw": 44,
+          "menge": 24
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2544.1001",
@@ -1851,7 +1874,13 @@
       "mo_a_platz": null
     },
     "2724.9001": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 42,
+          "menge": 10
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2724.1001",
@@ -1916,7 +1945,13 @@
       "mo_a_platz": null
     },
     "2725.9001": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 43,
+          "menge": 12
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2725.1001",
@@ -1962,7 +1997,13 @@
       "mo_a_platz": null
     },
     "2728.9001": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 40,
+          "menge": 10
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2728.1001",
@@ -1999,7 +2040,13 @@
       "mo_a_platz": null
     },
     "2729.9001": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 41,
+          "menge": 10
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2729.1001",
@@ -2045,7 +2092,13 @@
       "mo_a_platz": null
     },
     "2731.9001": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 41,
+          "menge": 10
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2731.1001",
@@ -2068,7 +2121,18 @@
       "mo_a_platz": null
     },
     "2732.9001": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 42,
+          "menge": 10
+        },
+        {
+          "year": 2026,
+          "kw": 42,
+          "menge": 10
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2732.1001",
@@ -2091,7 +2155,13 @@
       "mo_a_platz": null
     },
     "2733.9001": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 42,
+          "menge": 10
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2733.1001",
@@ -2114,7 +2184,18 @@
       "mo_a_platz": null
     },
     "2692.9001": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 43,
+          "menge": 6
+        },
+        {
+          "year": 2026,
+          "kw": 44,
+          "menge": 4
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2692.1001",
