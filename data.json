@@ -28,27 +28,37 @@
         {
           "year": 2026,
           "kw": 38,
-          "menge": 20
+          "menge": 20,
+          "mo_offset": 1,
+          "fr_offset": 1
         },
         {
           "year": 2026,
           "kw": 39,
-          "menge": 10
+          "menge": 10,
+          "mo_offset": 1,
+          "fr_offset": 1
         },
         {
           "year": 2026,
           "kw": 40,
-          "menge": 10
+          "menge": 10,
+          "mo_offset": 1,
+          "fr_offset": 1
         },
         {
           "year": 2026,
           "kw": 41,
-          "menge": 10
+          "menge": 10,
+          "mo_offset": 1,
+          "fr_offset": 1
         },
         {
           "year": 2026,
           "kw": 42,
-          "menge": 20
+          "menge": 20,
+          "mo_offset": 1,
+          "fr_offset": 1
         }
       ],
       "tz_bom": [
@@ -77,7 +87,9 @@
         {
           "year": 2026,
           "kw": 41,
-          "menge": 50
+          "menge": 50,
+          "tz_offset": 1,
+          "fr_offset": 1
         }
       ],
       "tz_bom": [
@@ -2042,6 +2054,42 @@
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 35
+    },
+    "TZ|2342.1012|2026|39": {
+      "done": false
+    },
+    "TZ|2454.1001|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 35
+    },
+    "TZ|2454.1002|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 35
+    },
+    "TZ|2454.1003|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 35
+    },
+    "FR|2454.2001|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 35
+    },
+    "FR|2454.2002|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 35
+    },
+    "FR|2454.2003|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 35
+    },
+    "MO|2454.9001|2026|37": {
+      "done": false
     }
   }
 }
