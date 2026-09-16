@@ -24,7 +24,73 @@
       "mo_a_platz": "EG 12"
     },
     "2341.9012": {
-      "liefertermin": [],
+      "liefertermin": [
+        {
+          "year": 2026,
+          "kw": 40,
+          "menge": 20
+        },
+        {
+          "year": 2026,
+          "kw": 41,
+          "menge": 10
+        },
+        {
+          "year": 2026,
+          "kw": 42,
+          "menge": 10
+        },
+        {
+          "year": 2026,
+          "kw": 43,
+          "menge": 10
+        },
+        {
+          "year": 2026,
+          "kw": 44,
+          "menge": 20
+        },
+        {
+          "year": 2026,
+          "kw": 45,
+          "menge": 10
+        },
+        {
+          "year": 2026,
+          "kw": 46,
+          "menge": 20
+        },
+        {
+          "year": 2026,
+          "kw": 47,
+          "menge": 10
+        },
+        {
+          "year": 2026,
+          "kw": 48,
+          "menge": 10
+        },
+        {
+          "year": 2026,
+          "kw": 49,
+          "menge": 20
+        },
+        {
+          "year": 2026,
+          "kw": 50,
+          "menge": 10
+        },
+        {
+          "year": 2026,
+          "kw": 51,
+          "menge": 10
+        },
+        {
+          "year": 2026,
+          "kw": 52,
+          "menge": 10
+        }
+      ],
       "tz_bom": [
         {
           "stage_art": "2341.1011",
@@ -50,22 +116,22 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 38,
+          "kw": 39,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 42,
+          "kw": 43,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 45,
+          "kw": 46,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 49,
+          "kw": 50,
           "menge": 50
         }
       ],
@@ -94,27 +160,27 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 36,
+          "kw": 37,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 39,
+          "kw": 40,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 43,
+          "kw": 44,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 45,
+          "kw": 46,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 48,
+          "kw": 49,
           "menge": 50
         }
       ],
@@ -171,22 +237,22 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 39,
+          "kw": 40,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 43,
+          "kw": 44,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 46,
+          "kw": 47,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 49,
+          "kw": 50,
           "menge": 50
         }
       ],
@@ -215,27 +281,27 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 39,
+          "kw": 40,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 42,
+          "kw": 43,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 45,
+          "kw": 46,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 48,
+          "kw": 49,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 51,
+          "kw": 52,
           "menge": 50
         }
       ],
@@ -264,27 +330,27 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 37,
+          "kw": 38,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 41,
+          "kw": 42,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 44,
+          "kw": 45,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 47,
+          "kw": 48,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 50,
+          "kw": 51,
           "menge": 50
         }
       ],
@@ -313,11 +379,6 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 37,
-          "menge": 20
-        },
-        {
-          "year": 2026,
           "kw": 38,
           "menge": 20
         },
@@ -328,7 +389,7 @@
         },
         {
           "year": 2026,
-          "kw": 41,
+          "kw": 40,
           "menge": 20
         },
         {
@@ -343,7 +404,7 @@
         },
         {
           "year": 2026,
-          "kw": 45,
+          "kw": 44,
           "menge": 20
         },
         {
@@ -363,7 +424,12 @@
         },
         {
           "year": 2026,
-          "kw": 50,
+          "kw": 49,
+          "menge": 20
+        },
+        {
+          "year": 2026,
+          "kw": 51,
           "menge": 20
         }
       ],
@@ -392,22 +458,22 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 40,
+          "kw": 41,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 43,
+          "kw": 44,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 46,
+          "kw": 47,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 50,
+          "kw": 51,
           "menge": 50
         }
       ],
@@ -436,27 +502,27 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 37,
+          "kw": 38,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 41,
+          "kw": 42,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 44,
+          "kw": 45,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 47,
+          "kw": 48,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 50,
+          "kw": 51,
           "menge": 50
         }
       ],
@@ -485,27 +551,27 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 37,
+          "kw": 38,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 41,
+          "kw": 42,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 44,
+          "kw": 45,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 47,
+          "kw": 48,
           "menge": 50
         },
         {
           "year": 2026,
-          "kw": 51,
+          "kw": 52,
           "menge": 50
         }
       ],
@@ -534,7 +600,7 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 49,
+          "kw": 50,
           "menge": 24
         }
       ],
@@ -809,17 +875,17 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 41,
-          "menge": 0
-        },
-        {
-          "year": 2026,
-          "kw": 46,
+          "kw": 42,
           "menge": 25
         },
         {
           "year": 2026,
-          "kw": 51,
+          "kw": 47,
+          "menge": 25
+        },
+        {
+          "year": 2026,
+          "kw": 52,
           "menge": 25
         }
       ],
@@ -862,17 +928,17 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 40,
+          "kw": 41,
           "menge": 25
         },
         {
           "year": 2026,
-          "kw": 45,
+          "kw": 46,
           "menge": 25
         },
         {
           "year": 2026,
-          "kw": 49,
+          "kw": 50,
           "menge": 25
         }
       ],
@@ -936,17 +1002,17 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 36,
-          "menge": 0
-        },
-        {
-          "year": 2026,
-          "kw": 42,
+          "kw": 37,
           "menge": 20
         },
         {
           "year": 2026,
-          "kw": 48,
+          "kw": 43,
+          "menge": 20
+        },
+        {
+          "year": 2026,
+          "kw": 49,
           "menge": 20
         }
       ],
@@ -975,23 +1041,23 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 36,
-          "menge": 0
-        },
-        {
-          "year": 2026,
-          "kw": 42,
+          "kw": 37,
           "menge": 20
         },
         {
           "year": 2026,
-          "kw": 46,
+          "kw": 43,
           "menge": 20
         },
         {
           "year": 2026,
-          "kw": 50,
-          "menge": 0
+          "kw": 47,
+          "menge": 20
+        },
+        {
+          "year": 2026,
+          "kw": 51,
+          "menge": 20
         }
       ],
       "tz_bom": [
@@ -1056,12 +1122,12 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 39,
+          "kw": 40,
           "menge": 15
         },
         {
           "year": 2026,
-          "kw": 45,
+          "kw": 46,
           "menge": 15
         }
       ],
@@ -1104,12 +1170,12 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 39,
+          "kw": 40,
           "menge": 15
         },
         {
           "year": 2026,
-          "kw": 46,
+          "kw": 47,
           "menge": 15
         }
       ],
@@ -1152,12 +1218,12 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 39,
+          "kw": 40,
           "menge": 15
         },
         {
           "year": 2026,
-          "kw": 45,
+          "kw": 46,
           "menge": 15
         }
       ],
@@ -1193,12 +1259,12 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 39,
+          "kw": 40,
           "menge": 15
         },
         {
           "year": 2026,
-          "kw": 46,
+          "kw": 47,
           "menge": 15
         }
       ],
@@ -1255,12 +1321,12 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 39,
+          "kw": 40,
           "menge": 15
         },
         {
           "year": 2026,
-          "kw": 46,
+          "kw": 47,
           "menge": 15
         }
       ],
@@ -1324,12 +1390,12 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 38,
+          "kw": 39,
           "menge": 25
         },
         {
           "year": 2026,
-          "kw": 50,
+          "kw": 51,
           "menge": 25
         }
       ],
@@ -1414,7 +1480,7 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 40,
+          "kw": 41,
           "menge": 25
         }
       ],
@@ -1485,7 +1551,7 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 44,
+          "kw": 45,
           "menge": 25
         }
       ],
@@ -1549,7 +1615,7 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 44,
+          "kw": 45,
           "menge": 25
         }
       ],
@@ -1578,7 +1644,7 @@
       "liefertermin": [
         {
           "year": 2026,
-          "kw": 41,
+          "kw": 42,
           "menge": 25
         }
       ],
@@ -2117,78 +2183,7 @@
       "mo_a_platz": null
     },
     "2341.9002": {
-      "liefertermin": [
-        {
-          "year": 2026,
-          "kw": 38,
-          "menge": 10
-        },
-        {
-          "year": 2026,
-          "kw": 39,
-          "menge": 10
-        },
-        {
-          "year": 2026,
-          "kw": 40,
-          "menge": 10
-        },
-        {
-          "year": 2026,
-          "kw": 41,
-          "menge": 10
-        },
-        {
-          "year": 2026,
-          "kw": 42,
-          "menge": 20
-        },
-        {
-          "year": 2026,
-          "kw": 43,
-          "menge": 10
-        },
-        {
-          "year": 2026,
-          "kw": 44,
-          "menge": 10
-        },
-        {
-          "year": 2026,
-          "kw": 45,
-          "menge": 20
-        },
-        {
-          "year": 2026,
-          "kw": 46,
-          "menge": 10
-        },
-        {
-          "year": 2026,
-          "kw": 47,
-          "menge": 20
-        },
-        {
-          "year": 2026,
-          "kw": 48,
-          "menge": 10
-        },
-        {
-          "year": 2026,
-          "kw": 49,
-          "menge": 10
-        },
-        {
-          "year": 2026,
-          "kw": 50,
-          "menge": 20
-        },
-        {
-          "year": 2026,
-          "kw": 51,
-          "menge": 10
-        }
-      ],
+      "liefertermin": [],
       "tz_bom": [
         {
           "stage_art": "2341.1002",
