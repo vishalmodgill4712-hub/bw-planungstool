@@ -349,6 +349,8 @@
   .gm-body .gp.wd{font-size:10px;line-height:1.3;padding:4px 8px}
   .gm-body .gp.dn{opacity:.35}
   .gm-body .gp.dn::after{content:'\2713';position:absolute;top:-7px;right:-7px;background:#15803d;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:900;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .gm-body .gp.gp-plan{opacity:.75}
+  .gm-body .gp.gp-plan::after{content:'●';position:absolute;top:-7px;right:-7px;background:#f59e0b;color:#fff;border-radius:50%;width:16px;height:16px;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:900;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
   .gm-body .gs{font-size:10px;color:#006EB7;cursor:pointer;padding:2px 4px;border-radius:3px;opacity:0;transition:opacity .12s;font-weight:900}
   .liw:hover .gs{opacity:1}
   .gs:hover{background:#006EB7;color:#fff}
@@ -774,17 +776,26 @@ function isDone(stage, ident, year, kw) {
   const entry = DONE_STATUS[doneKey(stage, ident, year, kw)];
   return !!(entry && entry.done);
 }
+function isGeplant(stage, ident, year, kw) {
+  const entry = DONE_STATUS[doneKey(stage, ident, year, kw)];
+  return !!(entry && entry.geplant);
+}
 function getDoneAt(stage, ident, year, kw) {
   const entry = DONE_STATUS[doneKey(stage, ident, year, kw)];
   return (entry && entry.done) ? { year: entry.doneAtYear, kw: entry.doneAtKw } : null;
 }
 function toggleDone(stage, ident, year, kw) {
   const k = doneKey(stage, ident, year, kw);
-  const wasDone = DONE_STATUS[k] && DONE_STATUS[k].done;
-  if (wasDone) {
-    DONE_STATUS[k] = { done: false };
+  const status = DONE_STATUS[k] || {};
+  if (!status.done && !status.geplant) {
+    // No status → Geplant (yellow, planned/in production)
+    DONE_STATUS[k] = { geplant: true, done: false };
+  } else if (status.geplant && !status.done) {
+    // Geplant → Erledigt (green, done)
+    DONE_STATUS[k] = { geplant: false, done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
   } else {
-    DONE_STATUS[k] = { done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
+    // Erledigt → No status (clear)
+    DONE_STATUS[k] = { geplant: false, done: false };
   }
   renderAll();
 }
@@ -2078,6 +2089,59 @@ function closeGantt(){document.getElementById('ganttModal').classList.remove('op
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGantt();});
 function gmF(f,b){_gf=f;document.querySelectorAll('.gm-fb').forEach(function(x){x.classList.remove('act');});b.classList.add('act');gmB();}
 function gmW(v){_gs=parseInt(v);var e=_gs+13;if(e>52)e-=52;document.getElementById('gmR').textContent='KW '+_gs+' \u2013 KW '+e;gmB();}
+function ganttPDF(){
+  var table = document.getElementById('gmT');
+  if(!table || !table.innerHTML) { alert('Bitte zuerst den Gantt-Chart laden.'); return; }
+  var w = window.open('','_blank');
+  w.document.write('<!DOCTYPE html><html><head><title>Gantt Chart - Bruno Weisser GmbH</title>');
+  w.document.write('<style>');
+  w.document.write('@page { size: A3 landscape; margin: 10mm; }');
+  w.document.write('body { font-family: Calibri, Arial, sans-serif; margin: 0; padding: 10px; }');
+  w.document.write('.pdf-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 3px solid #006EB7; }');
+  w.document.write('.pdf-title { font-size: 18px; font-weight: 800; color: #006EB7; text-transform: uppercase; letter-spacing: 1px; }');
+  w.document.write('.pdf-info { font-size: 11px; color: #666; }');
+  w.document.write('.pdf-legend { display: flex; gap: 16px; margin-bottom: 10px; }');
+  w.document.write('.pdf-legend span { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; }');
+  w.document.write('.pdf-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }');
+  w.document.write('table { width: 100%; border-collapse: collapse; font-size: 9px; }');
+  w.document.write('th { background: #1e293b; color: #fff; font-size: 10px; font-weight: 700; padding: 6px 5px; text-align: center; border: 1px solid #334155; }');
+  w.document.write('th.ca { background: #006EB7; text-align: left; padding-left: 10px; min-width: 90px; font-size: 11px; }');
+  w.document.write('th.kc { background: #f59e0b; color: #1c1c1c; font-weight: 900; }');
+  w.document.write('th.kf { background: #374151; }');
+  w.document.write('.ac { background: #e0f2fe; border-right: 3px solid #006EB7; font-size: 11px; font-weight: 800; color: #006EB7; padding: 5px 8px; }');
+  w.document.write('.sr-li td { background: #dcfce7; border-bottom: 1px solid #86efac; }');
+  w.document.write('.sr-mo td { background: #dbeafe; border-bottom: 1px solid #93c5fd; }');
+  w.document.write('.sr-fr td { background: #fef3c7; border-bottom: 1px solid #fcd34d; }');
+  w.document.write('.sr-tz td { background: #ede9fe; border-bottom: 1px solid #c4b5fd; }');
+  w.document.write('.art-sep td { border-top: 2px solid #006EB7; }');
+  w.document.write('.sc { padding: 3px 4px; text-align: center; border-right: 1px solid #cbd5e1; min-width: 50px; }');
+  w.document.write('.gp { display: inline-block; border-radius: 4px; font-size: 9px; font-weight: 800; padding: 3px 6px; color: #fff; }');
+  w.document.write('.gp.li { background: #15803d; }');
+  w.document.write('.gp.mo { background: #0c4a6e; }');
+  w.document.write('.gp.fr { background: #92400e; }');
+  w.document.write('.gp.tz { background: #5b21b6; }');
+  w.document.write('.gp.dn { opacity: 0.4; }');
+  w.document.write('.gs, .liw { display: inline; }');
+  w.document.write('.gs { display: none; }');
+  w.document.write('.drok { background: transparent !important; outline: none !important; }');
+  w.document.write('@media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }');
+  w.document.write('</style></head><body>');
+  w.document.write('<div class="pdf-header">');
+  w.document.write('<div class="pdf-title">Gantt / KW-Übersicht — Bruno Weisser GmbH</div>');
+  w.document.write('<div class="pdf-info">KW ' + _gs + ' – KW ' + (_gs+13>52?_gs+13-52:_gs+13) + ' / ' + CURRENT_YEAR + ' &nbsp;|&nbsp; Erstellt: ' + new Date().toLocaleDateString('de-DE') + '</div>');
+  w.document.write('</div>');
+  w.document.write('<div class="pdf-legend">');
+  w.document.write('<span><span class="pdf-dot" style="background:#5b21b6"></span> Tiefziehen</span>');
+  w.document.write('<span><span class="pdf-dot" style="background:#92400e"></span> Fräsen</span>');
+  w.document.write('<span><span class="pdf-dot" style="background:#0c4a6e"></span> Montage</span>');
+  w.document.write('<span><span class="pdf-dot" style="background:#15803d"></span> Lieferung</span>');
+  w.document.write('</div>');
+  w.document.write('<table>' + table.innerHTML + '</table>');
+  w.document.write('</body></html>');
+  w.document.close();
+  setTimeout(function(){ w.print(); }, 500);
+}
+
 function gmB(){
   var D=computeDerived(),wks=[],i,k,y;
   for(i=0;i<14;i++){k=_gs+i;y=CURRENT_YEAR;while(k>52){k-=52;y++;}wks.push({year:y,kw:k});}
@@ -2091,14 +2155,14 @@ function gmB(){
     var first=true;
     function _a(){if(first){first=false;return'<td class="ac" rowspan="'+rc+'">'+art+'</td>';}return'';}
     if(sL){h+='<tr class="sr-li art-sep">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<d.liefertermin.length;j++){if(d.liefertermin[j].year===w.year&&d.liefertermin[j].kw===w.kw){e=d.liefertermin[j];break;}}
-      if(e){var dn=isDone('LI',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',-1)">\u25c0</span><span class="gp li'+(dn?' dn':'')+'" draggable="true" ondragstart="_da=\''+art+'\';_dk='+w.kw+';_dy='+w.year+'" onclick="gmTg(\'LI\',\''+art+'\','+w.year+','+w.kw+')">LI:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',1)">\u25b6</span></div></td>';}
+      if(e){var dn=isDone('LI',art,w.year,w.kw),gp=isGeplant('LI',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',-1)">\u25c0</span><span class="gp li'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" ondragstart="_da=\''+art+'\';_dk='+w.kw+';_dy='+w.year+'" onclick="gmTg(\'LI\',\''+art+'\','+w.year+','+w.kw+')">LI:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',1)">\u25b6</span></div></td>';}
       else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}
     if(sM){h+='<tr class="sr-mo">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null,ma=D.montageByArt[art]||[];for(var j=0;j<ma.length;j++){if(ma[j].year===w.year&&ma[j].kw===w.kw){e=ma[j];break;}}
-      if(e){var dn=isDone('MO',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'MO\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',-1)">◀</span><span class="gp mo'+(dn?' dn':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'MO\','+w.kw+','+w.year+')" onclick="gmTg(\'MO\',\''+art+'\','+w.year+','+w.kw+')">MO:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'MO\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}
+      if(e){var dn=isDone('MO',art,w.year,w.kw),gp=isGeplant('MO',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'MO\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',-1)">◀</span><span class="gp mo'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'MO\','+w.kw+','+w.year+')" onclick="gmTg(\'MO\',\''+art+'\','+w.year+','+w.kw+')">MO:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'MO\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}
     if(sF){var fl=D.fraesenLines[art]&&D.fraesenLines[art].length?D.fraesenLines[art]:[{stage_art:'-',weeks:[]}];for(var fi=0;fi<fl.length;fi++){var ln=fl[fi];h+='<tr class="sr-fr">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<ln.weeks.length;j++){if(ln.weeks[j].year===w.year&&ln.weeks[j].kw===w.kw){e=ln.weeks[j];break;}}
-      if(e&&e.menge){var dn=isDone('FR',ln.stage_art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'FR\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',-1)">◀</span><span class="gp fr wd'+(dn?' dn':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'FR\','+w.kw+','+w.year+')" onclick="gmTg(\'FR\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>FR:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'FR\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}}
+      if(e&&e.menge){var dn=isDone('FR',ln.stage_art,w.year,w.kw),gp=isGeplant('FR',ln.stage_art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'FR\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',-1)">◀</span><span class="gp fr wd'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'FR\','+w.kw+','+w.year+')" onclick="gmTg(\'FR\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>FR:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'FR\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}}
     if(sT){var tl=D.tiefziehenLines[art]&&D.tiefziehenLines[art].length?D.tiefziehenLines[art]:[{stage_art:'-',weeks:[]}];for(var ti=0;ti<tl.length;ti++){var ln=tl[ti];h+='<tr class="sr-tz">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<ln.weeks.length;j++){if(ln.weeks[j].year===w.year&&ln.weeks[j].kw===w.kw){e=ln.weeks[j];break;}}
-      if(e&&e.menge){var dn=isDone('TZ',ln.stage_art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'TZ\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',-1)">◀</span><span class="gp tz wd'+(dn?' dn':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'TZ\','+w.kw+','+w.year+')" onclick="gmTg(\'TZ\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>TZ:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'TZ\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}}
+      if(e&&e.menge){var dn=isDone('TZ',ln.stage_art,w.year,w.kw),gp=isGeplant('TZ',ln.stage_art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'TZ\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',-1)">◀</span><span class="gp tz wd'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'TZ\','+w.kw+','+w.year+')" onclick="gmTg(\'TZ\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>TZ:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'TZ\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}}
   }
   h+='</tbody>';document.getElementById('gmT').innerHTML=h;
 }
@@ -2106,14 +2170,19 @@ function gmTg(s,id,y,k){toggleDone(s,id,y,k);gmB();}
 function gmShStage(art,stage,kw,yr,dir){
   var d=PLAN[art];if(!d)return;
   var offKey=stage==='MO'?'mo_offset':stage==='FR'?'fr_offset':'tz_offset';
-  // Shift the offset for all liefertermin entries of this artikel
-  // dir=1 means move stage 1 week later (increase offset), dir=-1 means earlier (decrease offset)
+  // Find the SPECIFIC liefertermin that produced this stage at this KW
   for(var i=0;i<d.liefertermin.length;i++){
     var lt=d.liefertermin[i];
-    var curOff=lt[offKey]||1;
-    var newOff=curOff-dir;
-    if(newOff<0)newOff=0;
-    lt[offKey]=newOff;
+    var off=lt[offKey]||1;
+    var stageKw=lt.kw-off,stageYr=lt.year;
+    while(stageKw<1){stageKw+=52;stageYr--;}
+    while(stageKw>52){stageKw-=52;stageYr++;}
+    if(stageKw===kw&&stageYr===yr){
+      var newOff=off-dir;
+      if(newOff<0)newOff=0;
+      lt[offKey]=newOff;
+      break; // only change THIS one
+    }
   }
   if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(d.liefertermin));
   renderAll();gmB();
@@ -2127,19 +2196,24 @@ function gmStageDragStart(ev,art,stage,kw,yr){_sdArt=art;_sdStage=stage;_sdKw=kw
 function gmStageDrop(art,stage,toKw,toYr){
   if(!_sdArt||_sdArt!==art||_sdStage!==stage)return;
   if(_sdKw===toKw&&_sdYr===toYr){_sdArt=null;return;}
-  // Calculate how many weeks to shift
   var diff=toKw-_sdKw;
   if(toYr>_sdYr)diff+=52*(toYr-_sdYr);
   if(toYr<_sdYr)diff-=52*(_sdYr-toYr);
-  // Apply the offset change to all matching liefertermin entries
   var offKey=stage==='MO'?'mo_offset':stage==='FR'?'fr_offset':'tz_offset';
   var d=PLAN[art];if(!d){_sdArt=null;return;}
+  // Find the SPECIFIC liefertermin that produced this stage at the drag-start KW
   for(var i=0;i<d.liefertermin.length;i++){
     var lt=d.liefertermin[i];
-    var curOff=lt[offKey]||1;
-    var newOff=curOff-diff;
-    if(newOff<0)newOff=0;
-    lt[offKey]=newOff;
+    var off=lt[offKey]||1;
+    var stageKw=lt.kw-off,stageYr=lt.year;
+    while(stageKw<1){stageKw+=52;stageYr--;}
+    while(stageKw>52){stageKw-=52;stageYr++;}
+    if(stageKw===_sdKw&&stageYr===_sdYr){
+      var newOff=off-diff;
+      if(newOff<0)newOff=0;
+      lt[offKey]=newOff;
+      break; // only change THIS one
+    }
   }
   if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(d.liefertermin));
   _sdArt=null;renderAll();gmB();
@@ -2152,7 +2226,7 @@ function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.c
 </script>
 <div id="ganttModal" onclick="if(event.target===this)closeGantt()">
 <div class="gm-box">
-<div class="gm-head"><div class="gm-head-t">Gantt / KW-Übersicht</div><div class="gm-head-kw" id="gmKwL"></div><button class="gm-close" onclick="closeGantt()">✕</button></div>
+<div class="gm-head"><div class="gm-head-t">Gantt / KW-Übersicht</div><div class="gm-head-kw" id="gmKwL"></div><button onclick="ganttPDF()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font:700 12px Calibri,sans-serif;color:#fff;cursor:pointer;margin-right:6px" title="Als PDF (A3) exportieren">📄 PDF Export</button><button class="gm-close" onclick="closeGantt()">✕</button></div>
 <div class="gm-bar">
 <span style="font:700 11px Calibri,sans-serif;color:#5a6472">Filter:</span>
 <button class="gm-fb gfa act" onclick="gmF('all',this)">Alle</button>
@@ -2160,7 +2234,7 @@ function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.c
 <button class="gm-fb gff" onclick="gmF('FR',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#92400e;margin-right:4px;vertical-align:middle"></span>Fräsen</button>
 <button class="gm-fb gfm" onclick="gmF('MO',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#0c4a6e;margin-right:4px;vertical-align:middle"></span>Montage</button>
 <button class="gm-fb gfl" onclick="gmF('LI',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#15803d;margin-right:4px;vertical-align:middle"></span>Lieferung</button>
-<span style="font-size:10px;color:#94a3b8;margin-left:auto">◀▶ = Woche verschieben · Klick = Erledigt</span>
+<span style="font-size:10px;color:#94a3b8;margin-left:auto">🟡 Geplant · ✅ Erledigt · ◀▶ Verschieben</span>
 </div>
 <div class="gm-sld"><label>KW-Fenster:</label><input type="range" id="gmSl" min="1" max="52" value="24" oninput="gmW(this.value)"><span class="rng" id="gmR"></span>
 <button onclick="gmW(CURRENT_KW);document.getElementById('gmSl').value=CURRENT_KW" style="background:#006EB7;color:#fff;border:none;border-radius:5px;padding:3px 10px;font:700 11px Calibri,sans-serif;cursor:pointer">Heute</button></div>
