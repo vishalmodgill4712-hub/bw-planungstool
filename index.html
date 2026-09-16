@@ -2155,14 +2155,14 @@ function gmB(){
     var first=true;
     function _a(){if(first){first=false;return'<td class="ac" rowspan="'+rc+'">'+art+'</td>';}return'';}
     if(sL){h+='<tr class="sr-li art-sep">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<d.liefertermin.length;j++){if(d.liefertermin[j].year===w.year&&d.liefertermin[j].kw===w.kw){e=d.liefertermin[j];break;}}
-      if(e){var dn=isDone('LI',art,w.year,w.kw),gp=isGeplant('LI',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',-1)">\u25c0</span><span class="gp li'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" ondragstart="_da=\''+art+'\';_dk='+w.kw+';_dy='+w.year+'" onclick="gmTg(\'LI\',\''+art+'\','+w.year+','+w.kw+')">LI:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',1)">\u25b6</span></div></td>';}
-      else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmDr(\''+art+'\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}
+      if(e){var dn=isDone('LI',art,w.year,w.kw),gp=isGeplant('LI',art,w.year,w.kw);h+='<td class="sc" data-drop="LI" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',-1)">◀</span><span class="gp li'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" data-drag="LI" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'" onclick="gmTg(\'LI\',\''+art+'\','+w.year+','+w.kw+')">LI:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmSh(\''+art+'\','+w.kw+','+w.year+',1)">▶</span></div></td>';}
+      else{h+='<td class="sc" data-drop="LI" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'"></td>';}}h+='</tr>';}
     if(sM){h+='<tr class="sr-mo">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null,ma=D.montageByArt[art]||[];for(var j=0;j<ma.length;j++){if(ma[j].year===w.year&&ma[j].kw===w.kw){e=ma[j];break;}}
-      if(e){var dn=isDone('MO',art,w.year,w.kw),gp=isGeplant('MO',art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'MO\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',-1)">◀</span><span class="gp mo'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'MO\','+w.kw+','+w.year+')" onclick="gmTg(\'MO\',\''+art+'\','+w.year+','+w.kw+')">MO:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'MO\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}
+      if(e){var dn=isDone('MO',art,w.year,w.kw),gp=isGeplant('MO',art,w.year,w.kw);h+='<td class="sc" data-drop="MO" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',-1)">◀</span><span class="gp mo'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" data-drag="MO" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'" onclick="gmTg(\'MO\',\''+art+'\','+w.year+','+w.kw+')">MO:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'MO\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" data-drop="MO" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'"></td>';}}h+='</tr>';}
     if(sF){var fl=D.fraesenLines[art]&&D.fraesenLines[art].length?D.fraesenLines[art]:[{stage_art:'-',weeks:[]}];for(var fi=0;fi<fl.length;fi++){var ln=fl[fi];h+='<tr class="sr-fr">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<ln.weeks.length;j++){if(ln.weeks[j].year===w.year&&ln.weeks[j].kw===w.kw){e=ln.weeks[j];break;}}
-      if(e&&e.menge){var dn=isDone('FR',ln.stage_art,w.year,w.kw),gp=isGeplant('FR',ln.stage_art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'FR\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',-1)">◀</span><span class="gp fr wd'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'FR\','+w.kw+','+w.year+')" onclick="gmTg(\'FR\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>FR:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'FR\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}}
+      if(e&&e.menge){var dn=isDone('FR',ln.stage_art,w.year,w.kw),gp=isGeplant('FR',ln.stage_art,w.year,w.kw);h+='<td class="sc" data-drop="FR" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',-1)">◀</span><span class="gp fr wd'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" data-drag="FR" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'" onclick="gmTg(\'FR\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>FR:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'FR\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" data-drop="FR" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'"></td>';}}h+='</tr>';}}
     if(sT){var tl=D.tiefziehenLines[art]&&D.tiefziehenLines[art].length?D.tiefziehenLines[art]:[{stage_art:'-',weeks:[]}];for(var ti=0;ti<tl.length;ti++){var ln=tl[ti];h+='<tr class="sr-tz">'+_a();for(i=0;i<wks.length;i++){var w=wks[i],e=null;for(var j=0;j<ln.weeks.length;j++){if(ln.weeks[j].year===w.year&&ln.weeks[j].kw===w.kw){e=ln.weeks[j];break;}}
-      if(e&&e.menge){var dn=isDone('TZ',ln.stage_art,w.year,w.kw),gp=isGeplant('TZ',ln.stage_art,w.year,w.kw);h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'TZ\','+w.kw+','+w.year+')"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',-1)">◀</span><span class="gp tz wd'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" ondragstart="gmStageDragStart(event,\''+art+'\',\'TZ\','+w.kw+','+w.year+')" onclick="gmTg(\'TZ\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>TZ:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" ondragover="event.preventDefault();this.classList.add(\'drok\')" ondragleave="this.classList.remove(\'drok\')" ondrop="this.classList.remove(\'drok\');gmStageDrop(\''+art+'\',\'TZ\','+w.kw+','+w.year+')"></td>';}}h+='</tr>';}}
+      if(e&&e.menge){var dn=isDone('TZ',ln.stage_art,w.year,w.kw),gp=isGeplant('TZ',ln.stage_art,w.year,w.kw);h+='<td class="sc" data-drop="TZ" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'"><div class="liw"><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',-1)">◀</span><span class="gp tz wd'+(dn?' dn':gp?' gp-plan':'')+'" draggable="true" data-drag="TZ" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'" onclick="gmTg(\'TZ\',\''+ln.stage_art+'\','+w.year+','+w.kw+')">'+ln.stage_art+'<br>TZ:'+e.menge+'</span><span class="gs" onclick="event.stopPropagation();gmShStage(\''+art+'\',\'TZ\','+w.kw+','+w.year+',1)">▶</span></div></td>';}else{h+='<td class="sc" data-drop="TZ" data-art="'+art+'" data-kw="'+w.kw+'" data-yr="'+w.year+'"></td>';}}h+='</tr>';}}
   }
   h+='</tbody>';document.getElementById('gmT').innerHTML=h;
 }
@@ -2170,19 +2170,12 @@ function gmTg(s,id,y,k){toggleDone(s,id,y,k);gmB();}
 function gmShStage(art,stage,kw,yr,dir){
   var d=PLAN[art];if(!d)return;
   var offKey=stage==='MO'?'mo_offset':stage==='FR'?'fr_offset':'tz_offset';
-  // Find the SPECIFIC liefertermin that produced this stage at this KW
   for(var i=0;i<d.liefertermin.length;i++){
     var lt=d.liefertermin[i];
-    var off=lt[offKey]||1;
-    var stageKw=lt.kw-off,stageYr=lt.year;
-    while(stageKw<1){stageKw+=52;stageYr--;}
-    while(stageKw>52){stageKw-=52;stageYr++;}
-    if(stageKw===kw&&stageYr===yr){
-      var newOff=off-dir;
-      if(newOff<0)newOff=0;
-      lt[offKey]=newOff;
-      break; // only change THIS one
-    }
+    var curOff=lt[offKey]||1;
+    var newOff=curOff-dir;
+    if(newOff<0)newOff=0;
+    lt[offKey]=newOff;
   }
   if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(d.liefertermin));
   renderAll();gmB();
@@ -2201,23 +2194,52 @@ function gmStageDrop(art,stage,toKw,toYr){
   if(toYr<_sdYr)diff-=52*(_sdYr-toYr);
   var offKey=stage==='MO'?'mo_offset':stage==='FR'?'fr_offset':'tz_offset';
   var d=PLAN[art];if(!d){_sdArt=null;return;}
-  // Find the SPECIFIC liefertermin that produced this stage at the drag-start KW
   for(var i=0;i<d.liefertermin.length;i++){
     var lt=d.liefertermin[i];
-    var off=lt[offKey]||1;
-    var stageKw=lt.kw-off,stageYr=lt.year;
-    while(stageKw<1){stageKw+=52;stageYr--;}
-    while(stageKw>52){stageKw-=52;stageYr++;}
-    if(stageKw===_sdKw&&stageYr===_sdYr){
-      var newOff=off-diff;
-      if(newOff<0)newOff=0;
-      lt[offKey]=newOff;
-      break; // only change THIS one
-    }
+    var curOff=lt[offKey]||1;
+    var newOff=curOff-diff;
+    if(newOff<0)newOff=0;
+    lt[offKey]=newOff;
   }
   if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(d.liefertermin));
   _sdArt=null;renderAll();gmB();
 }
+
+// ── Clean drag & drop via event delegation on Gantt table ──────
+(function setupGanttDrag(){
+  var t=document.getElementById('gmT');
+  if(!t){setTimeout(setupGanttDrag,500);return;}
+  t.addEventListener('dragstart',function(ev){
+    var p=ev.target.closest('[data-drag]');
+    if(!p){ev.preventDefault();return;}
+    var s=p.dataset.drag,a=p.dataset.art,k=+p.dataset.kw,y=+p.dataset.yr;
+    ev.dataTransfer.effectAllowed='move';
+    ev.dataTransfer.setData('text/plain',s+'|'+a+'|'+k+'|'+y);
+    if(s==='LI'){_da=a;_dk=k;_dy=y;}else{_sdArt=a;_sdStage=s;_sdKw=k;_sdYr=y;}
+    p.style.opacity='.5';
+    setTimeout(function(){p.style.opacity='';},300);
+  });
+  t.addEventListener('dragover',function(ev){
+    var c=ev.target.closest('[data-drop]');
+    if(!c)return;
+    ev.preventDefault();
+    ev.dataTransfer.dropEffect='move';
+    c.classList.add('drok');
+  });
+  t.addEventListener('dragleave',function(ev){
+    var c=ev.target.closest('[data-drop]');
+    if(c)c.classList.remove('drok');
+  });
+  t.addEventListener('drop',function(ev){
+    ev.preventDefault();
+    var c=ev.target.closest('[data-drop]');
+    if(!c)return;
+    c.classList.remove('drok');
+    var s=c.dataset.drop,a=c.dataset.art,k=+c.dataset.kw,y=+c.dataset.yr;
+    if(s==='LI')gmDr(a,k,y);
+    else gmStageDrop(a,s,k,y);
+  });
+})();
 
 // ══ SERVER SAVE/LOAD ════════════════════════════
 async function globalSave(){var b=document.getElementById('globalSaveBtn');if(b){b.disabled=true;b.textContent='\u23f3...';}try{var r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:PLAN,done_status:DONE_STATUS})});var d=await r.json();if(d.ok){_msg('\u2713 '+(d.permanent?'Dauerhaft gespeichert':'Temporär gespeichert')+' \u2014 '+new Date().toLocaleTimeString('de-DE'));if(b){b.textContent='\u2713';setTimeout(function(){b.disabled=false;b.textContent='\ud83d\udcbe Speichern';},2000);}}}catch(e){_msg('\u26a0 Fehler: '+e.message,1);if(b){b.disabled=false;b.textContent='\ud83d\udcbe Speichern';}}}
@@ -2226,7 +2248,7 @@ function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.c
 </script>
 <div id="ganttModal" onclick="if(event.target===this)closeGantt()">
 <div class="gm-box">
-<div class="gm-head"><div class="gm-head-t">Gantt / KW-Übersicht</div><div class="gm-head-kw" id="gmKwL"></div><button onclick="ganttPDF()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font:700 12px Calibri,sans-serif;color:#fff;cursor:pointer;margin-right:6px" title="Als PDF (A3) exportieren">📄 PDF Export</button><button class="gm-close" onclick="closeGantt()">✕</button></div>
+<div class="gm-head"><div class="gm-head-t">Gantt / KW-Übersicht</div><div class="gm-head-kw" id="gmKwL"></div><button onclick="globalSave()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font:700 12px Calibri,sans-serif;color:#fff;cursor:pointer;margin-right:6px">💾 Speichern</button><button onclick="ganttPDF()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font:700 12px Calibri,sans-serif;color:#fff;cursor:pointer;margin-right:6px">📄 PDF</button><button class="gm-close" onclick="closeGantt()">✕</button></div>
 <div class="gm-bar">
 <span style="font:700 11px Calibri,sans-serif;color:#5a6472">Filter:</span>
 <button class="gm-fb gfa act" onclick="gmF('all',this)">Alle</button>
