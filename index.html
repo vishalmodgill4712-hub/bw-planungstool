@@ -2182,16 +2182,51 @@ function gmB(){
   }
   h+='</tbody>';document.getElementById('gmT').innerHTML=h;
 }
-function gmTg(s,id,y,k){toggleDone(s,id,y,k);gmB();}
+function gmTg(s,id,y,k){
+  toggleDone(s,id,y,k);
+  // If LI marked as done, auto-mark all related MO/FR/TZ as erledigt too
+  if(s==='LI'){
+    var st=DONE_STATUS[doneKey('LI',id,y,k)];
+    if(st&&st.done){
+      var d=PLAN[id];if(d){
+        var lt=null;for(var i=0;i<d.liefertermin.length;i++){if(d.liefertermin[i].kw===k&&d.liefertermin[i].year===y){lt=d.liefertermin[i];break;}}
+        if(lt){
+          var moO=lt.mo_offset||1,frO=lt.fr_offset||1,tzO=lt.tz_offset||1;
+          var moK=lt.kw-moO,moY=lt.year;while(moK<1){moK+=52;moY--;}
+          var frK=moK-frO,frY=moY;while(frK<1){frK+=52;frY--;}
+          var tzK=frK-tzO,tzY=frY;while(tzK<1){tzK+=52;tzY--;}
+          DONE_STATUS[doneKey('MO',id,moY,moK)]={done:true,doneAtYear:CURRENT_YEAR,doneAtKw:CURRENT_KW};
+          // Mark all FR parts
+          for(var fi=0;fi<d.fr_bom.length;fi++){
+            DONE_STATUS[doneKey('FR',d.fr_bom[fi].stage_art,frY,frK)]={done:true,doneAtYear:CURRENT_YEAR,doneAtKw:CURRENT_KW};
+          }
+          // Mark all TZ parts
+          for(var ti=0;ti<d.tz_bom.length;ti++){
+            DONE_STATUS[doneKey('TZ',d.tz_bom[ti].stage_art,tzY,tzK)]={done:true,doneAtYear:CURRENT_YEAR,doneAtKw:CURRENT_KW};
+          }
+        }
+      }
+    }
+    renderAll();
+  }
+  gmB();
+}
 function gmShStage(art,stage,kw,yr,dir){
   var d=PLAN[art];if(!d)return;
   var offKey=stage==='MO'?'mo_offset':stage==='FR'?'fr_offset':'tz_offset';
+  // Find the closest liefertermin to this stage KW and adjust its offset
+  var best=-1,bestDist=999;
   for(var i=0;i<d.liefertermin.length;i++){
     var lt=d.liefertermin[i];
-    var curOff=lt[offKey]||1;
-    var newOff=curOff-dir;
-    if(newOff<0)newOff=0;
-    lt[offKey]=newOff;
+    var dist=Math.abs(lt.kw-kw);if(dist>26)dist=52-dist;
+    if(dist<bestDist){bestDist=dist;best=i;}
+  }
+  if(best>=0){
+    var lt=d.liefertermin[best];
+    var cur=lt[offKey]||1;
+    var nw=cur-dir;
+    if(nw<0)nw=0;
+    lt[offKey]=nw;
   }
   if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(d.liefertermin));
   renderAll();gmB();
@@ -2210,12 +2245,19 @@ function gmStageDrop(art,stage,toKw,toYr){
   if(toYr<_sdYr)diff-=52*(_sdYr-toYr);
   var offKey=stage==='MO'?'mo_offset':stage==='FR'?'fr_offset':'tz_offset';
   var d=PLAN[art];if(!d){_sdArt=null;return;}
+  // Find closest liefertermin to the drag-start KW
+  var best=-1,bestDist=999;
   for(var i=0;i<d.liefertermin.length;i++){
     var lt=d.liefertermin[i];
-    var curOff=lt[offKey]||1;
-    var newOff=curOff-diff;
-    if(newOff<0)newOff=0;
-    lt[offKey]=newOff;
+    var dist=Math.abs(lt.kw-_sdKw);if(dist>26)dist=52-dist;
+    if(dist<bestDist){bestDist=dist;best=i;}
+  }
+  if(best>=0){
+    var lt=d.liefertermin[best];
+    var cur=lt[offKey]||1;
+    var nw=cur-diff;
+    if(nw<0)nw=0;
+    lt[offKey]=nw;
   }
   if(DRAFT[art])DRAFT[art].liefertermin=JSON.parse(JSON.stringify(d.liefertermin));
   _sdArt=null;renderAll();gmB();
