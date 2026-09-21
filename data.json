@@ -2381,6 +2381,31 @@
     },
     "MO|2454.9001|2026|37": {
       "done": false
+    },
+    "LI|2341.9012|2026|40": {
+      "geplant": true,
+      "done": false
+    },
+    "LI|2341.9012|2026|39": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "MO|2341.9012|2026|38": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "FR|2341.2013|2026|37": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "TZ|2341.1011|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
     }
   }
 }
