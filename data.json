@@ -2613,6 +2613,27 @@
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 42
+    },
+    "LI|2457.9001|2026|37": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "MO|2457.9001|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2457.2001|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2457.1001|2026|34": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
     }
   }
 }
