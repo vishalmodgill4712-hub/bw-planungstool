@@ -2347,7 +2347,9 @@
       "doneAtKw": 35
     },
     "TZ|2342.1012|2026|39": {
-      "done": false
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
     },
     "TZ|2454.1001|2026|35": {
       "done": true,
@@ -2383,8 +2385,10 @@
       "done": false
     },
     "LI|2341.9012|2026|40": {
-      "geplant": true,
-      "done": false
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
     },
     "LI|2341.9012|2026|39": {
       "geplant": false,
@@ -2406,6 +2410,209 @@
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 38
+    },
+    "MO|2341.9012|2026|39": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "LI|2341.9012|2026|41": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "MO|2341.9012|2026|40": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2341.2013|2026|39": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2341.1011|2026|38": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "LI|2341.9012|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "MO|2341.9012|2026|41": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2341.2013|2026|40": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2341.1011|2026|39": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2341.1011|2026|37": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2341.2013|2026|38": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2341.1011|2026|40": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "MO|2342.9012|2026|37": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2342.2012|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "LI|2342.9012|2026|38": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2342.1012|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "LI|2342.9012|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "MO|2342.9012|2026|41": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2342.2012|2026|40": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "LI|2454.9001|2026|36": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "MO|2454.9001|2026|35": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2454.2001|2026|34": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2454.2002|2026|34": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2454.2003|2026|34": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2454.1001|2026|33": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2454.1002|2026|33": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2454.1003|2026|33": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "LI|2454.9001|2026|39": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "MO|2454.9001|2026|38": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2454.2001|2026|37": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2454.2002|2026|37": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2454.2003|2026|37": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2454.1001|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2454.1002|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2454.1003|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "LI|2455.9001|2026|39": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "MO|2455.9001|2026|38": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "FR|2455.2001|2026|37": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
+    },
+    "TZ|2455.1001|2026|36": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 42
     }
   }
 }
