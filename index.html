@@ -726,7 +726,7 @@ function applyRolePermissions() {
 let CURRENT_KW = 38;
 let CURRENT_YEAR = 2026;
 const FEST_WEEKS = 6;
-const KW_WINDOW = 14;
+const KW_WINDOW = 120;
 
 let PLAN = JSON.parse(JSON.stringify(INPUT_DATA));
 
@@ -1069,13 +1069,13 @@ function renderInputTable() {
       const frChips = (D.fraesenLines[art]||[]).map((line,i) => {
         const lw = line.weeks[idx];
         if (!lw) return '';
-        return `<span class="derived-chip fr">${line.stage_art}: KW${lw.kw}=${lw.menge}</span>`;
+        return `<span class="derived-chip fr">${line.stage_art}: KW${lw.kw}/${lw.year}=${lw.menge}</span>`;
       }).join(' ') || '<span class="derived-cell">—</span>';
 
       const tzChips = (D.tiefziehenLines[art]||[]).map((line,i) => {
         const lw = line.weeks[idx];
         if (!lw) return '';
-        return `<span class="derived-chip tz">${line.stage_art}: KW${lw.kw}=${lw.menge}</span>`;
+        return `<span class="derived-chip tz">${line.stage_art}: KW${lw.kw}/${lw.year}=${lw.menge}</span>`;
       }).join(' ') || '<span class="derived-cell">—</span>';
 
       return `<div class="lief-week-block">
@@ -1090,7 +1090,7 @@ function renderInputTable() {
         <div class="lief-week-stages">
           <div class="lws-col">
             <div class="offset-row"><label>MO Vorlauf (Wo.):</label><input class="offset-in" type="number" min="0" max="8" placeholder="${off.mo}" value="${moOffVal}" onchange="updateWeekOffset('${art}',${idx},'mo_offset',this.value)"></div>
-            <span class="derived-chip mo">KW${moW.kw}=${moW.menge}</span>
+            <span class="derived-chip mo">KW${moW.kw}/${moW.year}=${moW.menge}</span>
           </div>
           <div class="lws-col">
             <div class="offset-row"><label>FR Vorlauf (Wo.):</label><input class="offset-in" type="number" min="0" max="8" placeholder="${off.fr}" value="${frOffVal}" onchange="updateWeekOffset('${art}',${idx},'fr_offset',this.value)"></div>
@@ -1248,6 +1248,7 @@ function handleExcelImport(file) {
       const kwIdx = findColumnIndex(header, ['kw', 'woche', 'week']);
       const artIdx = findColumnIndex(header, ['artikel', 'artikel-nr', 'artikelnummer', 'article']);
       const mengeIdx = findColumnIndex(header, ['menge', 'qty', 'quantity', 'stück', 'stueck']);
+      const yearIdx = findColumnIndex(header, ['year', 'jahr', 'year']);
 
       if (kwIdx === -1 || artIdx === -1 || mengeIdx === -1) {
         showImportStatus('Spalten nicht erkannt. Bitte stellen Sie sicher, dass die Datei Spalten für KW, Artikel-Nr und Menge enthält (Reihenfolge egal).', true);
@@ -1263,9 +1264,10 @@ function handleExcelImport(file) {
         const art = normalizeArtikelKey(row[artIdx]);
         const kw = parseInt(row[kwIdx]);
         const menge = parseFloat(row[mengeIdx]);
-        if (!art || !kw || isNaN(menge)) { skipped++; continue; }
+        const year = yearIdx !== -1 ? parseInt(row[yearIdx]) : CURRENT_YEAR;
+        if (!art || !kw || isNaN(menge) || isNaN(year)) { skipped++; continue; }
         if (!importedByArt[art]) importedByArt[art] = [];
-        importedByArt[art].push({ year: CURRENT_YEAR, kw, menge });
+        importedByArt[art].push({ year, kw, menge });
       }
 
       const importedArts = Object.keys(importedByArt);
@@ -1696,7 +1698,7 @@ function renderGantt(D) {
   const weeks = [];
   for (let i = 0; i < KW_WINDOW; i++) {
     let k = CURRENT_KW + i, y = CURRENT_YEAR;
-    if (k > 52) { k -= 52; y += 1; }
+    while (k > 52) { k -= 52; y++; }
     weeks.push({year:y, kw:k});
   }
   const arts = getArtikelList();
@@ -1705,7 +1707,20 @@ function renderGantt(D) {
   const showMO = activeFilter === 'all' || activeFilter === 'MO';
   const showLI = activeFilter === 'all' || activeFilter === 'LI';
 
-  let html = '<thead><tr><th class="col-art">Artikel / Stufe</th>';
+  // Build year-span header row
+  let yearSpans = [];
+  let curYr = weeks[0].year, spanStart = 0;
+  for (let i = 1; i <= weeks.length; i++) {
+    if (i === weeks.length || weeks[i].year !== curYr) {
+      yearSpans.push({year: curYr, count: i - spanStart});
+      if (i < weeks.length) { curYr = weeks[i].year; spanStart = i; }
+    }
+  }
+  let html = '<thead><tr><th class="col-art" rowspan="2">Artikel / Stufe</th>';
+  yearSpans.forEach(({year, count}) => {
+    html += `<th colspan="${count}" style="background:#0f172a;color:#f59e0b;font-size:13px;font-weight:900;letter-spacing:1px;border-bottom:2px solid #f59e0b">${year}</th>`;
+  });
+  html += '</tr><tr>';
   weeks.forEach(({year,kw}) => {
     const isCur = (year===CURRENT_YEAR && kw===CURRENT_KW);
     const cls = isCur ? 'kw-curr' : isFest(year,kw) ? 'kw-fest' : 'kw-flex';
@@ -2079,16 +2094,17 @@ function renderAll() {
   if (activeView === 'kwoverview') renderTzFrOverview(D);
 }
 
-document.getElementById('currentKW').textContent = 'KW '+CURRENT_KW+' / '+CURRENT_YEAR;
+document.getElementById('currentKW').textContent = 'KW '+CURRENT_KW+' / '+CURRENT_YEAR+' (Forecast bis 2028)';
 renderAll();
 
 // ══ GANTT MODAL ══════════════════════════════════
 var _gf='all',_gs=24,_da=null,_dk=null,_dy=null;
-function openGantt(){_gs=CURRENT_KW;var s=document.getElementById('gmSl');if(s)s.value=CURRENT_KW;document.getElementById('gmKwL').textContent='Aktuelle Woche: KW '+CURRENT_KW+' / '+CURRENT_YEAR;gmW(_gs);document.getElementById('ganttModal').classList.add('open');document.body.style.overflow='hidden';}
+function openGantt(){_gs=CURRENT_KW;var s=document.getElementById('gmSl');if(s)s.value=CURRENT_KW;var ws=document.getElementById('gmWinSel');if(ws)_gWin=parseInt(ws.value);document.getElementById('gmKwL').textContent='Aktuelle Woche: KW '+CURRENT_KW+' / '+CURRENT_YEAR;gmW(_gs);document.getElementById('ganttModal').classList.add('open');document.body.style.overflow='hidden';}
 function closeGantt(){document.getElementById('ganttModal').classList.remove('open');document.body.style.overflow='';}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGantt();});
 function gmF(f,b){_gf=f;document.querySelectorAll('.gm-fb').forEach(function(x){x.classList.remove('act');});b.classList.add('act');gmB();}
-function gmW(v){_gs=parseInt(v);var e=_gs+13;if(e>52)e-=52;document.getElementById('gmR').textContent='KW '+_gs+' \u2013 KW '+e;gmB();}
+var _gWin=52;
+function gmW(v){_gs=parseInt(v);var e=_gs+_gWin-1,ey=CURRENT_YEAR;while(e>52){e-=52;ey++;}document.getElementById('gmR').textContent='KW '+_gs+'/'+CURRENT_YEAR+' \u2013 KW '+e+'/'+ey;gmB();}
 function ganttPDF(){
   var table = document.getElementById('gmT');
   if(!table || !table.innerHTML) { alert('Bitte zuerst den Gantt-Chart laden.'); return; }
@@ -2128,7 +2144,8 @@ function ganttPDF(){
   w.document.write('</style></head><body>');
   w.document.write('<div class="pdf-header">');
   w.document.write('<div class="pdf-title">Gantt / KW-Übersicht — Bruno Weisser GmbH</div>');
-  w.document.write('<div class="pdf-info">KW ' + _gs + ' – KW ' + (_gs+13>52?_gs+13-52:_gs+13) + ' / ' + CURRENT_YEAR + ' &nbsp;|&nbsp; Erstellt: ' + new Date().toLocaleDateString('de-DE') + '</div>');
+  var _pe=_gs+_gWin-1,_py=CURRENT_YEAR;while(_pe>52){_pe-=52;_py++;}
+  w.document.write('<div class="pdf-info">KW ' + _gs + '/' + CURRENT_YEAR + ' – KW ' + _pe + '/' + _py + ' &nbsp;|&nbsp; Erstellt: ' + new Date().toLocaleDateString('de-DE') + '</div>');
   w.document.write('</div>');
   w.document.write('<div class="pdf-legend">');
   w.document.write('<span><span class="pdf-dot" style="background:#5b21b6"></span> Tiefziehen</span>');
@@ -2146,10 +2163,15 @@ function ganttPDF(){
 
 function gmB(){
   var D=computeDerived(),wks=[],i,k,y;
-  for(i=0;i<14;i++){k=_gs+i;y=CURRENT_YEAR;while(k>52){k-=52;y++;}wks.push({year:y,kw:k});}
+  for(i=0;i<_gWin;i++){k=_gs+i;y=CURRENT_YEAR;while(k>52){k-=52;y++;}wks.push({year:y,kw:k});}
   var arts=getArtikelList().sort(),sT=_gf==='all'||_gf==='TZ',sF=_gf==='all'||_gf==='FR',sM=_gf==='all'||_gf==='MO',sL=_gf==='all'||_gf==='LI';
   var grpC=['#3b82f6','#ef4444','#f59e0b','#8b5cf6','#10b981','#ec4899','#06b6d4','#f97316'];
-  var h='<thead><tr><th class="ca">Artikel</th>';
+  // Year span header row
+  var ySpans=[],cY=wks[0].year,sI=0;
+  for(i=1;i<=wks.length;i++){if(i===wks.length||wks[i].year!==cY){ySpans.push({yr:cY,cnt:i-sI});if(i<wks.length){cY=wks[i].year;sI=i;}}}
+  var h='<thead><tr><th class="ca" rowspan="2">Artikel</th>';
+  for(i=0;i<ySpans.length;i++){h+='<th colspan="'+ySpans[i].cnt+'" style="background:#0f172a;color:#f59e0b;font-size:12px;font-weight:900;border-bottom:2px solid #f59e0b">'+ySpans[i].yr+'</th>';}
+  h+='</tr><tr>';
   for(i=0;i<wks.length;i++){var w=wks[i],c=w.year===CURRENT_YEAR&&w.kw===CURRENT_KW;h+='<th class="'+(c?'kc':isFest(w.year,w.kw)?'kf':'')+'">KW'+w.kw+(c?' \u25c0':'')+'</th>';}
   h+='</tr></thead><tbody>';
   for(var ai=0;ai<arts.length;ai++){
@@ -2339,7 +2361,8 @@ function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.c
 <button class="gm-fb gfl" onclick="gmF('LI',this)"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#15803d;margin-right:4px;vertical-align:middle"></span>Lieferung</button>
 <span style="font-size:10px;color:#94a3b8;margin-left:auto">Ziehen = Verschieben · Klick = Geplant/Erledigt · ◀▶ = 1 Woche</span>
 </div>
-<div class="gm-sld"><label>KW-Fenster:</label><input type="range" id="gmSl" min="1" max="52" value="24" oninput="gmW(this.value)"><span class="rng" id="gmR"></span>
+<div class="gm-sld"><label>Start-KW:</label><input type="range" id="gmSl" min="1" max="52" value="24" oninput="gmW(this.value)"><span class="rng" id="gmR"></span>
+<label style="margin-left:12px">Wochen:</label><select id="gmWinSel" onchange="_gWin=parseInt(this.value);gmB()" style="font:700 12px Calibri,sans-serif;padding:2px 6px;border-radius:5px;border:1px solid #475569;background:#1e293b;color:#e2e8f0"><option value="14">14</option><option value="26">26</option><option value="52" selected>52</option><option value="80">80</option><option value="120">120</option></select>
 <button onclick="gmW(CURRENT_KW);document.getElementById('gmSl').value=CURRENT_KW" style="background:#006EB7;color:#fff;border:none;border-radius:5px;padding:3px 10px;font:700 11px Calibri,sans-serif;cursor:pointer">Heute</button></div>
 <div class="gm-body"><table class="gantt" id="gmT"></table></div>
 </div></div>
