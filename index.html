@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Produktionsplanung — Bruno Weisser GmbH</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 <style>
   :root {
     --bg: #ffffff; --surface: #f7f8fa; --card: #ffffff; --border: #e2e6ec; --border-strong: #c9cfd9;
@@ -2159,7 +2160,162 @@ function ganttPDF(){
   setTimeout(function(){ w.print(); }, 500);
 }
 
+async function ganttExcel(){
+  if(typeof ExcelJS==='undefined'){alert('ExcelJS wird geladen...');return;}
+  var D=computeDerived();
+  var wks=[];
+  for(var i=0;i<_gWin;i++){var k=_gs+i,y=CURRENT_YEAR;while(k>52){k-=52;y++;}wks.push({year:y,kw:k});}
+  var arts=getArtikelList().sort();
+  var sT=_gf==='all'||_gf==='TZ',sF=_gf==='all'||_gf==='FR',sM=_gf==='all'||_gf==='MO',sL=_gf==='all'||_gf==='LI';
 
+  var wb=new ExcelJS.Workbook();
+  wb.creator='Bruno Weisser GmbH - Planungstool';
+  var ws=wb.addWorksheet('Gantt Chart',{views:[{state:'frozen',xSplit:1,ySplit:2}]});
+
+  // Colors
+  var cTZ='FF5b21b6',cFR='FF92400e',cMO='FF0c4a6e',cLI='FF15803d';
+  var bgTZ='FFede9fe',bgFR='FFfef3c7',bgMO='FFdbeafe',bgLI='FFdcfce7';
+  var cHead='FF1e293b',cYear='FF0f172a',cYearTxt='FFf59e0b',cCurr='FFf59e0b',cFest='FF374151',cFlex='FF475569';
+
+  // Borders
+  var thinB={top:{style:'thin',color:{argb:'FFcbd5e1'}},bottom:{style:'thin',color:{argb:'FFcbd5e1'}},left:{style:'thin',color:{argb:'FFcbd5e1'}},right:{style:'thin',color:{argb:'FFcbd5e1'}}};
+
+  // Row 1: Year header
+  var r1=ws.addRow(['']);
+  r1.getCell(1).value='Artikel';
+  r1.getCell(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:cHead}};
+  r1.getCell(1).font={bold:true,color:{argb:'FFffffff'},size:11,name:'Calibri'};
+  r1.getCell(1).alignment={vertical:'middle',horizontal:'center'};
+  r1.getCell(1).border=thinB;
+
+  // Build year spans and merge cells
+  var ySpans=[],cY=wks[0].year,sI=0;
+  for(i=1;i<=wks.length;i++){if(i===wks.length||wks[i].year!==cY){ySpans.push({yr:cY,start:sI+2,end:i+1});if(i<wks.length){cY=wks[i].year;sI=i;}}}
+  // Fill year cells
+  for(i=0;i<wks.length;i++){
+    var col=i+2;
+    r1.getCell(col).value='';
+    r1.getCell(col).fill={type:'pattern',pattern:'solid',fgColor:{argb:cYear}};
+    r1.getCell(col).font={bold:true,color:{argb:cYearTxt},size:12,name:'Calibri'};
+    r1.getCell(col).alignment={vertical:'middle',horizontal:'center'};
+    r1.getCell(col).border=thinB;
+  }
+  ySpans.forEach(function(sp){
+    ws.getCell(1,sp.start).value=sp.yr;
+    if(sp.end>sp.start)ws.mergeCells(1,sp.start,1,sp.end);
+  });
+
+  // Row 2: KW header
+  var r2vals=[''];
+  wks.forEach(function(w){r2vals.push('KW'+w.kw);});
+  var r2=ws.addRow(r2vals);
+  r2.getCell(1).value='Artikel';
+  r2.getCell(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:cHead}};
+  r2.getCell(1).font={bold:true,color:{argb:'FFffffff'},size:10,name:'Calibri'};
+  r2.getCell(1).alignment={vertical:'middle',horizontal:'center'};
+  r2.getCell(1).border=thinB;
+  // Merge Artikel header rows 1-2
+  ws.mergeCells(1,1,2,1);
+
+  for(i=0;i<wks.length;i++){
+    var c=r2.getCell(i+2);
+    var isCur=wks[i].year===CURRENT_YEAR&&wks[i].kw===CURRENT_KW;
+    c.fill={type:'pattern',pattern:'solid',fgColor:{argb:isCur?cCurr:isFest(wks[i].year,wks[i].kw)?cFest:cHead}};
+    c.font={bold:true,color:{argb:isCur?'FF1c1c1c':'FFffffff'},size:9,name:'Calibri'};
+    c.alignment={vertical:'middle',horizontal:'center'};
+    c.border=thinB;
+  }
+
+  // Data rows
+  arts.forEach(function(art){
+    var d=PLAN[art];if(!d)return;
+    var stageRows=[];
+
+    if(sL){
+      var vals=[art+' — LI'];
+      wks.forEach(function(w){
+        var e=d.liefertermin.find(function(x){return x.year===w.year&&x.kw===w.kw;});
+        vals.push(e?e.menge:'');
+      });
+      stageRows.push({vals:vals,bg:bgLI,fc:cLI,label:'LI'});
+    }
+    if(sM){
+      var vals=[art+' — MO'];
+      var ma=D.montageByArt[art]||[];
+      wks.forEach(function(w){
+        var e=ma.find(function(x){return x.year===w.year&&x.kw===w.kw;});
+        vals.push(e?e.menge:'');
+      });
+      stageRows.push({vals:vals,bg:bgMO,fc:cMO,label:'MO'});
+    }
+    if(sF){
+      var fl=D.fraesenLines[art]&&D.fraesenLines[art].length?D.fraesenLines[art]:[{stage_art:'—',weeks:[]}];
+      fl.forEach(function(line){
+        var vals=[art+' — FR ('+line.stage_art+')'];
+        wks.forEach(function(w){
+          var e=line.weeks.find(function(x){return x.year===w.year&&x.kw===w.kw;});
+          vals.push(e&&e.menge?e.menge:'');
+        });
+        stageRows.push({vals:vals,bg:bgFR,fc:cFR,label:'FR'});
+      });
+    }
+    if(sT){
+      var tl=D.tiefziehenLines[art]&&D.tiefziehenLines[art].length?D.tiefziehenLines[art]:[{stage_art:'—',weeks:[]}];
+      tl.forEach(function(line){
+        var vals=[art+' — TZ ('+line.stage_art+')'];
+        wks.forEach(function(w){
+          var e=line.weeks.find(function(x){return x.year===w.year&&x.kw===w.kw;});
+          vals.push(e&&e.menge?e.menge:'');
+        });
+        stageRows.push({vals:vals,bg:bgTZ,fc:cTZ,label:'TZ'});
+      });
+    }
+
+    stageRows.forEach(function(sr,idx){
+      var r=ws.addRow(sr.vals);
+      // Artikel cell
+      r.getCell(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFe0f2fe'}};
+      r.getCell(1).font={bold:true,color:{argb:'FF006EB7'},size:9,name:'Calibri'};
+      r.getCell(1).alignment={vertical:'middle',horizontal:'left'};
+      r.getCell(1).border=thinB;
+      // Data cells
+      for(var ci=0;ci<wks.length;ci++){
+        var cell=r.getCell(ci+2);
+        cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:sr.bg}};
+        cell.border=thinB;
+        cell.alignment={vertical:'middle',horizontal:'center'};
+        if(cell.value&&cell.value!==''){
+          cell.font={bold:true,color:{argb:'FFffffff'},size:9,name:'Calibri'};
+          cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:sr.fc}};
+        } else {
+          cell.font={size:9,name:'Calibri'};
+        }
+      }
+      // Top border for first stage of each artikel
+      if(idx===0){
+        for(var ci=1;ci<=wks.length+1;ci++){
+          var cell=r.getCell(ci);
+          cell.border={top:{style:'medium',color:{argb:'FF006EB7'}},bottom:thinB.bottom,left:thinB.left,right:thinB.right};
+        }
+      }
+    });
+  });
+
+  // Column widths
+  ws.getColumn(1).width=22;
+  for(i=2;i<=wks.length+1;i++){ws.getColumn(i).width=6;}
+
+  // Generate and download
+  var buf=await wb.xlsx.writeBuffer();
+  var blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  var _pe2=_gs+_gWin-1,_py2=CURRENT_YEAR;while(_pe2>52){_pe2-=52;_py2++;}
+  a.download='Gantt_BW_KW'+_gs+'_'+CURRENT_YEAR+'_bis_KW'+_pe2+'_'+_py2+'.xlsx';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 function gmB(){
   var D=computeDerived(),wks=[],i,k,y;
@@ -2351,7 +2507,7 @@ function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.c
 </script>
 <div id="ganttModal" onclick="if(event.target===this)closeGantt()">
 <div class="gm-box">
-<div class="gm-head"><div class="gm-head-t">Gantt / KW-Übersicht</div><div class="gm-head-kw" id="gmKwL"></div><button onclick="globalSave()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font:700 12px Calibri,sans-serif;color:#fff;cursor:pointer;margin-right:6px">💾 Speichern</button><button onclick="ganttPDF()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font:700 12px Calibri,sans-serif;color:#fff;cursor:pointer;margin-right:6px">📄 PDF</button><button class="gm-close" onclick="closeGantt()">✕</button></div>
+<div class="gm-head"><div class="gm-head-t">Gantt / KW-Übersicht</div><div class="gm-head-kw" id="gmKwL"></div><button onclick="globalSave()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font:700 12px Calibri,sans-serif;color:#fff;cursor:pointer;margin-right:6px">💾 Speichern</button><button onclick="ganttPDF()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font:700 12px Calibri,sans-serif;color:#fff;cursor:pointer;margin-right:6px">📄 PDF</button><button onclick="ganttExcel()" style="background:rgba(34,197,94,.3);border:1px solid rgba(34,197,94,.5);border-radius:6px;padding:5px 12px;font:700 12px Calibri,sans-serif;color:#fff;cursor:pointer;margin-right:6px">📊 Excel</button><button class="gm-close" onclick="closeGantt()">✕</button></div>
 <div class="gm-bar">
 <span style="font:700 11px Calibri,sans-serif;color:#5a6472">Filter:</span>
 <button class="gm-fb gfa act" onclick="gmF('all',this)">Alle</button>
