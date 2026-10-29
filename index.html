@@ -490,6 +490,7 @@
       <button class="view-tab" onclick="setView('gantt',this)">📊 Gantt / KW-Übersicht</button>
       <button class="view-tab" onclick="setView('kwoverview',this)">📅 Geplant vs. Erledigt</button>
       <button class="view-tab" onclick="setView('overload',this)">⚠️ Überlast</button>
+      <button class="view-tab" onclick="setView('otif',this)">📦 OTIF Tracker</button>
     </div>
 
     <!-- DASHBOARD VIEW (default) -->
@@ -625,6 +626,33 @@
         <span style="font-size:11px;color:var(--muted)">Zeigt alle KWs der nächsten 12 Wochen, in denen die Montage-Kapazität überschritten wird, mit den verursachenden Artikeln und einem Vorschlag, Fräsen/Tiefziehen 1 Woche früher zu produzieren.</span>
       </div>
       <div id="overloadActionPanel"></div>
+    </div>
+
+    <!-- OTIF TRACKER VIEW -->
+    <div id="view-otif" class="hidden">
+      <div class="sec-title">📦 OTIF Tracker — On-Time In-Full Lieferperformance</div>
+      <div id="otifKpiCards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px"></div>
+      <div class="input-toolbar" style="flex-wrap:wrap;gap:8px">
+        <select id="otifFilterArt" onchange="renderOtifTracker()" style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--fg);font:12px Calibri,sans-serif">
+          <option value="all">Alle Artikel</option>
+        </select>
+        <select id="otifFilterStatus" onchange="renderOtifTracker()" style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--fg);font:12px Calibri,sans-serif">
+          <option value="all">Alle Status</option>
+          <option value="offen">Offen</option>
+          <option value="geliefert">Geliefert</option>
+          <option value="verspätet">Verspätet</option>
+        </select>
+        <button onclick="exportOtifExcel()" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--fg);font:700 12px Calibri,sans-serif;cursor:pointer">📊 Excel Export</button>
+      </div>
+      <div style="overflow-x:auto;margin-top:10px">
+        <table class="data-table" style="font-size:11px;width:100%">
+          <thead><tr>
+            <th>Pos</th><th>Artikel</th><th>Menge</th><th>Geplant (Datum)</th><th>Geliefert (Datum)</th>
+            <th>Menge gelief.</th><th>Lieferschein-Nr</th><th>Δ Tage</th><th>Status</th><th>Aktion</th>
+          </tr></thead>
+          <tbody id="otifBody"></tbody>
+        </table>
+      </div>
     </div>
   </main>
 </div>
@@ -800,6 +828,234 @@ function toggleDone(stage, ident, year, kw) {
   }
   renderAll();
 }
+// ══ OTIF DATA ══════════════════════════════════
+// Key: "art|year|kw|pos" → {geplant_date, geliefert_date, lieferschein, menge_geliefert, status}
+let OTIF_DATA = {};
+function otifKey(art, year, kw, pos) { return art + '|' + year + '|' + kw + '|' + (pos||0); }
+
+function kwToDate(year, kw) {
+  // ISO week date: Monday of the given KW
+  var jan4 = new Date(year, 0, 4);
+  var dow = jan4.getDay() || 7;
+  var isoWeek1 = new Date(jan4);
+  isoWeek1.setDate(jan4.getDate() - dow + 1);
+  var d = new Date(isoWeek1);
+  d.setDate(d.getDate() + (kw - 1) * 7 + 4); // Friday of that week (delivery day)
+  return d;
+}
+
+function formatDate(d) {
+  if (!d) return '';
+  if (typeof d === 'string') d = new Date(d);
+  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function getOtifEntry(art, year, kw, pos) {
+  var k = otifKey(art, year, kw, pos);
+  if (!OTIF_DATA[k]) {
+    var pd = kwToDate(year, kw);
+    OTIF_DATA[k] = { geplant_date: pd.toISOString().slice(0,10), geliefert_date: '', lieferschein: '', menge_geliefert: 0, status: 'offen' };
+  }
+  return OTIF_DATA[k];
+}
+
+function otifMarkGeliefert(art, year, kw, pos) {
+  var entry = getOtifEntry(art, year, kw, pos);
+  if (entry.status === 'geliefert') { entry.status = 'offen'; entry.geliefert_date = ''; }
+  else { entry.status = 'geliefert'; entry.geliefert_date = new Date().toISOString().slice(0,10); }
+  // Auto-cascade: mark LI and all connected stages as erledigt
+  if (entry.status === 'geliefert') {
+    var d = PLAN[art]; if (d) {
+      var lt = null;
+      for (var i = 0; i < d.liefertermin.length; i++) {
+        if (d.liefertermin[i].kw === kw && d.liefertermin[i].year === year) { lt = d.liefertermin[i]; break; }
+      }
+      if (lt) {
+        // Mark LI as done
+        DONE_STATUS[doneKey('LI', art, year, kw)] = { done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
+        // Mark MO
+        var moO = lt.mo_offset || 1, moK = lt.kw - moO, moY = lt.year;
+        while (moK < 1) { moK += 52; moY--; }
+        DONE_STATUS[doneKey('MO', art, moY, moK)] = { done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
+        // Mark FR
+        var frO = lt.fr_offset || 1, frK = moK - frO, frY = moY;
+        while (frK < 1) { frK += 52; frY--; }
+        for (var fi = 0; fi < d.fr_bom.length; fi++) {
+          DONE_STATUS[doneKey('FR', d.fr_bom[fi].stage_art, frY, frK)] = { done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
+        }
+        // Mark TZ
+        var tzO = lt.tz_offset || 1, tzK = frK - tzO, tzY = frY;
+        while (tzK < 1) { tzK += 52; tzY--; }
+        for (var ti = 0; ti < d.tz_bom.length; ti++) {
+          DONE_STATUS[doneKey('TZ', d.tz_bom[ti].stage_art, tzY, tzK)] = { done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
+        }
+      }
+    }
+  }
+  renderAll();
+}
+
+function otifSetField(art, year, kw, pos, field, value) {
+  var entry = getOtifEntry(art, year, kw, pos);
+  entry[field] = value;
+}
+
+function renderOtifTracker() {
+  var rows = [];
+  var posCounter = 0;
+  // Build filter dropdown
+  var artFilter = document.getElementById('otifFilterArt');
+  var selectedArt = artFilter ? artFilter.value : 'all';
+  var statusFilter = document.getElementById('otifFilterStatus');
+  var selectedStatus = statusFilter ? statusFilter.value : 'all';
+  // Collect all delivery positions
+  var allArts = new Set();
+  for (var art in PLAN) {
+    var d = PLAN[art];
+    if (!d.liefertermin || d.liefertermin.length === 0) continue;
+    allArts.add(art);
+    for (var li = 0; li < d.liefertermin.length; li++) {
+      var lt = d.liefertermin[li];
+      posCounter++;
+      var entry = getOtifEntry(art, lt.year, lt.kw, li);
+      var geplantDate = new Date(entry.geplant_date);
+      var today = new Date(); today.setHours(0,0,0,0);
+      var geliefertDate = entry.geliefert_date ? new Date(entry.geliefert_date) : null;
+      // Calculate delta days
+      var deltaDays = null;
+      if (geliefertDate) {
+        deltaDays = Math.round((geliefertDate - geplantDate) / (1000 * 60 * 60 * 24));
+      } else if (entry.status === 'offen' && geplantDate < today) {
+        deltaDays = Math.round((today - geplantDate) / (1000 * 60 * 60 * 24));
+        entry.status = 'verspätet';
+      }
+      // Check if on-time
+      var onTime = geliefertDate ? (geliefertDate <= geplantDate) : null;
+      var inFull = (entry.menge_geliefert >= lt.menge);
+      rows.push({
+        pos: posCounter, art: art, menge: lt.menge, year: lt.year, kw: lt.kw, liIdx: li,
+        geplant_date: entry.geplant_date, geliefert_date: entry.geliefert_date,
+        menge_geliefert: entry.menge_geliefert, lieferschein: entry.lieferschein,
+        deltaDays: deltaDays, status: entry.status, onTime: onTime, inFull: inFull
+      });
+    }
+  }
+  // Update artikel filter
+  if (artFilter) {
+    var curOpts = new Set(); artFilter.querySelectorAll('option').forEach(function(o) { curOpts.add(o.value); });
+    allArts.forEach(function(a) { if (!curOpts.has(a)) { var o = document.createElement('option'); o.value = a; o.textContent = a; artFilter.appendChild(o); } });
+  }
+  // Filter rows
+  var filtered = rows.filter(function(r) {
+    if (selectedArt !== 'all' && r.art !== selectedArt) return false;
+    if (selectedStatus !== 'all' && r.status !== selectedStatus) return false;
+    return true;
+  });
+  // KPI calculations
+  var total = rows.length, delivered = 0, onTimeCount = 0, inFullCount = 0, otifCount = 0, late = 0;
+  rows.forEach(function(r) {
+    if (r.status === 'geliefert') {
+      delivered++;
+      if (r.onTime) onTimeCount++;
+      if (r.inFull) inFullCount++;
+      if (r.onTime && r.inFull) otifCount++;
+    }
+    if (r.status === 'verspätet') late++;
+  });
+  var otPct = delivered > 0 ? Math.round(onTimeCount / delivered * 100) : 0;
+  var ifPct = delivered > 0 ? Math.round(inFullCount / delivered * 100) : 0;
+  var otifPct = delivered > 0 ? Math.round(otifCount / delivered * 100) : 0;
+  // Render KPI cards
+  document.getElementById('otifKpiCards').innerHTML =
+    '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">' +
+      '<div style="font-size:28px;font-weight:900;color:' + (otifPct >= 90 ? '#16a34a' : otifPct >= 70 ? '#f59e0b' : '#dc2626') + '">' + otifPct + '%</div>' +
+      '<div style="font-size:11px;color:var(--muted);font-weight:700">OTIF Score</div>' +
+      '<div style="font-size:10px;color:var(--muted)">' + otifCount + '/' + delivered + ' geliefert</div>' +
+    '</div>' +
+    '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">' +
+      '<div style="font-size:28px;font-weight:900;color:' + (otPct >= 90 ? '#16a34a' : otPct >= 70 ? '#f59e0b' : '#dc2626') + '">' + otPct + '%</div>' +
+      '<div style="font-size:11px;color:var(--muted);font-weight:700">On-Time</div>' +
+      '<div style="font-size:10px;color:var(--muted)">' + onTimeCount + '/' + delivered + ' pünktlich</div>' +
+    '</div>' +
+    '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">' +
+      '<div style="font-size:28px;font-weight:900;color:' + (ifPct >= 90 ? '#16a34a' : ifPct >= 70 ? '#f59e0b' : '#dc2626') + '">' + ifPct + '%</div>' +
+      '<div style="font-size:11px;color:var(--muted);font-weight:700">In-Full</div>' +
+      '<div style="font-size:10px;color:var(--muted)">' + inFullCount + '/' + delivered + ' vollständig</div>' +
+    '</div>' +
+    '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">' +
+      '<div style="font-size:28px;font-weight:900;color:' + (late > 0 ? '#dc2626' : '#16a34a') + '">' + late + '</div>' +
+      '<div style="font-size:11px;color:var(--muted);font-weight:700">Verspätet</div>' +
+      '<div style="font-size:10px;color:var(--muted)">' + total + ' Positionen gesamt</div>' +
+    '</div>';
+  // Render table
+  var tbody = '';
+  filtered.forEach(function(r) {
+    var statusColor = r.status === 'geliefert' ? '#16a34a' : r.status === 'verspätet' ? '#dc2626' : '#f59e0b';
+    var statusLabel = r.status === 'geliefert' ? '✅ Geliefert' : r.status === 'verspätet' ? '🔴 Verspätet' : '🟡 Offen';
+    var deltaStr = r.deltaDays !== null ? (r.deltaDays > 0 ? '+' + r.deltaDays : r.deltaDays) : '—';
+    var deltaColor = r.deltaDays !== null ? (r.deltaDays > 0 ? '#dc2626' : r.deltaDays < 0 ? '#16a34a' : 'var(--fg)') : 'var(--muted)';
+    tbody += '<tr>' +
+      '<td style="font-weight:700">' + r.pos + '</td>' +
+      '<td style="font-weight:700">' + r.art + '</td>' +
+      '<td>' + r.menge + '</td>' +
+      '<td><input type="date" value="' + r.geplant_date + '" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'geplant_date\',this.value);renderOtifTracker()" style="font:11px Calibri,sans-serif;border:1px solid var(--border);border-radius:4px;padding:2px 4px;background:var(--card);color:var(--fg);width:110px"></td>' +
+      '<td><input type="date" value="' + (r.geliefert_date || '') + '" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'geliefert_date\',this.value);renderOtifTracker()" style="font:11px Calibri,sans-serif;border:1px solid var(--border);border-radius:4px;padding:2px 4px;background:var(--card);color:var(--fg);width:110px"></td>' +
+      '<td><input type="number" value="' + (r.menge_geliefert || 0) + '" min="0" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'menge_geliefert\',+this.value);renderOtifTracker()" style="font:11px Calibri,sans-serif;border:1px solid var(--border);border-radius:4px;padding:2px 4px;background:var(--card);color:var(--fg);width:60px"></td>' +
+      '<td><input type="text" value="' + (r.lieferschein || '') + '" placeholder="LS-Nr" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'lieferschein\',this.value)" style="font:11px Calibri,sans-serif;border:1px solid var(--border);border-radius:4px;padding:2px 4px;background:var(--card);color:var(--fg);width:90px"></td>' +
+      '<td style="font-weight:700;color:' + deltaColor + '">' + deltaStr + '</td>' +
+      '<td><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:' + statusColor + '22;color:' + statusColor + '">' + statusLabel + '</span></td>' +
+      '<td><button onclick="otifMarkGeliefert(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ')" style="padding:3px 8px;border-radius:5px;border:1px solid ' + statusColor + ';background:' + statusColor + '15;color:' + statusColor + ';font:700 10px Calibri,sans-serif;cursor:pointer">' + (r.status === 'geliefert' ? 'Rückgängig' : '✓ Liefern') + '</button></td>' +
+    '</tr>';
+  });
+  document.getElementById('otifBody').innerHTML = tbody || '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">Keine Lieferpositionen</td></tr>';
+}
+
+function exportOtifExcel() {
+  var wb = new ExcelJS.Workbook();
+  var ws = wb.addWorksheet('OTIF Tracker');
+  ws.columns = [
+    { header: 'Pos', key: 'pos', width: 6 },
+    { header: 'Artikel', key: 'art', width: 14 },
+    { header: 'Menge', key: 'menge', width: 8 },
+    { header: 'Geplant (Datum)', key: 'geplant', width: 14 },
+    { header: 'Geliefert (Datum)', key: 'geliefert', width: 14 },
+    { header: 'Menge gelief.', key: 'menge_gel', width: 12 },
+    { header: 'Lieferschein-Nr', key: 'ls', width: 16 },
+    { header: 'Δ Tage', key: 'delta', width: 8 },
+    { header: 'Status', key: 'status', width: 12 }
+  ];
+  ws.getRow(1).font = { bold: true, size: 11 };
+  ws.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0f172a' } };
+  ws.getRow(1).font = { bold: true, color: { argb: 'FFf59e0b' }, size: 11 };
+  var pos = 0;
+  for (var art in PLAN) {
+    var d = PLAN[art];
+    if (!d.liefertermin || d.liefertermin.length === 0) continue;
+    for (var li = 0; li < d.liefertermin.length; li++) {
+      var lt = d.liefertermin[li];
+      pos++;
+      var entry = getOtifEntry(art, lt.year, lt.kw, li);
+      var gd = new Date(entry.geplant_date);
+      var dd = entry.geliefert_date ? new Date(entry.geliefert_date) : null;
+      var delta = dd ? Math.round((dd - gd) / 86400000) : null;
+      var row = ws.addRow({
+        pos: pos, art: art, menge: lt.menge,
+        geplant: formatDate(gd), geliefert: dd ? formatDate(dd) : '',
+        menge_gel: entry.menge_geliefert, ls: entry.lieferschein || '',
+        delta: delta !== null ? delta : '', status: entry.status
+      });
+      var sc = entry.status === 'geliefert' ? '16a34a' : entry.status === 'verspätet' ? 'dc2626' : 'f59e0b';
+      row.getCell('status').font = { bold: true, color: { argb: 'FF' + sc } };
+    }
+  }
+  wb.xlsx.writeBuffer().then(function(buf) {
+    var blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'OTIF_Tracker_KW' + CURRENT_KW + '_' + CURRENT_YEAR + '.xlsx';
+    a.click();
+  });
+}
+
 function isPast(year, kw) {
   return absWeek(year, kw) < absWeek(CURRENT_YEAR, CURRENT_KW);
 }
@@ -872,6 +1128,7 @@ function setView(v, btn) {
   document.getElementById('view-gantt').classList.toggle('hidden', v !== 'gantt');
   document.getElementById('view-kwoverview').classList.toggle('hidden', v !== 'kwoverview');
   document.getElementById('view-overload').classList.toggle('hidden', v !== 'overload');
+  document.getElementById('view-otif').classList.toggle('hidden', v !== 'otif');
   renderAll();
 }
 
@@ -2093,6 +2350,7 @@ function renderAll() {
   if (activeView === 'input') renderInputTable();
   if (activeView === 'gantt') renderGantt(D);
   if (activeView === 'kwoverview') renderTzFrOverview(D);
+  if (activeView === 'otif') renderOtifTracker();
 }
 
 document.getElementById('currentKW').textContent = 'KW '+CURRENT_KW+' / '+CURRENT_YEAR+' (Forecast bis 2028)';
@@ -2501,9 +2759,9 @@ setTimeout(function(){
 
 
 // ══ SERVER SAVE/LOAD ════════════════════════════
-async function globalSave(){var b=document.getElementById('globalSaveBtn');if(b){b.disabled=true;b.textContent='\u23f3...';}try{var r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:PLAN,done_status:DONE_STATUS})});var d=await r.json();if(d.ok){_msg('\u2713 '+(d.permanent?'Dauerhaft gespeichert':'Temporär gespeichert')+' \u2014 '+new Date().toLocaleTimeString('de-DE'));if(b){b.textContent='\u2713';setTimeout(function(){b.disabled=false;b.textContent='\ud83d\udcbe Speichern';},2000);}}}catch(e){_msg('\u26a0 Fehler: '+e.message,1);if(b){b.disabled=false;b.textContent='\ud83d\udcbe Speichern';}}}
+async function globalSave(){var b=document.getElementById('globalSaveBtn');if(b){b.disabled=true;b.textContent='\u23f3...';}try{var r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:PLAN,done_status:DONE_STATUS,otif_data:OTIF_DATA})});var d=await r.json();if(d.ok){_msg('\u2713 '+(d.permanent?'Dauerhaft gespeichert':'Temporär gespeichert')+' \u2014 '+new Date().toLocaleTimeString('de-DE'));if(b){b.textContent='\u2713';setTimeout(function(){b.disabled=false;b.textContent='\ud83d\udcbe Speichern';},2000);}}}catch(e){_msg('\u26a0 Fehler: '+e.message,1);if(b){b.disabled=false;b.textContent='\ud83d\udcbe Speichern';}}}
 function _msg(m,err){var el=document.getElementById('_sv');if(!el){el=document.createElement('div');el.id='_sv';el.style.cssText='position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:8px;font:700 13px Calibri,Arial,sans-serif;z-index:9999;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:opacity .4s';document.body.appendChild(el);}el.textContent=m;el.style.background=err?'#dc2626':'#16a34a';el.style.color='#fff';el.style.opacity='1';clearTimeout(el._t);el._t=setTimeout(function(){el.style.opacity='0';},3500);}
-(async function(){try{var r=await fetch('/api/load');if(r.ok){var d=await r.json();if(d.plan&&Object.keys(d.plan).length>0){PLAN=d.plan;DRAFT=JSON.parse(JSON.stringify(PLAN));if(d.done_status)DONE_STATUS=d.done_status;renderAll();_msg('\u2713 '+Object.keys(PLAN).length+' Artikel geladen');}}}catch(e){}})();
+(async function(){try{var r=await fetch('/api/load');if(r.ok){var d=await r.json();if(d.plan&&Object.keys(d.plan).length>0){PLAN=d.plan;DRAFT=JSON.parse(JSON.stringify(PLAN));if(d.done_status)DONE_STATUS=d.done_status;if(d.otif_data)OTIF_DATA=d.otif_data;renderAll();_msg('\u2713 '+Object.keys(PLAN).length+' Artikel geladen');}}}catch(e){}})();
 </script>
 <div id="ganttModal" onclick="if(event.target===this)closeGantt()">
 <div class="gm-box">
