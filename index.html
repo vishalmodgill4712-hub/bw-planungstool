@@ -630,25 +630,80 @@
 
     <!-- OTIF TRACKER VIEW -->
     <div id="view-otif" class="hidden">
-      <div class="sec-title">📦 OTIF Tracker — On-Time In-Full Lieferperformance</div>
-      <div id="otifKpiCards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px"></div>
-      <div class="input-toolbar" style="flex-wrap:wrap;gap:8px">
-        <select id="otifFilterArt" onchange="renderOtifTracker()" style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--fg);font:12px Calibri,sans-serif">
-          <option value="all">Alle Artikel</option>
-        </select>
-        <select id="otifFilterStatus" onchange="renderOtifTracker()" style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--fg);font:12px Calibri,sans-serif">
-          <option value="all">Alle Status</option>
-          <option value="offen">Offen</option>
-          <option value="geliefert">Geliefert</option>
-          <option value="verspätet">Verspätet</option>
-        </select>
-        <button onclick="exportOtifExcel()" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--fg);font:700 12px Calibri,sans-serif;cursor:pointer">📊 Excel Export</button>
+      <style>
+        .otif-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px; }
+        .otif-header .sec-title { margin:0; }
+        .otif-kpi { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+        .otif-kpi-card { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:18px 14px; text-align:center; position:relative; overflow:hidden; box-shadow:var(--shadow-sm); transition:box-shadow .15s,transform .15s; }
+        .otif-kpi-card:hover { box-shadow:var(--shadow-md); transform:translateY(-1px); }
+        .otif-kpi-card .kpi-bar { position:absolute; top:0; left:0; right:0; height:3px; }
+        .otif-kpi-card .kpi-value { font-size:32px; font-weight:900; line-height:1.1; margin-top:4px; font-family:var(--font-head); }
+        .otif-kpi-card .kpi-label { font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.8px; margin-top:4px; }
+        .otif-kpi-card .kpi-sub { font-size:10px; color:var(--muted-light); margin-top:3px; }
+        .otif-toolbar { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-sm); }
+        .otif-toolbar select, .otif-toolbar button { height:32px; padding:0 12px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface); color:var(--text); font:600 12px var(--font); cursor:pointer; transition:all .12s; }
+        .otif-toolbar select:hover, .otif-toolbar button:hover { border-color:var(--accent); }
+        .otif-toolbar button:hover { background:var(--accent); color:#fff; }
+        .otif-toolbar .otif-count { margin-left:auto; font-size:11px; color:var(--muted); font-weight:600; }
+        .otif-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-sm); background:var(--bg); }
+        .otif-table { width:100%; border-collapse:collapse; font-size:12px; }
+        .otif-table thead th { background:#0f172a; color:#f59e0b; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; padding:10px 10px; text-align:center; white-space:nowrap; border-bottom:2px solid #f59e0b; position:sticky; top:0; z-index:1; }
+        .otif-table tbody td { padding:8px 10px; border-bottom:1px solid var(--border); text-align:center; vertical-align:middle; white-space:nowrap; }
+        .otif-table tbody tr:hover { background:rgba(0,110,183,.04); }
+        .otif-table tbody tr:nth-child(even) { background:var(--surface); }
+        .otif-table tbody tr:nth-child(even):hover { background:rgba(0,110,183,.06); }
+        .otif-table .col-pos { width:45px; font-weight:800; color:var(--muted); font-size:11px; }
+        .otif-table .col-art { font-weight:700; color:var(--text); font-size:12px; text-align:left; padding-left:14px; }
+        .otif-table .col-kw { font-size:10px; color:var(--muted); font-weight:600; }
+        .otif-table .col-menge { font-weight:700; font-size:13px; }
+        .otif-input { font:600 11px var(--font); border:1px solid var(--border); border-radius:5px; padding:4px 6px; background:var(--bg); color:var(--text); text-align:center; transition:border-color .12s,box-shadow .12s; }
+        .otif-input:focus { border-color:var(--accent); outline:none; box-shadow:0 0 0 2px rgba(0,110,183,.12); }
+        .otif-input[type=date] { width:120px; }
+        .otif-input[type=number] { width:65px; }
+        .otif-input[type=text] { width:100px; }
+        .otif-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:.3px; }
+        .otif-badge-offen { background:#fef3c7; color:#92400e; }
+        .otif-badge-geliefert { background:#dcfce7; color:#15803d; }
+        .otif-badge-verspaetet { background:#fee2e2; color:#b91c1c; }
+        .otif-badge-teilweise { background:#e0e7ff; color:#3730a3; }
+        .otif-btn { padding:4px 10px; border-radius:6px; font:700 10px var(--font); cursor:pointer; transition:all .12s; border:none; }
+        .otif-btn-deliver { background:#16a34a; color:#fff; }
+        .otif-btn-deliver:hover { background:#15803d; }
+        .otif-btn-undo { background:var(--surface); color:var(--muted); border:1px solid var(--border); }
+        .otif-btn-undo:hover { background:#fef2f2; color:#dc2626; border-color:#dc2626; }
+        .otif-delta-pos { color:#dc2626; font-weight:800; }
+        .otif-delta-neg { color:#16a34a; font-weight:800; }
+        .otif-delta-zero { color:var(--text); font-weight:700; }
+        .otif-delta-none { color:var(--muted-light); }
+        .otif-progress { width:100%; height:6px; background:var(--surface); border-radius:3px; overflow:hidden; margin-top:6px; }
+        .otif-progress-bar { height:100%; border-radius:3px; transition:width .3s; }
+        @media (max-width:900px) { .otif-kpi { grid-template-columns:repeat(2,1fr); } }
+      </style>
+      <div class="otif-header">
+        <div class="sec-title">📦 OTIF Tracker — On-Time In-Full Lieferperformance</div>
       </div>
-      <div style="overflow-x:auto;margin-top:10px">
-        <table class="data-table" style="font-size:11px;width:100%">
+      <div id="otifKpiCards" class="otif-kpi"></div>
+      <div class="otif-toolbar">
+        <select id="otifFilterArt" onchange="renderOtifTracker()">
+          <option value="all">🔍 Alle Artikel</option>
+        </select>
+        <select id="otifFilterStatus" onchange="renderOtifTracker()">
+          <option value="all">📋 Alle Status</option>
+          <option value="offen">🟡 Offen</option>
+          <option value="geliefert">✅ Geliefert</option>
+          <option value="teilweise">🔵 Teillieferung</option>
+          <option value="verspätet">🔴 Verspätet</option>
+        </select>
+        <button onclick="exportOtifExcel()">📊 Excel Export</button>
+        <button onclick="globalSave()">💾 Speichern</button>
+        <span class="otif-count" id="otifCount"></span>
+      </div>
+      <div class="otif-table-wrap">
+        <table class="otif-table">
           <thead><tr>
-            <th>Pos</th><th>Artikel</th><th>Menge</th><th>Geplant (Datum)</th><th>Geliefert (Datum)</th>
-            <th>Menge gelief.</th><th>Lieferschein-Nr</th><th>Δ Tage</th><th>Status</th><th>Aktion</th>
+            <th>Pos</th><th style="text-align:left;padding-left:14px">Artikel</th><th>KW/Jahr</th><th>Soll</th>
+            <th>Geplant (Datum)</th><th>Geliefert (Datum)</th>
+            <th>Ist-Menge</th><th>Lieferschein-Nr</th><th>Δ Tage</th><th>Status</th><th>Aktion</th>
           </tr></thead>
           <tbody id="otifBody"></tbody>
         </table>
@@ -903,13 +958,12 @@ function otifSetField(art, year, kw, pos, field, value) {
 function renderOtifTracker() {
   var rows = [];
   var posCounter = 0;
-  // Build filter dropdown
   var artFilter = document.getElementById('otifFilterArt');
   var selectedArt = artFilter ? artFilter.value : 'all';
   var statusFilter = document.getElementById('otifFilterStatus');
   var selectedStatus = statusFilter ? statusFilter.value : 'all';
-  // Collect all delivery positions
   var allArts = new Set();
+  var today = new Date(); today.setHours(0,0,0,0);
   for (var art in PLAN) {
     var d = PLAN[art];
     if (!d.liefertermin || d.liefertermin.length === 0) continue;
@@ -919,17 +973,22 @@ function renderOtifTracker() {
       posCounter++;
       var entry = getOtifEntry(art, lt.year, lt.kw, li);
       var geplantDate = new Date(entry.geplant_date);
-      var today = new Date(); today.setHours(0,0,0,0);
       var geliefertDate = entry.geliefert_date ? new Date(entry.geliefert_date) : null;
-      // Calculate delta days
       var deltaDays = null;
+      // Determine status
       if (geliefertDate) {
         deltaDays = Math.round((geliefertDate - geplantDate) / (1000 * 60 * 60 * 24));
-      } else if (entry.status === 'offen' && geplantDate < today) {
+        if (entry.menge_geliefert > 0 && entry.menge_geliefert < lt.menge) {
+          entry.status = 'teilweise';
+        } else {
+          entry.status = 'geliefert';
+        }
+      } else if (geplantDate < today) {
         deltaDays = Math.round((today - geplantDate) / (1000 * 60 * 60 * 24));
         entry.status = 'verspätet';
+      } else {
+        entry.status = 'offen';
       }
-      // Check if on-time
       var onTime = geliefertDate ? (geliefertDate <= geplantDate) : null;
       var inFull = (entry.menge_geliefert >= lt.menge);
       rows.push({
@@ -940,74 +999,97 @@ function renderOtifTracker() {
       });
     }
   }
-  // Update artikel filter
+  // Update artikel filter dropdown
   if (artFilter) {
     var curOpts = new Set(); artFilter.querySelectorAll('option').forEach(function(o) { curOpts.add(o.value); });
-    allArts.forEach(function(a) { if (!curOpts.has(a)) { var o = document.createElement('option'); o.value = a; o.textContent = a; artFilter.appendChild(o); } });
+    var sortedArts = Array.from(allArts).sort();
+    sortedArts.forEach(function(a) { if (!curOpts.has(a)) { var o = document.createElement('option'); o.value = a; o.textContent = a; artFilter.appendChild(o); } });
   }
-  // Filter rows
+  // Filter
   var filtered = rows.filter(function(r) {
     if (selectedArt !== 'all' && r.art !== selectedArt) return false;
     if (selectedStatus !== 'all' && r.status !== selectedStatus) return false;
     return true;
   });
   // KPI calculations
-  var total = rows.length, delivered = 0, onTimeCount = 0, inFullCount = 0, otifCount = 0, late = 0;
+  var total = rows.length, delivered = 0, onTimeCount = 0, inFullCount = 0, otifCount = 0, late = 0, partial = 0;
   rows.forEach(function(r) {
-    if (r.status === 'geliefert') {
+    if (r.status === 'geliefert' || r.status === 'teilweise') {
       delivered++;
       if (r.onTime) onTimeCount++;
       if (r.inFull) inFullCount++;
       if (r.onTime && r.inFull) otifCount++;
+      if (r.status === 'teilweise') partial++;
     }
     if (r.status === 'verspätet') late++;
   });
   var otPct = delivered > 0 ? Math.round(onTimeCount / delivered * 100) : 0;
   var ifPct = delivered > 0 ? Math.round(inFullCount / delivered * 100) : 0;
   var otifPct = delivered > 0 ? Math.round(otifCount / delivered * 100) : 0;
-  // Render KPI cards
+  var deliveredPct = total > 0 ? Math.round(delivered / total * 100) : 0;
+  // Update count
+  var countEl = document.getElementById('otifCount');
+  if (countEl) countEl.textContent = filtered.length + ' von ' + total + ' Positionen';
+  // KPI cards with progress bars
+  function kpiColor(pct) { return pct >= 90 ? '#16a34a' : pct >= 70 ? '#f59e0b' : '#dc2626'; }
   document.getElementById('otifKpiCards').innerHTML =
-    '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">' +
-      '<div style="font-size:28px;font-weight:900;color:' + (otifPct >= 90 ? '#16a34a' : otifPct >= 70 ? '#f59e0b' : '#dc2626') + '">' + otifPct + '%</div>' +
-      '<div style="font-size:11px;color:var(--muted);font-weight:700">OTIF Score</div>' +
-      '<div style="font-size:10px;color:var(--muted)">' + otifCount + '/' + delivered + ' geliefert</div>' +
+    '<div class="otif-kpi-card"><div class="kpi-bar" style="background:' + kpiColor(otifPct) + '"></div>' +
+      '<div class="kpi-value" style="color:' + kpiColor(otifPct) + '">' + otifPct + '%</div>' +
+      '<div class="kpi-label">OTIF Score</div>' +
+      '<div class="kpi-sub">' + otifCount + ' / ' + delivered + ' perfekt geliefert</div>' +
+      '<div class="otif-progress"><div class="otif-progress-bar" style="width:' + otifPct + '%;background:' + kpiColor(otifPct) + '"></div></div>' +
     '</div>' +
-    '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">' +
-      '<div style="font-size:28px;font-weight:900;color:' + (otPct >= 90 ? '#16a34a' : otPct >= 70 ? '#f59e0b' : '#dc2626') + '">' + otPct + '%</div>' +
-      '<div style="font-size:11px;color:var(--muted);font-weight:700">On-Time</div>' +
-      '<div style="font-size:10px;color:var(--muted)">' + onTimeCount + '/' + delivered + ' pünktlich</div>' +
+    '<div class="otif-kpi-card"><div class="kpi-bar" style="background:' + kpiColor(otPct) + '"></div>' +
+      '<div class="kpi-value" style="color:' + kpiColor(otPct) + '">' + otPct + '%</div>' +
+      '<div class="kpi-label">On-Time</div>' +
+      '<div class="kpi-sub">' + onTimeCount + ' / ' + delivered + ' pünktlich</div>' +
+      '<div class="otif-progress"><div class="otif-progress-bar" style="width:' + otPct + '%;background:' + kpiColor(otPct) + '"></div></div>' +
     '</div>' +
-    '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">' +
-      '<div style="font-size:28px;font-weight:900;color:' + (ifPct >= 90 ? '#16a34a' : ifPct >= 70 ? '#f59e0b' : '#dc2626') + '">' + ifPct + '%</div>' +
-      '<div style="font-size:11px;color:var(--muted);font-weight:700">In-Full</div>' +
-      '<div style="font-size:10px;color:var(--muted)">' + inFullCount + '/' + delivered + ' vollständig</div>' +
+    '<div class="otif-kpi-card"><div class="kpi-bar" style="background:' + kpiColor(ifPct) + '"></div>' +
+      '<div class="kpi-value" style="color:' + kpiColor(ifPct) + '">' + ifPct + '%</div>' +
+      '<div class="kpi-label">In-Full</div>' +
+      '<div class="kpi-sub">' + inFullCount + ' / ' + delivered + ' vollständig</div>' +
+      '<div class="otif-progress"><div class="otif-progress-bar" style="width:' + ifPct + '%;background:' + kpiColor(ifPct) + '"></div></div>' +
     '</div>' +
-    '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">' +
-      '<div style="font-size:28px;font-weight:900;color:' + (late > 0 ? '#dc2626' : '#16a34a') + '">' + late + '</div>' +
-      '<div style="font-size:11px;color:var(--muted);font-weight:700">Verspätet</div>' +
-      '<div style="font-size:10px;color:var(--muted)">' + total + ' Positionen gesamt</div>' +
+    '<div class="otif-kpi-card"><div class="kpi-bar" style="background:' + (late > 0 ? '#dc2626' : '#16a34a') + '"></div>' +
+      '<div class="kpi-value" style="color:' + (late > 0 ? '#dc2626' : '#16a34a') + '">' + delivered + '<span style="font-size:16px;color:var(--muted)"> / ' + total + '</span></div>' +
+      '<div class="kpi-label">Geliefert</div>' +
+      '<div class="kpi-sub">' + late + ' verspätet · ' + partial + ' Teillieferungen</div>' +
+      '<div class="otif-progress"><div class="otif-progress-bar" style="width:' + deliveredPct + '%;background:var(--accent)"></div></div>' +
     '</div>';
-  // Render table
+  // Render table rows
   var tbody = '';
   filtered.forEach(function(r) {
-    var statusColor = r.status === 'geliefert' ? '#16a34a' : r.status === 'verspätet' ? '#dc2626' : '#f59e0b';
-    var statusLabel = r.status === 'geliefert' ? '✅ Geliefert' : r.status === 'verspätet' ? '🔴 Verspätet' : '🟡 Offen';
-    var deltaStr = r.deltaDays !== null ? (r.deltaDays > 0 ? '+' + r.deltaDays : r.deltaDays) : '—';
-    var deltaColor = r.deltaDays !== null ? (r.deltaDays > 0 ? '#dc2626' : r.deltaDays < 0 ? '#16a34a' : 'var(--fg)') : 'var(--muted)';
+    var badgeCls = r.status === 'geliefert' ? 'otif-badge-geliefert' : r.status === 'verspätet' ? 'otif-badge-verspaetet' : r.status === 'teilweise' ? 'otif-badge-teilweise' : 'otif-badge-offen';
+    var statusIcon = r.status === 'geliefert' ? '✅' : r.status === 'verspätet' ? '⏰' : r.status === 'teilweise' ? '📦' : '⏳';
+    var statusText = r.status === 'geliefert' ? 'Geliefert' : r.status === 'verspätet' ? 'Verspätet' : r.status === 'teilweise' ? 'Teilweise' : 'Offen';
+    var deltaStr, deltaCls;
+    if (r.deltaDays !== null) {
+      if (r.deltaDays > 0) { deltaStr = '+' + r.deltaDays + 'd'; deltaCls = 'otif-delta-pos'; }
+      else if (r.deltaDays < 0) { deltaStr = r.deltaDays + 'd'; deltaCls = 'otif-delta-neg'; }
+      else { deltaStr = '0d'; deltaCls = 'otif-delta-zero'; }
+    } else { deltaStr = '—'; deltaCls = 'otif-delta-none'; }
+    // Menge display: show fraction if partially delivered
+    var mengeDisplay = r.menge_geliefert > 0
+      ? '<span style="font-weight:700;color:' + (r.menge_geliefert >= r.menge ? '#16a34a' : '#f59e0b') + '">' + r.menge_geliefert + '</span><span style="color:var(--muted)"> / ' + r.menge + '</span>'
+      : '<span style="color:var(--muted-light)">0 / ' + r.menge + '</span>';
     tbody += '<tr>' +
-      '<td style="font-weight:700">' + r.pos + '</td>' +
-      '<td style="font-weight:700">' + r.art + '</td>' +
-      '<td>' + r.menge + '</td>' +
-      '<td><input type="date" value="' + r.geplant_date + '" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'geplant_date\',this.value);renderOtifTracker()" style="font:11px Calibri,sans-serif;border:1px solid var(--border);border-radius:4px;padding:2px 4px;background:var(--card);color:var(--fg);width:110px"></td>' +
-      '<td><input type="date" value="' + (r.geliefert_date || '') + '" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'geliefert_date\',this.value);renderOtifTracker()" style="font:11px Calibri,sans-serif;border:1px solid var(--border);border-radius:4px;padding:2px 4px;background:var(--card);color:var(--fg);width:110px"></td>' +
-      '<td><input type="number" value="' + (r.menge_geliefert || 0) + '" min="0" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'menge_geliefert\',+this.value);renderOtifTracker()" style="font:11px Calibri,sans-serif;border:1px solid var(--border);border-radius:4px;padding:2px 4px;background:var(--card);color:var(--fg);width:60px"></td>' +
-      '<td><input type="text" value="' + (r.lieferschein || '') + '" placeholder="LS-Nr" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'lieferschein\',this.value)" style="font:11px Calibri,sans-serif;border:1px solid var(--border);border-radius:4px;padding:2px 4px;background:var(--card);color:var(--fg);width:90px"></td>' +
-      '<td style="font-weight:700;color:' + deltaColor + '">' + deltaStr + '</td>' +
-      '<td><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:' + statusColor + '22;color:' + statusColor + '">' + statusLabel + '</span></td>' +
-      '<td><button onclick="otifMarkGeliefert(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ')" style="padding:3px 8px;border-radius:5px;border:1px solid ' + statusColor + ';background:' + statusColor + '15;color:' + statusColor + ';font:700 10px Calibri,sans-serif;cursor:pointer">' + (r.status === 'geliefert' ? 'Rückgängig' : '✓ Liefern') + '</button></td>' +
-    '</tr>';
+      '<td class="col-pos">' + r.pos + '</td>' +
+      '<td class="col-art">' + r.art + '</td>' +
+      '<td class="col-kw">KW' + r.kw + '/' + r.year + '</td>' +
+      '<td class="col-menge">' + r.menge + '</td>' +
+      '<td><input type="date" class="otif-input" value="' + r.geplant_date + '" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'geplant_date\',this.value);renderOtifTracker()"></td>' +
+      '<td><input type="date" class="otif-input" value="' + (r.geliefert_date || '') + '" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'geliefert_date\',this.value);renderOtifTracker()"></td>' +
+      '<td><input type="number" class="otif-input" value="' + (r.menge_geliefert || 0) + '" min="0" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'menge_geliefert\',+this.value);renderOtifTracker()"></td>' +
+      '<td><input type="text" class="otif-input" value="' + (r.lieferschein || '') + '" placeholder="LS-Nr..." onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'lieferschein\',this.value)"></td>' +
+      '<td class="' + deltaCls + '">' + deltaStr + '</td>' +
+      '<td><span class="otif-badge ' + badgeCls + '">' + statusIcon + ' ' + statusText + '</span></td>' +
+      '<td>' + (r.status === 'geliefert' ?
+        '<button class="otif-btn otif-btn-undo" onclick="otifMarkGeliefert(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ')">↩ Zurück</button>' :
+        '<button class="otif-btn otif-btn-deliver" onclick="otifMarkGeliefert(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ')">✓ Liefern</button>') +
+      '</td></tr>';
   });
-  document.getElementById('otifBody').innerHTML = tbody || '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">Keine Lieferpositionen</td></tr>';
+  document.getElementById('otifBody').innerHTML = tbody || '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:30px;font-size:13px">Keine Lieferpositionen gefunden</td></tr>';
 }
 
 function exportOtifExcel() {
@@ -1016,10 +1098,11 @@ function exportOtifExcel() {
   ws.columns = [
     { header: 'Pos', key: 'pos', width: 6 },
     { header: 'Artikel', key: 'art', width: 14 },
-    { header: 'Menge', key: 'menge', width: 8 },
+    { header: 'KW/Jahr', key: 'kwjahr', width: 10 },
+    { header: 'Soll-Menge', key: 'menge', width: 10 },
     { header: 'Geplant (Datum)', key: 'geplant', width: 14 },
     { header: 'Geliefert (Datum)', key: 'geliefert', width: 14 },
-    { header: 'Menge gelief.', key: 'menge_gel', width: 12 },
+    { header: 'Ist-Menge', key: 'menge_gel', width: 10 },
     { header: 'Lieferschein-Nr', key: 'ls', width: 16 },
     { header: 'Δ Tage', key: 'delta', width: 8 },
     { header: 'Status', key: 'status', width: 12 }
@@ -1039,7 +1122,7 @@ function exportOtifExcel() {
       var dd = entry.geliefert_date ? new Date(entry.geliefert_date) : null;
       var delta = dd ? Math.round((dd - gd) / 86400000) : null;
       var row = ws.addRow({
-        pos: pos, art: art, menge: lt.menge,
+        pos: pos, art: art, kwjahr: 'KW' + lt.kw + '/' + lt.year, menge: lt.menge,
         geplant: formatDate(gd), geliefert: dd ? formatDate(dd) : '',
         menge_gel: entry.menge_geliefert, ls: entry.lieferschein || '',
         delta: delta !== null ? delta : '', status: entry.status
