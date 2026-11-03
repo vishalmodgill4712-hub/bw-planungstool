@@ -23,23 +23,23 @@
   code, .mono { font-family: var(--font-mono); }
   h1, h2, h3, .sec-title, .cap-title, .logo-text { font-family: var(--font-head); }
 
-  header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 28px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-sm); }
-  .logo { font-size: 15px; font-weight: 700; letter-spacing: -.1px; color: var(--text); display: flex; align-items: center; gap: 12px; }
+  header { background: linear-gradient(135deg,#0f172a 0%,#1e293b 100%); border-bottom: none; padding: 14px 28px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 12px rgba(0,0,0,.15); }
+  .logo { font-size: 15px; font-weight: 700; letter-spacing: -.1px; color: #fff; display: flex; align-items: center; gap: 12px; }
   .logo img.logo-mark-img { height: 34px; width: auto; display: block; }
-  .logo-text { font-family: var(--font-head); font-weight: 700; font-size: 14px; letter-spacing: .2px; color: var(--text); line-height: 1.25; }
-  .logo-text .logo-sub { display: block; font-family: var(--font); font-weight: 500; font-size: 10.5px; color: var(--muted); letter-spacing: .3px; text-transform: uppercase; margin-top: 1px; }
-  .logo .logo-mark { width: 26px; height: 26px; border-radius: 7px; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+  .logo-text { font-family: var(--font-head); font-weight: 700; font-size: 14px; letter-spacing: .2px; color: #fff; line-height: 1.25; }
+  .logo-text .logo-sub { display: block; font-family: var(--font); font-weight: 500; font-size: 10.5px; color: rgba(255,255,255,.5); letter-spacing: .3px; text-transform: uppercase; margin-top: 1px; }
+  .logo .logo-mark { width: 28px; height: 28px; border-radius: 7px; background: #38bdf8; color: #0c2d48; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
   .sub { color: var(--muted); font-size: 11.5px; margin-top: 2px; }
-  .kw-badge { margin-left: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 12px; color: var(--muted); display:flex; align-items:center; gap:10px; }
-  .kw-badge strong { color: var(--text); font-family: var(--font-mono); font-weight: 600; }
+  .kw-badge { margin-left: auto; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,.6); display:flex; align-items:center; gap:10px; }
+  .kw-badge strong { color: #38bdf8; font-family: var(--font-mono); font-weight: 700; }
   .kw-nav { display:flex; gap:2px; }
-  .kw-nav button { background: var(--bg); border: 1px solid var(--border); color:var(--text); width:23px; height:23px; border-radius:5px; cursor:pointer; font-size:13px; transition: all .12s; }
-  .kw-nav button:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .kw-nav button { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color:#fff; width:23px; height:23px; border-radius:5px; cursor:pointer; font-size:13px; transition: all .12s; }
+  .kw-nav button:hover { background: #38bdf8; border-color: #38bdf8; color: #0c2d48; }
 
   .main { display: flex; height: calc(100vh - 58px); overflow: hidden; }
 
-  .sidebar { width: 252px; min-width: 252px; background: var(--bg); border-right: 1px solid var(--border); overflow-y: auto; padding: 18px 12px; display: flex; flex-direction: column; gap: 18px; }
-  .sb-h { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted-light); font-weight: 700; padding: 0 4px; margin-bottom: 6px; }
+  .sidebar { width: 252px; min-width: 252px; background: var(--bg); border-right: 1px solid var(--border); overflow-y: auto; padding: 18px 14px; display: flex; flex-direction: column; gap: 20px; }
+  .sb-h { font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-light); font-weight: 800; padding: 0 4px 6px; margin-bottom: 4px; border-bottom: 1px solid var(--border); }
   .filter-group { display: flex; flex-direction: column; gap: 3px; }
   .filter-btn { background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); padding: 7px 10px; color: var(--muted); cursor: pointer; text-align: left; font-size: 12px; font-weight: 500; transition: all .12s; display: flex; align-items: center; gap: 8px; }
   .filter-btn:hover { background: var(--surface); color: var(--text); }
@@ -68,18 +68,21 @@
 
   .content { flex: 1; overflow: auto; padding: 22px 26px; }
 
-  .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
-  .sum-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow-sm); }
+  .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 22px; }
+  .sum-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow-sm); position:relative; overflow:hidden; transition: box-shadow .15s, transform .15s; }
+  .sum-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); transform:translateY(-1px); }
+  .sum-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--card-accent, var(--accent)); }
   .sum-card.alert-card { border-color: var(--danger); background: rgba(220,38,38,.04); }
-  .sum-card .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
-  .sum-card .val { font-size: 21px; font-weight: 700; font-family: var(--font-mono); letter-spacing: -.3px; }
-  .sum-card .sv { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .sum-card.alert-card::before { background: var(--danger); }
+  .sum-card .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .7px; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+  .sum-card .val { font-size: 24px; font-weight: 800; font-family: var(--font-head); letter-spacing: -.3px; }
+  .sum-card .sv { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
   .cap-section { margin-bottom: 20px; }
-  .cap-chart-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px 6px; margin-bottom: 12px; box-shadow: var(--shadow-sm); }
+  .cap-chart-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px 8px; margin-bottom: 14px; box-shadow: var(--shadow-sm); }
   .cap-chart-wrap svg { width: 100%; height: auto; display: block; }
-  .cap-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; color: var(--text); letter-spacing: -.1px; }
-  .cap-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .cap-title { font-size: 14px; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; color: var(--text); letter-spacing: -.1px; }
+  .cap-title::after { content: ''; flex: 1; height: 2px; background: linear-gradient(90deg,var(--border),transparent); }
   .cap-grid { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; }
   .cap-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 10px; min-width: 0; box-shadow: var(--shadow-sm); overflow: hidden; }
   .cap-card.over { border-color: var(--danger); background: rgba(220,38,38,.04); }
@@ -93,17 +96,17 @@
   .cap-detail .ok-txt { color: var(--fest); }
   .cap-detail .warn-txt { color: var(--warn); }
 
-  .view-tabs { display: flex; gap: 4px; margin-bottom: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px; width: fit-content; }
-  .view-tab { background: transparent; border: none; border-radius: 6px; color: var(--muted); font-size: 12.5px; font-weight: 500; padding: 7px 15px; cursor: pointer; transition: all .12s; }
-  .view-tab:hover { color: var(--text); }
-  .view-tab.active { background: var(--bg); color: var(--text); font-weight: 600; box-shadow: var(--shadow-sm); }
+  .view-tabs { display: flex; gap: 3px; margin-bottom: 20px; background: #0f172a; border: none; border-radius: 10px; padding: 4px; width: fit-content; box-shadow: 0 2px 8px rgba(15,23,42,.15); }
+  .view-tab { background: transparent; border: none; border-radius: 8px; color: rgba(255,255,255,.5); font-size: 12px; font-weight: 600; padding: 8px 16px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+  .view-tab:hover { color: rgba(255,255,255,.8); background: rgba(255,255,255,.06); }
+  .view-tab.active { background: #38bdf8; color: #0c2d48; font-weight: 700; box-shadow: 0 2px 8px rgba(56,189,248,.3); }
 
   .gantt-wrap { overflow-x: auto; }
   table.gantt { width: 100%; border-collapse: collapse; min-width: 1300px; }
-  .gantt th { background: var(--surface); border: 1px solid var(--border); padding: 7px 8px; font-size: 10.5px; font-weight: 600; text-align: center; color: var(--muted); white-space: nowrap; }
-  .gantt th.kw-fest { color: var(--fest); }
-  .gantt th.kw-flex { color: var(--warn); }
-  .gantt th.kw-curr { color: var(--accent); border-bottom: 2px solid var(--accent); }
+  .gantt th { background: #0f172a; border: 1px solid #1e293b; padding: 8px 8px; font-size: 10.5px; font-weight: 700; text-align: center; color: rgba(255,255,255,.7); white-space: nowrap; }
+  .gantt th.kw-fest { color: #4ade80; }
+  .gantt th.kw-flex { color: #fbbf24; }
+  .gantt th.kw-curr { color: #38bdf8; border-bottom: 2px solid #38bdf8; background: #1e293b; }
   .gantt th.col-art { text-align: left; width: 150px; }
   .gantt th.col-info { width: 55px; }
   .gantt td { border: 1px solid var(--border); padding: 4px 5px; vertical-align: middle; }
@@ -131,7 +134,7 @@
   .kombi-badge { font-size: 9px; background: rgba(6,182,212,.14); border: 1px solid rgba(6,182,212,.3); color: var(--accent2); border-radius: 3px; padding: 1px 5px; margin-left: 5px; }
 
   table.detail { width: 100%; border-collapse: collapse; margin-top: 4px; }
-  .detail thead th { background: var(--surface); border: 1px solid var(--border); padding: 8px 10px; font-size: 10px; color: var(--muted); text-align: left; letter-spacing: .5px; text-transform: uppercase; position: sticky; top:0; }
+  .detail thead th { background: #0f172a; border: 1px solid #1e293b; padding: 9px 10px; font-size: 10px; color: #7dd3fc; text-align: left; letter-spacing: .6px; text-transform: uppercase; font-weight: 700; position: sticky; top:0; z-index:1; }
   .detail tbody td { border: 1px solid var(--border); padding: 6px 10px; font-size: 12px; vertical-align: middle; }
   .detail tbody tr:hover td { background: rgba(29,78,216,.04); }
 
@@ -145,21 +148,21 @@
   .st-flex { color: var(--warn); font-size: 11px; }
   .st-est { color: var(--muted); font-size: 10px; font-style: italic; }
 
-  .sec-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; color: var(--text); letter-spacing: -.1px; }
-  .sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .sec-title { font-size: 15px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; color: var(--text); letter-spacing: -.1px; }
+  .sec-title::after { content: ''; flex: 1; height: 2px; background: linear-gradient(90deg,var(--border),transparent); }
 
   .hidden { display: none !important; }
 
   /* INPUT VIEW */
   .input-toolbar { display: flex; gap: 10px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; }
-  .btn-small { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); padding: 7px 13px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all .12s; }
-  .btn-small:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
-  .btn-primary { background: var(--accent); border: 1px solid var(--accent); color: #fff; font-weight: 600; }
-  .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); box-shadow: var(--shadow-sm); }
+  .btn-small { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; }
+  .btn-small:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,110,183,.1); transform:translateY(-1px); }
+  .btn-primary { background: linear-gradient(135deg,var(--accent),var(--accent-dark)); border: 1px solid var(--accent); color: #fff; font-weight: 700; }
+  .btn-primary:hover { background: linear-gradient(135deg,var(--accent-dark),#003d66); border-color: var(--accent-dark); box-shadow: 0 3px 12px rgba(0,110,183,.25); }
   .btn-danger { color: var(--danger); }
 
   table.input-table { width: 100%; border-collapse: collapse; }
-  .input-table thead th { background: var(--surface); border: 1px solid var(--border); padding: 7px 8px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; position: sticky; top: 0; z-index: 2;}
+  .input-table thead th { background: #0f172a; border: 1px solid #1e293b; padding: 8px 8px; font-size: 10px; color: #7dd3fc; text-transform: uppercase; letter-spacing: .6px; font-weight: 700; position: sticky; top: 0; z-index: 2;}
   .input-table tbody td { border: 1px solid var(--border); padding: 4px 6px; vertical-align: middle; }
   .input-table tbody tr:hover td { background: rgba(29,78,216,.04); }
   .input-table input[type=text], .input-table input[type=number] {
@@ -192,9 +195,10 @@
   .bom-qty { font-size: 9.5px; color: var(--muted); margin-left: 4px; }
 
   /* DASHBOARD */
-  .dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .dash-col { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; min-height: 120px; }
-  .dash-col-head { font-size: 12px; font-weight: 700; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .dash-col { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; min-height: 120px; box-shadow: var(--shadow-sm); transition: box-shadow .15s; }
+  .dash-col:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+  .dash-col-head { font-size: 13px; font-weight: 800; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid var(--border); letter-spacing: .2px; }
   .dash-col-head.tz { color: var(--tz-c); }
   .dash-col-head.fr { color: var(--fr-c); }
   .dash-col-head.mo { color: var(--mo-c); }
@@ -238,7 +242,7 @@
 
   /* KW OVERVIEW TABLE (Geplant vs Erledigt) */
   table.kwov-table { width:100%; border-collapse:collapse; }
-  .kwov-table th { background: var(--surface); border:1px solid var(--border); padding:8px 10px; font-size:11px; color:var(--accent); font-weight:700; text-align:center; }
+  .kwov-table th { background: #0f172a; border:1px solid #1e293b; padding:9px 10px; font-size:10px; color:#7dd3fc; font-weight:700; text-align:center; text-transform:uppercase; letter-spacing:.5px; }
   .kwov-table th.kwov-kw-col { text-align:left; width:90px; }
   .kwov-table td { border:1px solid var(--border); padding:6px 8px; text-align:center; font-size:11.5px; vertical-align:middle; }
   .kwov-table td.kwov-kw { font-weight:700; text-align:left; font-family:Calibri,'Segoe UI',Arial,sans-serif; }
@@ -283,8 +287,8 @@
   .import-status.error { background: rgba(220,38,38,.08); border: 1px solid var(--danger); color: var(--danger); }
 
   /* LOGIN SCREEN */
-  #loginScreen { position: fixed; inset: 0; background: var(--surface); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-  .login-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-md); padding: 36px 40px; width: 100%; max-width: 360px; }
+  #loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+  .login-card { background: var(--bg); border: none; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.3); padding: 40px 44px; width: 100%; max-width: 380px; }
   .login-logo { display: flex; align-items: center; margin-bottom: 14px; }
   .login-logo-img { height: 38px; width: auto; }
   .login-title { font-family: var(--font-head); font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
@@ -293,21 +297,21 @@
   .login-field label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .4px; }
   .login-field input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13px; color: var(--text); }
   .login-field input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(29,78,216,.08); }
-  .login-btn { width: 100%; background: var(--accent); border: 1px solid var(--accent); color: #fff; font-weight: 600; font-size: 13px; padding: 11px; border-radius: var(--radius-sm); cursor: pointer; margin-top: 6px; transition: all .12s; }
-  .login-btn:hover { background: var(--accent-dark); }
+  .login-btn { width: 100%; background: linear-gradient(135deg,#0c4a6e,#0369a1); border: none; color: #fff; font-weight: 700; font-size: 14px; padding: 12px; border-radius: 10px; cursor: pointer; margin-top: 8px; transition: all .15s; letter-spacing:.3px; }
+  .login-btn:hover { background: linear-gradient(135deg,#1e293b,#334155); box-shadow: 0 4px 16px rgba(15,23,42,.3); }
   .login-error { color: var(--danger); font-size: 12px; margin-top: 12px; display: none; }
   .login-error.show { display: block; }
-  .role-badge { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 5px; text-transform: uppercase; letter-spacing: .3px; }
-  .role-badge.planer { background: rgba(29,78,216,.1); color: var(--accent); }
-  .role-badge.mitarbeiter { background: rgba(107,115,128,.12); color: var(--muted); }
-  .user-menu { display: flex; align-items: center; gap: 10px; margin-left: 14px; padding-left: 14px; border-left: 1px solid var(--border); }
-  .user-menu .user-name { font-size: 12.5px; font-weight: 600; color: var(--text); }
-  .logout-btn { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: var(--radius-sm); padding: 5px 11px; font-size: 11.5px; cursor: pointer; }
-  .logout-btn:hover { border-color: var(--danger); color: var(--danger); }
+  .role-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; }
+  .role-badge.planer { background: rgba(56,189,248,.15); color: #38bdf8; }
+  .role-badge.mitarbeiter { background: rgba(255,255,255,.1); color: rgba(255,255,255,.6); }
+  .user-menu { display: flex; align-items: center; gap: 10px; margin-left: 14px; padding-left: 14px; border-left: 1px solid rgba(255,255,255,.15); }
+  .user-menu .user-name { font-size: 12.5px; font-weight: 600; color: #fff; }
+  .logout-btn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6); border-radius: 6px; padding: 5px 11px; font-size: 11.5px; cursor: pointer; }
+  .logout-btn:hover { border-color: #dc2626; color: #dc2626; background: rgba(220,38,38,.1); }
   .readonly-note { background: rgba(217,119,6,.07); border: 1px solid var(--warn); color: #92400e; border-radius: var(--radius-sm); padding: 9px 13px; font-size: 12px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
   .readonly-locked { opacity: .6; pointer-events: none; user-select: none; filter: grayscale(.15); }
 
-  .save-bar { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 14px; margin-bottom: 14px; transition: all .15s; }
+  .save-bar { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; margin-bottom: 16px; transition: all .15s; }
   .save-bar.dirty { background: rgba(217,119,6,.07); border-color: var(--warn); }
   .save-status { font-size: 12px; color: var(--muted); font-weight: 500; }
   .save-bar.dirty .save-status { color: #92400e; font-weight: 600; }
@@ -333,7 +337,7 @@
   .gm-body .gantt{width:100%;border-collapse:collapse;font-family:Calibri,Arial,sans-serif}
   .gm-body .gantt th{position:sticky;top:0;z-index:10;background:#1e293b;color:#fff;font-size:12px;font-weight:800;padding:10px 8px;text-align:center;border-right:1px solid #334155;white-space:nowrap}
   .gm-body .gantt th.ca{background:#006EB7;text-align:left;padding-left:14px;min-width:140px;font-size:13px;letter-spacing:.4px}
-  .gm-body .gantt th.kc{background:#f59e0b;color:#1c1c1c;font-weight:900}
+  .gm-body .gantt th.kc{background:#38bdf8;color:#0c2d48;font-weight:900}
   .gm-body .gantt th.kf{background:#374151}
   .gm-body .gantt .ac{background:#e0f2fe;border-right:4px solid #006EB7;font:800 13px Calibri,Arial,sans-serif;color:#006EB7;padding:8px 12px;white-space:nowrap;vertical-align:middle;letter-spacing:.3px;border-top:3px solid #006EB7}
   .gm-body .gantt .art-sep td{border-top:3px solid #006EB7}
@@ -351,7 +355,7 @@
   .gm-body .gp.dn{opacity:.35}
   .gm-body .gp.dn::after{content:'\2713';position:absolute;top:-7px;right:-7px;background:#15803d;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:900;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
   .gm-body .gp.gp-plan{opacity:.75}
-  .gm-body .gp.gp-plan::after{content:'●';position:absolute;top:-7px;right:-7px;background:#f59e0b;color:#fff;border-radius:50%;width:16px;height:16px;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:900;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .gm-body .gp.gp-plan::after{content:'●';position:absolute;top:-7px;right:-7px;background:#38bdf8;color:#0c2d48;border-radius:50%;width:16px;height:16px;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:900;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
   .gm-body .gs{font-size:10px;color:#006EB7;cursor:pointer;padding:2px 4px;border-radius:3px;opacity:0;transition:opacity .12s;font-weight:900}
   .liw:hover .gs{opacity:1}
   .gs:hover{background:#006EB7;color:#fff}
@@ -448,28 +452,28 @@
 
   <main class="content">
     <div class="summary-row">
-      <div class="sum-card">
-        <div class="lbl">Artikel Gesamt</div>
+      <div class="sum-card" style="--card-accent:var(--accent)">
+        <div class="lbl">📋 Artikel Gesamt</div>
         <div class="val" id="s-total" style="color:var(--accent)">—</div>
         <div class="sv" id="s-kw-lbl">im Plan</div>
       </div>
-      <div class="sum-card">
-        <div class="lbl">TZ diese Woche</div>
-        <div class="val" id="s-tz" style="color:var(--tz-c)">—</div>
+      <div class="sum-card" style="--card-accent:#6d28d9">
+        <div class="lbl">🟣 TZ diese Woche</div>
+        <div class="val" id="s-tz" style="color:#6d28d9">—</div>
         <div class="sv">Stück Tiefziehen</div>
       </div>
-      <div class="sum-card">
-        <div class="lbl">FR diese Woche</div>
+      <div class="sum-card" style="--card-accent:var(--fr-c)">
+        <div class="lbl">🟠 FR diese Woche</div>
         <div class="val" id="s-fr" style="color:var(--fr-c)">—</div>
         <div class="sv">Stück Fräsen</div>
       </div>
-      <div class="sum-card">
-        <div class="lbl">MO diese Woche</div>
+      <div class="sum-card" style="--card-accent:var(--mo-c)">
+        <div class="lbl">🔵 MO diese Woche</div>
         <div class="val" id="s-mo" style="color:var(--mo-c)">—</div>
         <div class="sv">Std. Montage</div>
       </div>
-      <div class="sum-card" id="s-over-card">
-        <div class="lbl">Kapazität KW <span id="s-over-kw">—</span></div>
+      <div class="sum-card" id="s-over-card" style="--card-accent:var(--fest)">
+        <div class="lbl">⚡ Kapazität KW <span id="s-over-kw">—</span></div>
         <div class="val" id="s-over-val" style="color:var(--fest)">OK</div>
         <div class="sv" id="s-over-sub">keine Überlast</div>
       </div>
@@ -648,7 +652,7 @@
         .otif-toolbar .otif-count { margin-left:auto; font-size:11px; color:var(--muted); font-weight:600; }
         .otif-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-sm); background:var(--bg); }
         .otif-table { width:100%; border-collapse:collapse; font-size:12px; }
-        .otif-table thead th { background:#0f172a; color:#f59e0b; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; padding:10px 10px; text-align:center; white-space:nowrap; border-bottom:2px solid #f59e0b; position:sticky; top:0; z-index:1; }
+        .otif-table thead th { background:#0f172a; color:#7dd3fc; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; padding:10px 10px; text-align:center; white-space:nowrap; border-bottom:2px solid #38bdf8; position:sticky; top:0; z-index:1; }
         .otif-table tbody td { padding:8px 10px; border-bottom:1px solid var(--border); text-align:center; vertical-align:middle; white-space:nowrap; }
         .otif-table tbody tr:hover { background:rgba(0,110,183,.04); }
         .otif-table tbody tr:nth-child(even) { background:var(--surface); }
@@ -681,8 +685,17 @@
         @media (max-width:900px) { .otif-kpi { grid-template-columns:repeat(2,1fr); } }
         @media (max-width:500px) { .otif-kpi { grid-template-columns:1fr; } }
       </style>
-      <div class="otif-header">
-        <div class="sec-title">📦 OTIF Tracker — On-Time In-Full Lieferperformance</div>
+      <div class="otif-header" id="otifHeader" style="background:#0f172a;padding:16px 20px;border-radius:var(--radius);margin-bottom:18px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:28px">📦</span>
+          <div>
+            <div style="font-size:16px;font-weight:800;color:#38bdf8;font-family:var(--font-head);letter-spacing:.3px;">OTIF Tracker</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.55);font-weight:500;margin-top:1px;">On-Time In-Full · Lieferperformance Dashboard</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="otifHeaderKw" style="font-size:10px;color:rgba(255,255,255,.4);font-weight:600;text-transform:uppercase;letter-spacing:.5px;"></span>
+        </div>
       </div>
       <div id="otifKpiCards" class="otif-kpi"></div>
       <div class="otif-toolbar">
@@ -966,6 +979,8 @@ function renderOtifTracker() {
   var selectedStatus = statusFilter ? statusFilter.value : 'all';
   var allArts = new Set();
   var today = new Date(); today.setHours(0,0,0,0);
+  var hkw = document.getElementById('otifHeaderKw');
+  if (hkw) hkw.textContent = 'KW ' + CURRENT_KW + ' / ' + CURRENT_YEAR;
   for (var art in PLAN) {
     var d = PLAN[art];
     if (!d.liefertermin || d.liefertermin.length === 0) continue;
@@ -1023,49 +1038,95 @@ function renderOtifTracker() {
   });
   // KPI calculations
   var total = rows.length, delivered = 0, onTimeCount = 0, inFullCount = 0, otifCount = 0, late = 0, partial = 0;
+  var totalDelayDays = 0, delayCount = 0;
+  var thisWeekDue = 0, nextWeekDue = 0;
+  var uniqueArts = new Set();
+  var artDelivered = {}, artTotal = {};
   rows.forEach(function(r) {
+    uniqueArts.add(r.art);
+    artTotal[r.art] = (artTotal[r.art] || 0) + 1;
     if (r.status === 'geliefert' || r.status === 'teilweise') {
       delivered++;
+      artDelivered[r.art] = (artDelivered[r.art] || 0) + 1;
       if (r.onTime) onTimeCount++;
       if (r.inFull) inFullCount++;
       if (r.onTime && r.inFull) otifCount++;
       if (r.status === 'teilweise') partial++;
+      if (r.deltaDays !== null && r.deltaDays > 0) { totalDelayDays += r.deltaDays; delayCount++; }
     }
-    if (r.status === 'verspätet') late++;
+    if (r.status === 'verspätet') { late++; if (r.deltaDays !== null) { totalDelayDays += r.deltaDays; delayCount++; } }
+    // Check if due this week or next week
+    var gd = new Date(r.geplant_date);
+    var nowMs = today.getTime();
+    var daysTilDue = Math.round((gd - nowMs) / 86400000);
+    if (daysTilDue >= 0 && daysTilDue <= 7 && r.status === 'offen') thisWeekDue++;
+    if (daysTilDue > 7 && daysTilDue <= 14 && r.status === 'offen') nextWeekDue++;
   });
   var otPct = delivered > 0 ? Math.round(onTimeCount / delivered * 100) : 0;
   var ifPct = delivered > 0 ? Math.round(inFullCount / delivered * 100) : 0;
   var otifPct = delivered > 0 ? Math.round(otifCount / delivered * 100) : 0;
   var deliveredPct = total > 0 ? Math.round(delivered / total * 100) : 0;
+  var avgDelay = delayCount > 0 ? (totalDelayDays / delayCount).toFixed(1) : '0';
+  var openCount = rows.filter(function(r){return r.status==='offen';}).length;
   // Update count
   var countEl = document.getElementById('otifCount');
-  if (countEl) countEl.textContent = filtered.length + ' von ' + total + ' Positionen';
+  if (countEl) countEl.textContent = filtered.length + ' von ' + total + ' Positionen · ' + uniqueArts.size + ' Artikel';
   // KPI cards with progress bars
   function kpiColor(pct) { return pct >= 90 ? '#16a34a' : pct >= 70 ? '#f59e0b' : '#dc2626'; }
   document.getElementById('otifKpiCards').innerHTML =
+    // Row 1: Core OTIF metrics
     '<div class="otif-kpi-card"><div class="kpi-bar" style="background:' + kpiColor(otifPct) + '"></div>' +
+      '<div class="kpi-icon">🎯</div>' +
       '<div class="kpi-value" style="color:' + kpiColor(otifPct) + '">' + otifPct + '%</div>' +
       '<div class="kpi-label">OTIF Score</div>' +
       '<div class="kpi-sub">' + otifCount + ' / ' + delivered + ' perfekt geliefert</div>' +
       '<div class="otif-progress"><div class="otif-progress-bar" style="width:' + otifPct + '%;background:' + kpiColor(otifPct) + '"></div></div>' +
     '</div>' +
     '<div class="otif-kpi-card"><div class="kpi-bar" style="background:' + kpiColor(otPct) + '"></div>' +
+      '<div class="kpi-icon">⏱️</div>' +
       '<div class="kpi-value" style="color:' + kpiColor(otPct) + '">' + otPct + '%</div>' +
       '<div class="kpi-label">On-Time</div>' +
       '<div class="kpi-sub">' + onTimeCount + ' / ' + delivered + ' pünktlich</div>' +
       '<div class="otif-progress"><div class="otif-progress-bar" style="width:' + otPct + '%;background:' + kpiColor(otPct) + '"></div></div>' +
     '</div>' +
     '<div class="otif-kpi-card"><div class="kpi-bar" style="background:' + kpiColor(ifPct) + '"></div>' +
+      '<div class="kpi-icon">📦</div>' +
       '<div class="kpi-value" style="color:' + kpiColor(ifPct) + '">' + ifPct + '%</div>' +
       '<div class="kpi-label">In-Full</div>' +
       '<div class="kpi-sub">' + inFullCount + ' / ' + delivered + ' vollständig</div>' +
       '<div class="otif-progress"><div class="otif-progress-bar" style="width:' + ifPct + '%;background:' + kpiColor(ifPct) + '"></div></div>' +
     '</div>' +
     '<div class="otif-kpi-card"><div class="kpi-bar" style="background:' + (late > 0 ? '#dc2626' : '#16a34a') + '"></div>' +
+      '<div class="kpi-icon">✅</div>' +
       '<div class="kpi-value" style="color:' + (late > 0 ? '#dc2626' : '#16a34a') + '">' + delivered + '<span style="font-size:16px;color:var(--muted)"> / ' + total + '</span></div>' +
       '<div class="kpi-label">Geliefert</div>' +
-      '<div class="kpi-sub">' + late + ' verspätet · ' + partial + ' Teillieferungen</div>' +
+      '<div class="kpi-sub">' + late + ' verspätet · ' + partial + ' Teillieferung</div>' +
       '<div class="otif-progress"><div class="otif-progress-bar" style="width:' + deliveredPct + '%;background:var(--accent)"></div></div>' +
+    '</div>' +
+    // Row 2: Operational KPIs
+    '<div class="otif-kpi-card"><div class="kpi-bar" style="background:' + (parseFloat(avgDelay) > 3 ? '#dc2626' : parseFloat(avgDelay) > 1 ? '#f59e0b' : '#16a34a') + '"></div>' +
+      '<div class="kpi-icon">📊</div>' +
+      '<div class="kpi-value" style="color:' + (parseFloat(avgDelay) > 3 ? '#dc2626' : parseFloat(avgDelay) > 1 ? '#f59e0b' : '#16a34a') + '">' + avgDelay + '<span style="font-size:14px"> d</span></div>' +
+      '<div class="kpi-label">Ø Verzug</div>' +
+      '<div class="kpi-sub">Durchschn. Verspätung</div>' +
+    '</div>' +
+    '<div class="otif-kpi-card"><div class="kpi-bar" style="background:#dc2626"></div>' +
+      '<div class="kpi-icon">🔴</div>' +
+      '<div class="kpi-value" style="color:#dc2626">' + late + '</div>' +
+      '<div class="kpi-label">Überfällig</div>' +
+      '<div class="kpi-sub">' + (total > 0 ? Math.round(late/total*100) : 0) + '% aller Positionen</div>' +
+    '</div>' +
+    '<div class="otif-kpi-card"><div class="kpi-bar" style="background:#38bdf8"></div>' +
+      '<div class="kpi-icon">📅</div>' +
+      '<div class="kpi-value" style="color:#0369a1">' + thisWeekDue + '</div>' +
+      '<div class="kpi-label">Diese Woche fällig</div>' +
+      '<div class="kpi-sub">Nächste Woche: ' + nextWeekDue + '</div>' +
+    '</div>' +
+    '<div class="otif-kpi-card"><div class="kpi-bar" style="background:var(--accent)"></div>' +
+      '<div class="kpi-icon">⏳</div>' +
+      '<div class="kpi-value" style="color:var(--accent)">' + openCount + '</div>' +
+      '<div class="kpi-label">Offen</div>' +
+      '<div class="kpi-sub">' + uniqueArts.size + ' Artikel gesamt</div>' +
     '</div>';
   // Render table rows
   var tbody = '';
@@ -1080,6 +1141,8 @@ function renderOtifTracker() {
       else { deltaStr = '0d'; deltaCls = 'otif-delta-zero'; }
     } else { deltaStr = '—'; deltaCls = 'otif-delta-none'; }
     // Menge display: show fraction if partially delivered
+    var mengePct = r.menge > 0 ? Math.min(100, Math.round(r.menge_geliefert / r.menge * 100)) : 0;
+    var mengeColor = r.menge_geliefert >= r.menge ? '#16a34a' : r.menge_geliefert > 0 ? '#f59e0b' : 'var(--border)';
     var mengeDisplay = r.menge_geliefert > 0
       ? '<span style="font-weight:700;color:' + (r.menge_geliefert >= r.menge ? '#16a34a' : '#f59e0b') + '">' + r.menge_geliefert + '</span><span style="color:var(--muted)"> / ' + r.menge + '</span>'
       : '<span style="color:var(--muted-light)">0 / ' + r.menge + '</span>';
@@ -1087,7 +1150,7 @@ function renderOtifTracker() {
       '<td class="col-pos">' + r.pos + '</td>' +
       '<td class="col-art">' + r.art + '</td>' +
       '<td class="col-kw">KW' + r.kw + '/' + r.year + '</td>' +
-      '<td class="col-menge">' + r.menge + '</td>' +
+      '<td class="col-menge">' + r.menge + '<div style="height:3px;background:var(--surface);border-radius:2px;margin-top:3px;"><div style="height:100%;width:' + mengePct + '%;background:' + mengeColor + ';border-radius:2px;"></div></div></td>' +
       '<td><input type="date" class="otif-input" value="' + r.geplant_date + '" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'geplant_date\',this.value);renderOtifTracker()"></td>' +
       '<td><input type="date" class="otif-input" value="' + (r.geliefert_date || '') + '" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'geliefert_date\',this.value);renderOtifTracker()"></td>' +
       '<td><input type="number" class="otif-input" value="' + (r.menge_geliefert || 0) + '" min="0" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'menge_geliefert\',+this.value);renderOtifTracker()"></td>' +
@@ -1119,7 +1182,7 @@ function exportOtifExcel() {
   ];
   ws.getRow(1).font = { bold: true, size: 11 };
   ws.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0f172a' } };
-  ws.getRow(1).font = { bold: true, color: { argb: 'FFf59e0b' }, size: 11 };
+  ws.getRow(1).font = { bold: true, color: { argb: 'FF7dd3fc' }, size: 11 };
   var pos = 0;
   for (var art in PLAN) {
     var d = PLAN[art];
@@ -2069,7 +2132,7 @@ function renderGantt(D) {
   }
   let html = '<thead><tr><th class="col-art" rowspan="2">Artikel / Stufe</th>';
   yearSpans.forEach(({year, count}) => {
-    html += `<th colspan="${count}" style="background:#0f172a;color:#f59e0b;font-size:13px;font-weight:900;letter-spacing:1px;border-bottom:2px solid #f59e0b">${year}</th>`;
+    html += `<th colspan="${count}" style="background:#0f172a;color:#38bdf8;font-size:13px;font-weight:900;letter-spacing:1px;border-bottom:2px solid #38bdf8">${year}</th>`;
   });
   html += '</tr><tr>';
   weeks.forEach(({year,kw}) => {
@@ -2474,7 +2537,7 @@ function ganttPDF(){
   w.document.write('table { width: 100%; border-collapse: collapse; font-size: 9px; }');
   w.document.write('th { background: #1e293b; color: #fff; font-size: 10px; font-weight: 700; padding: 6px 5px; text-align: center; border: 1px solid #334155; }');
   w.document.write('th.ca { background: #006EB7; text-align: left; padding-left: 10px; min-width: 90px; font-size: 11px; }');
-  w.document.write('th.kc { background: #f59e0b; color: #1c1c1c; font-weight: 900; }');
+  w.document.write('th.kc { background: #38bdf8; color: #0c2d48; font-weight: 900; }');
   w.document.write('th.kf { background: #374151; }');
   w.document.write('.ac { background: #e0f2fe; border-right: 3px solid #006EB7; font-size: 11px; font-weight: 800; color: #006EB7; padding: 5px 8px; }');
   w.document.write('.sr-li td { background: #dcfce7; border-bottom: 1px solid #86efac; }');
@@ -2526,7 +2589,7 @@ async function ganttExcel(){
   // Colors
   var cTZ='FF5b21b6',cFR='FF92400e',cMO='FF0c4a6e',cLI='FF15803d';
   var bgTZ='FFede9fe',bgFR='FFfef3c7',bgMO='FFdbeafe',bgLI='FFdcfce7';
-  var cHead='FF1e293b',cYear='FF0f172a',cYearTxt='FFf59e0b',cCurr='FFf59e0b',cFest='FF374151',cFlex='FF475569';
+  var cHead='FF1e293b',cYear='FF0f172a',cYearTxt='FF38bdf8',cCurr='FF38bdf8',cFest='FF374151',cFlex='FF475569';
 
   // Borders
   var thinB={top:{style:'thin',color:{argb:'FFcbd5e1'}},bottom:{style:'thin',color:{argb:'FFcbd5e1'}},left:{style:'thin',color:{argb:'FFcbd5e1'}},right:{style:'thin',color:{argb:'FFcbd5e1'}}};
@@ -2677,7 +2740,7 @@ function gmB(){
   var ySpans=[],cY=wks[0].year,sI=0;
   for(i=1;i<=wks.length;i++){if(i===wks.length||wks[i].year!==cY){ySpans.push({yr:cY,cnt:i-sI});if(i<wks.length){cY=wks[i].year;sI=i;}}}
   var h='<thead><tr><th class="ca" rowspan="2">Artikel</th>';
-  for(i=0;i<ySpans.length;i++){h+='<th colspan="'+ySpans[i].cnt+'" style="background:#0f172a;color:#f59e0b;font-size:12px;font-weight:900;border-bottom:2px solid #f59e0b">'+ySpans[i].yr+'</th>';}
+  for(i=0;i<ySpans.length;i++){h+='<th colspan="'+ySpans[i].cnt+'" style="background:#0f172a;color:#38bdf8;font-size:12px;font-weight:900;border-bottom:2px solid #38bdf8">'+ySpans[i].yr+'</th>';}
   h+='</tr><tr>';
   for(i=0;i<wks.length;i++){var w=wks[i],c=w.year===CURRENT_YEAR&&w.kw===CURRENT_KW;h+='<th class="'+(c?'kc':isFest(w.year,w.kw)?'kf':'')+'">KW'+w.kw+(c?' \u25c0':'')+'</th>';}
   h+='</tr></thead><tbody>';
