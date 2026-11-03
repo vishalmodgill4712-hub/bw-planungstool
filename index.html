@@ -634,11 +634,12 @@
         .otif-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px; }
         .otif-header .sec-title { margin:0; }
         .otif-kpi { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
-        .otif-kpi-card { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:18px 14px; text-align:center; position:relative; overflow:hidden; box-shadow:var(--shadow-sm); transition:box-shadow .15s,transform .15s; }
-        .otif-kpi-card:hover { box-shadow:var(--shadow-md); transform:translateY(-1px); }
-        .otif-kpi-card .kpi-bar { position:absolute; top:0; left:0; right:0; height:3px; }
-        .otif-kpi-card .kpi-value { font-size:32px; font-weight:900; line-height:1.1; margin-top:4px; font-family:var(--font-head); }
-        .otif-kpi-card .kpi-label { font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.8px; margin-top:4px; }
+        .otif-kpi-card { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:20px 14px 14px; text-align:center; position:relative; overflow:hidden; box-shadow:var(--shadow-sm); transition:box-shadow .18s,transform .18s; }
+        .otif-kpi-card:hover { box-shadow:0 6px 24px rgba(0,0,0,.1); transform:translateY(-2px); }
+        .otif-kpi-card .kpi-bar { position:absolute; top:0; left:0; right:0; height:4px; }
+        .otif-kpi-card .kpi-icon { font-size:18px; margin-bottom:2px; }
+        .otif-kpi-card .kpi-value { font-size:30px; font-weight:900; line-height:1.1; margin-top:2px; font-family:var(--font-head); }
+        .otif-kpi-card .kpi-label { font-size:10px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.9px; margin-top:4px; }
         .otif-kpi-card .kpi-sub { font-size:10px; color:var(--muted-light); margin-top:3px; }
         .otif-toolbar { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-sm); }
         .otif-toolbar select, .otif-toolbar button { height:32px; padding:0 12px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface); color:var(--text); font:600 12px var(--font); cursor:pointer; transition:all .12s; }
@@ -678,6 +679,7 @@
         .otif-progress { width:100%; height:6px; background:var(--surface); border-radius:3px; overflow:hidden; margin-top:6px; }
         .otif-progress-bar { height:100%; border-radius:3px; transition:width .3s; }
         @media (max-width:900px) { .otif-kpi { grid-template-columns:repeat(2,1fr); } }
+        @media (max-width:500px) { .otif-kpi { grid-template-columns:1fr; } }
       </style>
       <div class="otif-header">
         <div class="sec-title">📦 OTIF Tracker — On-Time In-Full Lieferperformance</div>
@@ -999,6 +1001,14 @@ function renderOtifTracker() {
       });
     }
   }
+  // Sort by Geplant Datum ascending
+  rows.sort(function(a, b) {
+    if (a.geplant_date < b.geplant_date) return -1;
+    if (a.geplant_date > b.geplant_date) return 1;
+    return 0;
+  });
+  // Re-number positions after sort
+  for (var ri = 0; ri < rows.length; ri++) rows[ri].pos = ri + 1;
   // Update artikel filter dropdown
   if (artFilter) {
     var curOpts = new Set(); artFilter.querySelectorAll('option').forEach(function(o) { curOpts.add(o.value); });
