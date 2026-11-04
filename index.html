@@ -914,14 +914,41 @@ function toggleDone(stage, ident, year, kw) {
   const k = doneKey(stage, ident, year, kw);
   const status = DONE_STATUS[k] || {};
   if (!status.done && !status.geplant) {
-    // No status → Geplant (yellow, planned/in production)
     DONE_STATUS[k] = { geplant: true, done: false };
   } else if (status.geplant && !status.done) {
-    // Geplant → Erledigt (green, done)
     DONE_STATUS[k] = { geplant: false, done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW };
+    // Gantt → OTIF sync: if LI stage marked erledigt, update OTIF to geliefert
+    if (stage === 'LI') {
+      var d = PLAN[ident] || INPUT_DATA[ident];
+      if (d) {
+        for (var i = 0; i < (d.liefertermin||[]).length; i++) {
+          var lt = d.liefertermin[i];
+          if (lt.year === year && lt.kw === kw) {
+            var entry = getOtifEntry(ident, year, kw, i);
+            entry.status = 'geliefert';
+            if (!entry.geliefert_date) entry.geliefert_date = new Date().toISOString().slice(0,10);
+            if (!entry.menge_geliefert) entry.menge_geliefert = lt.menge;
+            break;
+          }
+        }
+      }
+    }
   } else {
-    // Erledigt → No status (clear)
     DONE_STATUS[k] = { geplant: false, done: false };
+    // Gantt → OTIF sync: if LI cleared, reset OTIF to offen
+    if (stage === 'LI') {
+      var d2 = PLAN[ident] || INPUT_DATA[ident];
+      if (d2) {
+        for (var j = 0; j < (d2.liefertermin||[]).length; j++) {
+          var lt2 = d2.liefertermin[j];
+          if (lt2.year === year && lt2.kw === kw) {
+            var entry2 = getOtifEntry(ident, year, kw, j);
+            entry2.status = 'offen';
+            break;
+          }
+        }
+      }
+    }
   }
   renderAll();
 }
@@ -995,6 +1022,66 @@ function otifMarkGeliefert(art, year, kw, pos) {
 function otifSetField(art, year, kw, pos, field, value) {
   var entry = getOtifEntry(art, year, kw, pos);
   entry[field] = value;
+  // Auto-sync: when menge_geliefert is set, update status & cascade to Gantt
+  if (field === 'menge_geliefert') {
+    var d = PLAN[art] || INPUT_DATA[art];
+    if (d) {
+      var lt = null;
+      for (var i = 0; i < d.liefertermin.length; i++) {
+        if (d.liefertermin[i].kw === kw && d.liefertermin[i].year === year) { lt = d.liefertermin[i]; break; }
+      }
+      if (lt) {
+        if (+value >= lt.menge) {
+          // Full delivery → geliefert + cascade all stages erledigt
+          entry.status = 'geliefert';
+          if (!entry.geliefert_date) entry.geliefert_date = new Date().toISOString().slice(0,10);
+          otifCascadeToGantt(art, d, lt, true);
+        } else if (+value > 0) {
+          entry.status = 'teilweise';
+          if (!entry.geliefert_date) entry.geliefert_date = new Date().toISOString().slice(0,10);
+        } else {
+          entry.status = 'offen';
+        }
+      }
+    }
+  }
+  // Auto-sync: when geliefert_date is set, mark as geliefert if menge matches
+  if (field === 'geliefert_date' && value) {
+    var d2 = PLAN[art] || INPUT_DATA[art];
+    if (d2) {
+      var lt2 = null;
+      for (var j = 0; j < d2.liefertermin.length; j++) {
+        if (d2.liefertermin[j].kw === kw && d2.liefertermin[j].year === year) { lt2 = d2.liefertermin[j]; break; }
+      }
+      if (lt2 && entry.menge_geliefert >= lt2.menge) {
+        entry.status = 'geliefert';
+        otifCascadeToGantt(art, d2, lt2, true);
+      }
+    }
+  }
+}
+
+// Cascade OTIF delivery → Gantt DONE_STATUS for all stages
+function otifCascadeToGantt(art, d, lt, markDone) {
+  var val = markDone ? { done: true, doneAtYear: CURRENT_YEAR, doneAtKw: CURRENT_KW } : { done: false, geplant: false };
+  // LI
+  DONE_STATUS[doneKey('LI', art, lt.year, lt.kw)] = JSON.parse(JSON.stringify(val));
+  // MO
+  var moO = lt.mo_offset || 1, moK = lt.kw - moO, moY = lt.year;
+  while (moK < 1) { moK += 52; moY--; }
+  DONE_STATUS[doneKey('MO', art, moY, moK)] = JSON.parse(JSON.stringify(val));
+  // FR
+  var frO = lt.fr_offset || 1, frK = moK - frO, frY = moY;
+  while (frK < 1) { frK += 52; frY--; }
+  for (var fi = 0; fi < (d.fr_bom||[]).length; fi++) {
+    DONE_STATUS[doneKey('FR', d.fr_bom[fi].stage_art, frY, frK)] = JSON.parse(JSON.stringify(val));
+  }
+  // TZ
+  var tzO = lt.tz_offset || 1, tzK = frK - tzO, tzY = frY;
+  while (tzK < 1) { tzK += 52; tzY--; }
+  for (var ti = 0; ti < (d.tz_bom||[]).length; ti++) {
+    DONE_STATUS[doneKey('TZ', d.tz_bom[ti].stage_art, tzY, tzK)] = JSON.parse(JSON.stringify(val));
+  }
 }
 
 var _otifExpandedRows = {};
@@ -1033,13 +1120,28 @@ function buildOtifDetailHtml(art, pos) {
 
   // Count erledigt Stück per stage from DONE_STATUS
   // Key format: "stage|ident|year|kw" → {done, geplant}
-  function countErledigt(stage, ident) {
+  function countErledigt(stage, stageIdent) {
     var total = 0, done = 0;
     var lts = d.liefertermin || [];
     for (var i = 0; i < lts.length; i++) {
       var lt = lts[i];
-      var key = stage + '|' + ident + '|' + lt.year + '|' + lt.kw;
       total += lt.menge;
+      // Calculate the actual KW for this stage using offsets
+      var sKw = lt.kw, sY = lt.year;
+      if (stage === 'MO') {
+        var moO = lt.mo_offset || 1; sKw = lt.kw - moO;
+        while (sKw < 1) { sKw += 52; sY--; }
+      } else if (stage === 'FR') {
+        var moO2 = lt.mo_offset || 1, frO = lt.fr_offset || 1;
+        sKw = lt.kw - moO2 - frO;
+        while (sKw < 1) { sKw += 52; sY--; }
+      } else if (stage === 'TZ') {
+        var moO3 = lt.mo_offset || 1, frO2 = lt.fr_offset || 1, tzO = lt.tz_offset || 1;
+        sKw = lt.kw - moO3 - frO2 - tzO;
+        while (sKw < 1) { sKw += 52; sY--; }
+      }
+      // LI uses delivery KW directly
+      var key = stage + '|' + stageIdent + '|' + sY + '|' + sKw;
       if (DONE_STATUS[key] && DONE_STATUS[key].done) {
         done += lt.menge;
       }
@@ -1057,7 +1159,7 @@ function buildOtifDetailHtml(art, pos) {
   var frBom = d.fr_bom || [];
   for (var i = 0; i < tzBom.length; i++) {
     var b = tzBom[i];
-    var tzErl = countErledigt('TZ', art);
+    var tzErl = countErledigt('TZ', b.stage_art);
     bomRows += '<tr>' +
       '<td><span class="stage-badge stage-tz">TZ</span></td>' +
       '<td style="font-weight:700;text-align:left;padding-left:10px;">' + b.stage_art + '</td>' +
@@ -1071,7 +1173,7 @@ function buildOtifDetailHtml(art, pos) {
   }
   for (var j = 0; j < frBom.length; j++) {
     var f = frBom[j];
-    var frErl = countErledigt('FR', art);
+    var frErl = countErledigt('FR', f.stage_art);
     bomRows += '<tr>' +
       '<td><span class="stage-badge stage-fr">FR</span></td>' +
       '<td style="font-weight:700;text-align:left;padding-left:10px;">' + f.stage_art + '</td>' +
