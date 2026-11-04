@@ -5822,41 +5822,91 @@
       "doneAtKw": 42
     },
     "FR|2724.2001|2026|40": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 38
     },
     "FR|2724.2002|2026|40": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 38
     },
     "FR|2724.2003|2026|40": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 38
     },
     "FR|2724.2004|2026|40": {
-      "geplant": false,
-      "done": false
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
     },
     "TZ|2724.1001|2026|39": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 38
     },
     "TZ|2724.1002|2026|39": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 38
     },
     "TZ|2724.1003|2026|39": {
-      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "LI|2724.9001|2026|42": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "MO|2724.9001|2026|41": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "TZ|2724.1004|2026|39": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "LI|2454.9001|2026|44": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "MO|2454.9001|2026|43": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "FR|2454.2001|2026|42": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "FR|2454.2002|2026|42": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "FR|2454.2003|2026|42": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "TZ|2454.1001|2026|41": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "TZ|2454.1002|2026|41": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 38
+    },
+    "TZ|2454.1003|2026|41": {
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 38
@@ -6712,10 +6762,10 @@
     },
     "2454.9001|2026|44|0": {
       "geplant_date": "2026-10-29",
-      "geliefert_date": "",
+      "geliefert_date": "2026-11-04",
       "lieferschein": "",
       "menge_geliefert": 0,
-      "status": "verspätet"
+      "status": "geliefert"
     },
     "2454.9001|2026|47|1": {
       "geplant_date": "2026-11-19",
@@ -10142,10 +10192,10 @@
     },
     "2724.9001|2026|42|0": {
       "geplant_date": "2026-10-15",
-      "geliefert_date": "",
+      "geliefert_date": "2026-11-04",
       "lieferschein": "",
       "menge_geliefert": 0,
-      "status": "verspätet"
+      "status": "geliefert"
     },
     "2724.9001|2026|50|1": {
       "geplant_date": "2026-12-10",
