@@ -38,13 +38,17 @@
 
   .main { display: flex; height: calc(100vh - 58px); overflow: hidden; }
 
-  .sidebar { width: 252px; min-width: 252px; background: var(--bg); border-right: 1px solid var(--border); overflow-y: auto; padding: 18px 14px; display: flex; flex-direction: column; gap: 20px; }
+  .sidebar { width: 230px; min-width: 230px; background: var(--bg); border-right: 1px solid var(--border); overflow-y: auto; padding: 18px 12px; display: flex; flex-direction: column; gap: 16px; }
   .sb-h { font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-light); font-weight: 800; padding: 0 4px 6px; margin-bottom: 4px; border-bottom: 1px solid var(--border); }
   .filter-group { display: flex; flex-direction: column; gap: 3px; }
   .filter-btn { background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); padding: 7px 10px; color: var(--muted); cursor: pointer; text-align: left; font-size: 12px; font-weight: 500; transition: all .12s; display: flex; align-items: center; gap: 8px; }
   .filter-btn:hover { background: var(--surface); color: var(--text); }
   .filter-btn.active { background: var(--surface); border-color: var(--border); color: var(--text); font-weight: 600; }
   .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  .nav-btn { background: transparent; border: none; border-radius: 8px; padding: 9px 12px; color: var(--muted); cursor: pointer; text-align: left; font-size: 12.5px; font-weight: 500; transition: all .15s; display: block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-btn:hover { background: rgba(56,189,248,.08); color: var(--text); }
+  .nav-btn.active { background: #0f172a; color: #38bdf8; font-weight: 700; box-shadow: 0 2px 8px rgba(56,189,248,.12); }
 
   .cap-input-group { display: flex; flex-direction: column; gap: 6px; }
   .cap-input-group label { font-size: 11px; color: var(--muted); }
@@ -96,10 +100,7 @@
   .cap-detail .ok-txt { color: var(--fest); }
   .cap-detail .warn-txt { color: var(--warn); }
 
-  .view-tabs { display: flex; gap: 3px; margin-bottom: 20px; background: #0f172a; border: none; border-radius: 10px; padding: 4px; width: fit-content; box-shadow: 0 2px 8px rgba(15,23,42,.15); }
-  .view-tab { background: transparent; border: none; border-radius: 8px; color: rgba(255,255,255,.5); font-size: 12px; font-weight: 600; padding: 8px 16px; cursor: pointer; transition: all .15s; white-space: nowrap; }
-  .view-tab:hover { color: rgba(255,255,255,.8); background: rgba(255,255,255,.06); }
-  .view-tab.active { background: #38bdf8; color: #0c2d48; font-weight: 700; box-shadow: 0 2px 8px rgba(56,189,248,.3); }
+  .view-tabs { display: none; }
 
   .gantt-wrap { overflow-x: auto; }
   table.gantt { width: 100%; border-collapse: collapse; min-width: 1300px; }
@@ -398,24 +399,44 @@
 </header>
 
 <div class="main">
-  <aside class="sidebar">
+  <aside class="sidebar" id="mainSidebar">
     <div>
-      <div class="sb-h">Produktionsstufe</div>
+      <div class="sb-h">Planung</div>
       <div class="filter-group">
-        <button class="filter-btn active" data-stage="all" onclick="setFilter('all',this)"><span class="dot" style="background:var(--accent)"></span>Alle Stufen</button>
-        <button class="filter-btn" data-stage="TZ" onclick="setFilter('TZ',this)"><span class="dot" style="background:var(--tz-c)"></span>Tiefziehen</button>
-        <button class="filter-btn" data-stage="FR" onclick="setFilter('FR',this)"><span class="dot" style="background:var(--fr-c)"></span>Fräsen</button>
-        <button class="filter-btn" data-stage="MO" onclick="setFilter('MO',this)"><span class="dot" style="background:var(--mo-c)"></span>Montage</button>
-        <button class="filter-btn" data-stage="LI" onclick="setFilter('LI',this)"><span class="dot" style="background:var(--li-c)"></span>Lieferung</button>
+        <button class="nav-btn active" data-view="dashboard" onclick="setView('dashboard',this)">🏠 Diese Woche</button>
+        <button class="nav-btn" data-view="bom" onclick="setView('bom',this)">📐 Stückliste</button>
+        <button class="nav-btn" data-view="input" onclick="setView('input',this)">✏️ Liefertermin Eingabe</button>
       </div>
     </div>
 
     <div>
+      <div class="sb-h">Übersicht</div>
+      <div class="filter-group">
+        <button class="nav-btn" data-view="gantt" onclick="setView('gantt',this)">📊 Gantt / KW</button>
+        <button class="nav-btn" data-view="kwoverview" onclick="setView('kwoverview',this)">📅 Geplant vs. Erledigt</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="sb-h">Kapazität</div>
+      <div class="filter-group">
+        <button class="nav-btn" data-view="overload" onclick="setView('overload',this)">⚠️ Überlast</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="sb-h">Tracking</div>
+      <div class="filter-group">
+        <button class="nav-btn" data-view="otif" onclick="setView('otif',this)">📦 OTIF Tracker</button>
+      </div>
+    </div>
+
+    <div id="sidebarSearch">
       <div class="sb-h">Artikel Suche</div>
       <input type="text" class="search-box" id="searchBox" placeholder="z.B. 2341.9012" oninput="renderAll()">
     </div>
 
-    <div>
+    <div id="sidebarCapacity">
       <div class="sb-h">Montage Kapazität</div>
       <div class="cap-input-group">
         <label>Normal bis (Std./Woche)</label>
@@ -425,27 +446,12 @@
         <label>Warnung bis (Std./Woche)</label>
         <input type="number" id="capWarnInput" value="50" min="1" max="300" onchange="renderAll()">
       </div>
-      <p style="font-size:10px;color:var(--muted);margin-top:7px;line-height:1.4">Bis zur 1. Grenze = normal (grün). Zwischen 1. und 2. Grenze = Warnung (gelb). Über der 2. Grenze = Überlast (rot).</p>
     </div>
 
     <div>
       <div class="sb-h">Plan-Übersicht</div>
       <div class="stat-mini">
         <div>Artikel gesamt: <b id="stat-total-art">—</b></div>
-      </div>
-    </div>
-
-    <div>
-      <div class="sb-h">Legende</div>
-      <div class="legend">
-        <div class="leg-row"><div class="leg-swatch" style="background:rgba(103,108,110,.3);border:1px solid #676C6E"></div>Tiefziehen</div>
-        <div class="leg-row"><div class="leg-swatch" style="background:rgba(245,158,11,.3);border:1px solid #f59e0b"></div>Fräsen</div>
-        <div class="leg-row"><div class="leg-swatch" style="background:rgba(0,110,183,.3);border:1px solid #006EB7"></div>Montage</div>
-        <div class="leg-row"><div class="leg-swatch" style="background:rgba(34,197,94,.25);border:1px solid #22c55e"></div>Lieferung</div>
-        <div class="leg-row" style="margin-top:4px">
-          <span style="width:8px;height:8px;border-radius:50%;background:var(--fest);display:inline-block"></span> FEST &nbsp;
-          <span style="width:8px;height:8px;border-radius:50%;background:var(--warn);display:inline-block"></span> FLEX
-        </div>
       </div>
     </div>
   </aside>
@@ -682,6 +688,27 @@
         .otif-delta-none { color:var(--muted-light); }
         .otif-progress { width:100%; height:6px; background:var(--surface); border-radius:3px; overflow:hidden; margin-top:6px; }
         .otif-progress-bar { height:100%; border-radius:3px; transition:width .3s; }
+        /* Expandable detail row */
+        .otif-detail-row td { padding:0 !important; border-bottom:2px solid #38bdf8 !important; background:#f0f9ff !important; }
+        .otif-detail-wrap { padding:14px 18px 16px; }
+        .otif-detail-tabs { display:flex; gap:2px; margin-bottom:12px; }
+        .otif-detail-tab { padding:6px 16px; border-radius:6px 6px 0 0; font:700 11px var(--font); cursor:pointer; border:1px solid var(--border); border-bottom:none; background:var(--surface); color:var(--muted); transition:all .12s; }
+        .otif-detail-tab.active { background:#0f172a; color:#38bdf8; border-color:#0f172a; }
+        .otif-detail-panel { display:none; }
+        .otif-detail-panel.active { display:block; }
+        .otif-sub-table { width:100%; border-collapse:collapse; font-size:11px; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+        .otif-sub-table thead th { background:#0f172a; color:#7dd3fc; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:7px 10px; text-align:center; white-space:nowrap; }
+        .otif-sub-table tbody td { padding:6px 10px; border-bottom:1px solid var(--border); text-align:center; vertical-align:middle; }
+        .otif-sub-table tbody tr:hover { background:rgba(0,110,183,.06); }
+        .otif-sub-table tbody tr:nth-child(even) { background:rgba(0,0,0,.02); }
+        .otif-sub-table .stage-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:9px; font-weight:800; letter-spacing:.3px; }
+        .otif-sub-table .stage-tz { background:rgba(103,108,110,.12); color:#676C6E; }
+        .otif-sub-table .stage-fr { background:rgba(180,83,9,.12); color:#b45309; }
+        .otif-sub-table .stage-mo { background:rgba(0,110,183,.12); color:#006EB7; }
+        .otif-art-clickable { cursor:pointer; transition:color .12s; }
+        .otif-art-clickable:hover { color:#0369a1 !important; }
+        .otif-art-clickable::before { content:'▶ '; font-size:8px; color:var(--muted-light); transition:transform .15s; display:inline-block; }
+        .otif-art-clickable.expanded::before { transform:rotate(90deg); color:#38bdf8; }
         @media (max-width:900px) { .otif-kpi { grid-template-columns:repeat(2,1fr); } }
         @media (max-width:500px) { .otif-kpi { grid-template-columns:1fr; } }
       </style>
@@ -970,6 +997,121 @@ function otifSetField(art, year, kw, pos, field, value) {
   entry[field] = value;
 }
 
+var _otifExpandedRows = {};
+function toggleOtifDetail(art, pos, el, evt) {
+  evt.stopPropagation();
+  var rowId = 'otifDetailRow_' + pos;
+  var existing = document.getElementById(rowId);
+  if (existing) {
+    existing.remove();
+    el.classList.remove('expanded');
+    delete _otifExpandedRows[pos];
+    return;
+  }
+  el.classList.add('expanded');
+  _otifExpandedRows[pos] = art;
+  var parentTr = el.closest('tr');
+  var detailTr = document.createElement('tr');
+  detailTr.id = rowId;
+  detailTr.className = 'otif-detail-row';
+  detailTr.innerHTML = '<td colspan="11">' + buildOtifDetailHtml(art, pos) + '</td>';
+  parentTr.after(detailTr);
+  // Activate first tab
+  switchOtifDetailTab(pos, 'stueck');
+}
+
+function switchOtifDetailTab(pos, tab) {
+  var wrap = document.getElementById('otifDetailWrap_' + pos);
+  if (!wrap) return;
+  wrap.querySelectorAll('.otif-detail-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.tab === tab); });
+  wrap.querySelectorAll('.otif-detail-panel').forEach(function(p) { p.classList.toggle('active', p.dataset.panel === tab); });
+}
+
+function buildOtifDetailHtml(art, pos) {
+  var d = PLAN[art] || INPUT_DATA[art];
+  if (!d) return '<div class="otif-detail-wrap" style="color:var(--muted);font-size:12px;">Keine Daten für ' + art + '</div>';
+  // Stückliste (BOM)
+  var bomRows = '';
+  var tzBom = d.tz_bom || [];
+  var frBom = d.fr_bom || [];
+  for (var i = 0; i < tzBom.length; i++) {
+    var b = tzBom[i];
+    bomRows += '<tr>' +
+      '<td><span class="stage-badge stage-tz">TZ</span></td>' +
+      '<td style="font-weight:700;text-align:left;padding-left:10px;">' + b.stage_art + '</td>' +
+      '<td>Tiefziehrohling</td>' +
+      '<td>' + b.menge_per_stk + '</td>' +
+      '<td>' + (b.maschine || '—') + '</td>' +
+      '<td>' + (b.s_zt != null ? b.s_zt + ' min' : '—') + '</td>' +
+      '<td>' + (b.r_zt != null ? b.r_zt + ' min' : '—') + '</td>' +
+    '</tr>';
+  }
+  for (var j = 0; j < frBom.length; j++) {
+    var f = frBom[j];
+    bomRows += '<tr>' +
+      '<td><span class="stage-badge stage-fr">FR</span></td>' +
+      '<td style="font-weight:700;text-align:left;padding-left:10px;">' + f.stage_art + '</td>' +
+      '<td>Fräsrohling</td>' +
+      '<td>' + f.menge_per_stk + '</td>' +
+      '<td>' + (f.maschine || '—') + '</td>' +
+      '<td>' + (f.s_zt != null ? f.s_zt + ' min' : '—') + '</td>' +
+      '<td>' + (f.r_zt != null ? f.r_zt + ' min' : '—') + '</td>' +
+    '</tr>';
+  }
+  // Montage row
+  bomRows += '<tr>' +
+    '<td><span class="stage-badge stage-mo">MO</span></td>' +
+    '<td style="font-weight:700;text-align:left;padding-left:10px;">' + art + '</td>' +
+    '<td>Montage</td>' +
+    '<td>1</td>' +
+    '<td>' + (d.mo_a_platz || '—') + '</td>' +
+    '<td>' + (d.mo_s_zt != null ? d.mo_s_zt + ' min' : '—') + '</td>' +
+    '<td>—</td>' +
+  '</tr>';
+  var stueckHtml = '<table class="otif-sub-table">' +
+    '<thead><tr><th>Stufe</th><th style="text-align:left;padding-left:10px;">Artikel-Nr</th><th>Bezeichnung</th><th>Menge/Stk</th><th>Maschine</th><th>Stückzeit</th><th>Rüstzeit</th></tr></thead>' +
+    '<tbody>' + bomRows + '</tbody></table>';
+  // Auftragsliste (all deliveries for this article)
+  var auftrRows = '';
+  var lts = d.liefertermin || [];
+  for (var k = 0; k < lts.length; k++) {
+    var lt = lts[k];
+    var pd = kwToDate(lt.year, lt.kw);
+    var pdStr = formatDate(pd);
+    var entry = getOtifEntry(art, lt.year, lt.kw, k);
+    var statusIcon, statusText, badgeCls;
+    if (entry.status === 'geliefert') { statusIcon = '✅'; statusText = 'Geliefert'; badgeCls = 'otif-badge-geliefert'; }
+    else if (entry.status === 'verspätet') { statusIcon = '⏰'; statusText = 'Verspätet'; badgeCls = 'otif-badge-verspaetet'; }
+    else if (entry.status === 'teilweise') { statusIcon = '📦'; statusText = 'Teilweise'; badgeCls = 'otif-badge-teilweise'; }
+    else { statusIcon = '⏳'; statusText = 'Offen'; badgeCls = 'otif-badge-offen'; }
+    var geliefStr = entry.geliefert_date ? formatDate(new Date(entry.geliefert_date)) : '—';
+    auftrRows += '<tr>' +
+      '<td style="font-weight:700;">' + (k + 1) + '</td>' +
+      '<td>KW ' + lt.kw + ' / ' + lt.year + '</td>' +
+      '<td style="font-weight:600;">' + pdStr + '</td>' +
+      '<td style="font-weight:800;font-size:13px;">' + lt.menge + '</td>' +
+      '<td>' + (entry.menge_geliefert || 0) + '</td>' +
+      '<td>' + geliefStr + '</td>' +
+      '<td>' + (entry.lieferschein || '—') + '</td>' +
+      '<td><span class="otif-badge ' + badgeCls + '">' + statusIcon + ' ' + statusText + '</span></td>' +
+    '</tr>';
+  }
+  if (lts.length === 0) {
+    auftrRows = '<tr><td colspan="8" style="color:var(--muted);padding:16px;font-size:12px;">Keine Liefertermine vorhanden</td></tr>';
+  }
+  var auftrHtml = '<table class="otif-sub-table">' +
+    '<thead><tr><th>Pos</th><th>KW / Jahr</th><th>Geplant Datum</th><th>Auftragsmenge</th><th>Ist-Menge</th><th>Geliefert Datum</th><th>Lieferschein</th><th>Status</th></tr></thead>' +
+    '<tbody>' + auftrRows + '</tbody></table>';
+  return '<div class="otif-detail-wrap" id="otifDetailWrap_' + pos + '">' +
+    '<div class="otif-detail-tabs">' +
+      '<div class="otif-detail-tab active" data-tab="stueck" onclick="switchOtifDetailTab(' + pos + ',\'stueck\')">📋 Stückliste</div>' +
+      '<div class="otif-detail-tab" data-tab="auftr" onclick="switchOtifDetailTab(' + pos + ',\'auftr\')">📦 Aufträge (' + lts.length + ')</div>' +
+    '</div>' +
+    '<div class="otif-detail-panel active" data-panel="stueck">' + stueckHtml + '</div>' +
+    '<div class="otif-detail-panel" data-panel="auftr">' + auftrHtml + '</div>' +
+  '</div>';
+}
+
 function renderOtifTracker() {
   var rows = [];
   var posCounter = 0;
@@ -1148,7 +1290,7 @@ function renderOtifTracker() {
       : '<span style="color:var(--muted-light)">0 / ' + r.menge + '</span>';
     tbody += '<tr>' +
       '<td class="col-pos">' + r.pos + '</td>' +
-      '<td class="col-art">' + r.art + '</td>' +
+      '<td class="col-art"><span class="otif-art-clickable" id="otifArt_' + r.pos + '" onclick="toggleOtifDetail(\'' + r.art + '\',' + r.pos + ',this,event)">' + r.art + '</span></td>' +
       '<td class="col-kw">KW' + r.kw + '/' + r.year + '</td>' +
       '<td class="col-menge">' + r.menge + '<div style="height:3px;background:var(--surface);border-radius:2px;margin-top:3px;"><div style="height:100%;width:' + mengePct + '%;background:' + mengeColor + ';border-radius:2px;"></div></div></td>' +
       '<td><input type="date" class="otif-input" value="' + r.geplant_date + '" onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'geplant_date\',this.value);renderOtifTracker()"></td>' +
@@ -1163,6 +1305,7 @@ function renderOtifTracker() {
       '</td></tr>';
   });
   document.getElementById('otifBody').innerHTML = tbody || '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:30px;font-size:13px">Keine Lieferpositionen gefunden</td></tr>';
+  _otifExpandedRows = {};
 }
 
 function exportOtifExcel() {
@@ -1276,8 +1419,14 @@ function setView(v, btn) {
     DRAFT = JSON.parse(JSON.stringify(PLAN));
   }
   activeView = v;
+  // Update sidebar nav buttons
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  var activeBtn = document.querySelector('.nav-btn[data-view="'+v+'"]');
+  if(activeBtn) activeBtn.classList.add('active');
+  // Also handle old view-tab buttons if any
   document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  if(btn && btn.classList.contains('view-tab')) btn.classList.add('active');
+
   document.getElementById('view-dashboard').classList.toggle('hidden', v !== 'dashboard');
   document.getElementById('view-bom').classList.toggle('hidden', v !== 'bom');
   document.getElementById('view-input').classList.toggle('hidden', v !== 'input');
@@ -1285,6 +1434,15 @@ function setView(v, btn) {
   document.getElementById('view-kwoverview').classList.toggle('hidden', v !== 'kwoverview');
   document.getElementById('view-overload').classList.toggle('hidden', v !== 'overload');
   document.getElementById('view-otif').classList.toggle('hidden', v !== 'otif');
+  // Hide summary cards & capacity chart on OTIF view (OTIF has its own KPI cards)
+  var isOtif = (v === 'otif');
+  document.querySelector('.summary-row').style.display = isOtif ? 'none' : '';
+  document.querySelector('.cap-section').style.display = isOtif ? 'none' : '';
+  // Hide search & capacity sidebar sections on OTIF
+  var ss = document.getElementById('sidebarSearch');
+  var sc = document.getElementById('sidebarCapacity');
+  if(ss) ss.style.display = isOtif ? 'none' : '';
+  if(sc) sc.style.display = isOtif ? 'none' : '';
   renderAll();
 }
 
@@ -2514,7 +2672,7 @@ renderAll();
 
 // ══ GANTT MODAL ══════════════════════════════════
 var _gf='all',_gs=24,_da=null,_dk=null,_dy=null;
-function openGantt(){_gs=CURRENT_KW;var s=document.getElementById('gmSl');if(s)s.value=CURRENT_KW;var ws=document.getElementById('gmWinSel');if(ws)_gWin=parseInt(ws.value);document.getElementById('gmKwL').textContent='Aktuelle Woche: KW '+CURRENT_KW+' / '+CURRENT_YEAR;gmW(_gs);document.getElementById('ganttModal').classList.add('open');document.body.style.overflow='hidden';}
+function openGantt(){_gs=CURRENT_KW;var s=document.getElementById('gmSl');if(s)s.value=CURRENT_KW;var ws=document.getElementById('gmWinSel');if(ws)_gWin=parseInt(ws.value);document.getElementById('gmKwL').textContent='Aktuelle Woche: KW '+CURRENT_KW+' / '+CURRENT_YEAR;gmW(_gs);document.getElementById('ganttModal').classList.add('open');document.body.style.overflow='hidden';document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active')});var gb=document.querySelector('.nav-btn[data-view="gantt"]');if(gb)gb.classList.add('active');}
 function closeGantt(){document.getElementById('ganttModal').classList.remove('open');document.body.style.overflow='';}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGantt();});
 function gmF(f,b){_gf=f;document.querySelectorAll('.gm-fb').forEach(function(x){x.classList.remove('act');});b.classList.add('act');gmB();}
