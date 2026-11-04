@@ -5822,5 +5822,4339 @@
       "doneAtKw": 42
     }
   },
-  "otif_data": {}
+  "otif_data": {
+    "2341.9012|2026|46|0": {
+      "geplant_date": "2026-11-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2026|47|1": {
+      "geplant_date": "2026-11-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2026|48|2": {
+      "geplant_date": "2026-11-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2026|49|3": {
+      "geplant_date": "2026-12-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2026|51|4": {
+      "geplant_date": "2026-12-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|2|5": {
+      "geplant_date": "2027-01-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|3|6": {
+      "geplant_date": "2027-01-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|4|7": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|5|8": {
+      "geplant_date": "2027-02-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|6|9": {
+      "geplant_date": "2027-02-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|7|10": {
+      "geplant_date": "2027-02-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|8|11": {
+      "geplant_date": "2027-02-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|9|12": {
+      "geplant_date": "2027-03-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|10|13": {
+      "geplant_date": "2027-03-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|11|14": {
+      "geplant_date": "2027-03-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|12|15": {
+      "geplant_date": "2027-03-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|14|16": {
+      "geplant_date": "2027-04-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|15|17": {
+      "geplant_date": "2027-04-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|16|18": {
+      "geplant_date": "2027-04-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|17|19": {
+      "geplant_date": "2027-04-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|18|20": {
+      "geplant_date": "2027-05-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|19|21": {
+      "geplant_date": "2027-05-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|20|22": {
+      "geplant_date": "2027-05-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|22|23": {
+      "geplant_date": "2027-06-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|23|24": {
+      "geplant_date": "2027-06-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|24|25": {
+      "geplant_date": "2027-06-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|25|26": {
+      "geplant_date": "2027-06-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|26|27": {
+      "geplant_date": "2027-07-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|27|28": {
+      "geplant_date": "2027-07-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|28|29": {
+      "geplant_date": "2027-07-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|29|30": {
+      "geplant_date": "2027-07-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|30|31": {
+      "geplant_date": "2027-07-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|34|32": {
+      "geplant_date": "2027-08-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|35|33": {
+      "geplant_date": "2027-09-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|36|34": {
+      "geplant_date": "2027-09-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|37|35": {
+      "geplant_date": "2027-09-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|38|36": {
+      "geplant_date": "2027-09-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|39|37": {
+      "geplant_date": "2027-09-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|40|38": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|41|39": {
+      "geplant_date": "2027-10-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|42|40": {
+      "geplant_date": "2027-10-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|43|41": {
+      "geplant_date": "2027-10-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|44|42": {
+      "geplant_date": "2027-11-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|45|43": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|45|44": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|46|45": {
+      "geplant_date": "2027-11-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|47|46": {
+      "geplant_date": "2027-11-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|48|47": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|49|48": {
+      "geplant_date": "2027-12-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|50|49": {
+      "geplant_date": "2027-12-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2027|51|50": {
+      "geplant_date": "2027-12-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|2|51": {
+      "geplant_date": "2028-01-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|3|52": {
+      "geplant_date": "2028-01-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|4|53": {
+      "geplant_date": "2028-01-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|5|54": {
+      "geplant_date": "2028-02-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|6|55": {
+      "geplant_date": "2028-02-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|7|56": {
+      "geplant_date": "2028-02-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|8|57": {
+      "geplant_date": "2028-02-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|9|58": {
+      "geplant_date": "2028-03-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|10|59": {
+      "geplant_date": "2028-03-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|11|60": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|12|61": {
+      "geplant_date": "2028-03-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|13|62": {
+      "geplant_date": "2028-03-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|14|63": {
+      "geplant_date": "2028-04-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|15|64": {
+      "geplant_date": "2028-04-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|17|65": {
+      "geplant_date": "2028-04-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|18|66": {
+      "geplant_date": "2028-05-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|19|67": {
+      "geplant_date": "2028-05-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|20|68": {
+      "geplant_date": "2028-05-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|21|69": {
+      "geplant_date": "2028-05-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|22|70": {
+      "geplant_date": "2028-06-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|23|71": {
+      "geplant_date": "2028-06-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|25|72": {
+      "geplant_date": "2028-06-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|26|73": {
+      "geplant_date": "2028-06-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|27|74": {
+      "geplant_date": "2028-07-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|28|75": {
+      "geplant_date": "2028-07-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|29|76": {
+      "geplant_date": "2028-07-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|30|77": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|34|78": {
+      "geplant_date": "2028-08-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|35|79": {
+      "geplant_date": "2028-08-31",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|36|80": {
+      "geplant_date": "2028-09-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|37|81": {
+      "geplant_date": "2028-09-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|38|82": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|39|83": {
+      "geplant_date": "2028-09-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|40|84": {
+      "geplant_date": "2028-10-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|41|85": {
+      "geplant_date": "2028-10-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|42|86": {
+      "geplant_date": "2028-10-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|43|87": {
+      "geplant_date": "2028-10-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|44|88": {
+      "geplant_date": "2028-11-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|45|89": {
+      "geplant_date": "2028-11-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|46|90": {
+      "geplant_date": "2028-11-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|47|91": {
+      "geplant_date": "2028-11-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|48|92": {
+      "geplant_date": "2028-11-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|49|93": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2341.9012|2028|50|94": {
+      "geplant_date": "2028-12-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2026|46|0": {
+      "geplant_date": "2026-11-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2026|50|1": {
+      "geplant_date": "2026-12-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|4|2": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|8|3": {
+      "geplant_date": "2027-02-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|11|4": {
+      "geplant_date": "2027-03-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|15|5": {
+      "geplant_date": "2027-04-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|18|6": {
+      "geplant_date": "2027-05-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|22|7": {
+      "geplant_date": "2027-06-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|26|8": {
+      "geplant_date": "2027-07-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|29|9": {
+      "geplant_date": "2027-07-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|36|10": {
+      "geplant_date": "2027-09-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|39|11": {
+      "geplant_date": "2027-09-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|42|12": {
+      "geplant_date": "2027-10-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|46|13": {
+      "geplant_date": "2027-11-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2027|49|14": {
+      "geplant_date": "2027-12-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|3|15": {
+      "geplant_date": "2028-01-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|6|16": {
+      "geplant_date": "2028-02-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|10|17": {
+      "geplant_date": "2028-03-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|13|18": {
+      "geplant_date": "2028-03-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|18|19": {
+      "geplant_date": "2028-05-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|22|20": {
+      "geplant_date": "2028-06-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|26|21": {
+      "geplant_date": "2028-06-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|30|22": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|36|23": {
+      "geplant_date": "2028-09-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|41|24": {
+      "geplant_date": "2028-10-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2342.9012|2028|46|25": {
+      "geplant_date": "2028-11-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2026|44|0": {
+      "geplant_date": "2026-10-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "verspätet"
+    },
+    "2454.9001|2026|47|1": {
+      "geplant_date": "2026-11-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|2|2": {
+      "geplant_date": "2027-01-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|4|3": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|8|4": {
+      "geplant_date": "2027-02-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|11|5": {
+      "geplant_date": "2027-03-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|15|6": {
+      "geplant_date": "2027-04-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|19|7": {
+      "geplant_date": "2027-05-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|23|8": {
+      "geplant_date": "2027-06-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|26|9": {
+      "geplant_date": "2027-07-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|29|10": {
+      "geplant_date": "2027-07-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|35|11": {
+      "geplant_date": "2027-09-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|38|12": {
+      "geplant_date": "2027-09-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|41|13": {
+      "geplant_date": "2027-10-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|43|14": {
+      "geplant_date": "2027-10-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|46|15": {
+      "geplant_date": "2027-11-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2027|49|16": {
+      "geplant_date": "2027-12-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|2|17": {
+      "geplant_date": "2028-01-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|5|18": {
+      "geplant_date": "2028-02-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|7|19": {
+      "geplant_date": "2028-02-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|11|20": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|13|21": {
+      "geplant_date": "2028-03-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|17|22": {
+      "geplant_date": "2028-04-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|19|23": {
+      "geplant_date": "2028-05-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|23|24": {
+      "geplant_date": "2028-06-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|26|25": {
+      "geplant_date": "2028-06-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|29|26": {
+      "geplant_date": "2028-07-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|35|27": {
+      "geplant_date": "2028-08-31",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|37|28": {
+      "geplant_date": "2028-09-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|39|29": {
+      "geplant_date": "2028-09-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|42|30": {
+      "geplant_date": "2028-10-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|45|31": {
+      "geplant_date": "2028-11-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|47|32": {
+      "geplant_date": "2028-11-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2454.9001|2028|49|33": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2026|48|0": {
+      "geplant_date": "2026-11-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|2|1": {
+      "geplant_date": "2027-01-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|5|2": {
+      "geplant_date": "2027-02-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|9|3": {
+      "geplant_date": "2027-03-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|16|4": {
+      "geplant_date": "2027-04-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|20|5": {
+      "geplant_date": "2027-05-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|24|6": {
+      "geplant_date": "2027-06-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|27|7": {
+      "geplant_date": "2027-07-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|30|8": {
+      "geplant_date": "2027-07-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|36|9": {
+      "geplant_date": "2027-09-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|39|10": {
+      "geplant_date": "2027-09-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|42|11": {
+      "geplant_date": "2027-10-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|45|12": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|45|13": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|48|14": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2027|51|15": {
+      "geplant_date": "2027-12-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|4|16": {
+      "geplant_date": "2028-01-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|7|17": {
+      "geplant_date": "2028-02-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|10|18": {
+      "geplant_date": "2028-03-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|13|19": {
+      "geplant_date": "2028-03-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|19|20": {
+      "geplant_date": "2028-05-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|22|21": {
+      "geplant_date": "2028-06-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|26|22": {
+      "geplant_date": "2028-06-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|28|23": {
+      "geplant_date": "2028-07-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|35|24": {
+      "geplant_date": "2028-08-31",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|37|25": {
+      "geplant_date": "2028-09-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|40|26": {
+      "geplant_date": "2028-10-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|42|27": {
+      "geplant_date": "2028-10-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|45|28": {
+      "geplant_date": "2028-11-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2455.9001|2028|47|29": {
+      "geplant_date": "2028-11-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2026|47|0": {
+      "geplant_date": "2026-11-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2026|51|1": {
+      "geplant_date": "2026-12-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|4|2": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|8|3": {
+      "geplant_date": "2027-02-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|11|4": {
+      "geplant_date": "2027-03-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|15|5": {
+      "geplant_date": "2027-04-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|18|6": {
+      "geplant_date": "2027-05-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|22|7": {
+      "geplant_date": "2027-06-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|26|8": {
+      "geplant_date": "2027-07-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|28|9": {
+      "geplant_date": "2027-07-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|35|10": {
+      "geplant_date": "2027-09-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|37|11": {
+      "geplant_date": "2027-09-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|40|12": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|43|13": {
+      "geplant_date": "2027-10-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|46|14": {
+      "geplant_date": "2027-11-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2027|49|15": {
+      "geplant_date": "2027-12-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|2|16": {
+      "geplant_date": "2028-01-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|5|17": {
+      "geplant_date": "2028-02-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|7|18": {
+      "geplant_date": "2028-02-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|11|19": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|13|20": {
+      "geplant_date": "2028-03-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|19|21": {
+      "geplant_date": "2028-05-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|22|22": {
+      "geplant_date": "2028-06-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|26|23": {
+      "geplant_date": "2028-06-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|28|24": {
+      "geplant_date": "2028-07-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|35|25": {
+      "geplant_date": "2028-08-31",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|37|26": {
+      "geplant_date": "2028-09-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|39|27": {
+      "geplant_date": "2028-09-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|42|28": {
+      "geplant_date": "2028-10-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|44|29": {
+      "geplant_date": "2028-11-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|47|30": {
+      "geplant_date": "2028-11-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2456.9001|2028|49|31": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2026|46|0": {
+      "geplant_date": "2026-11-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2026|49|1": {
+      "geplant_date": "2026-12-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|4|2": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|7|3": {
+      "geplant_date": "2027-02-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|10|4": {
+      "geplant_date": "2027-03-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|14|5": {
+      "geplant_date": "2027-04-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|18|6": {
+      "geplant_date": "2027-05-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|22|7": {
+      "geplant_date": "2027-06-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|25|8": {
+      "geplant_date": "2027-06-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|28|9": {
+      "geplant_date": "2027-07-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|35|10": {
+      "geplant_date": "2027-09-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|37|11": {
+      "geplant_date": "2027-09-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|40|12": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|43|13": {
+      "geplant_date": "2027-10-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|46|14": {
+      "geplant_date": "2027-11-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2027|49|15": {
+      "geplant_date": "2027-12-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|2|16": {
+      "geplant_date": "2028-01-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|5|17": {
+      "geplant_date": "2028-02-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|8|18": {
+      "geplant_date": "2028-02-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|11|19": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|14|20": {
+      "geplant_date": "2028-04-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|17|21": {
+      "geplant_date": "2028-04-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|20|22": {
+      "geplant_date": "2028-05-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|25|23": {
+      "geplant_date": "2028-06-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|27|24": {
+      "geplant_date": "2028-07-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|30|25": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|36|26": {
+      "geplant_date": "2028-09-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|38|27": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|41|28": {
+      "geplant_date": "2028-10-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|43|29": {
+      "geplant_date": "2028-10-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|46|30": {
+      "geplant_date": "2028-11-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2457.9001|2028|48|31": {
+      "geplant_date": "2028-11-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2026|46|0": {
+      "geplant_date": "2026-11-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2026|47|1": {
+      "geplant_date": "2026-11-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2026|49|2": {
+      "geplant_date": "2026-12-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2026|51|3": {
+      "geplant_date": "2026-12-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|2|4": {
+      "geplant_date": "2027-01-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|4|5": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|5|6": {
+      "geplant_date": "2027-02-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|7|7": {
+      "geplant_date": "2027-02-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|8|8": {
+      "geplant_date": "2027-02-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|9|9": {
+      "geplant_date": "2027-03-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|10|10": {
+      "geplant_date": "2027-03-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|12|11": {
+      "geplant_date": "2027-03-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|14|12": {
+      "geplant_date": "2027-04-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|15|13": {
+      "geplant_date": "2027-04-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|16|14": {
+      "geplant_date": "2027-04-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|18|15": {
+      "geplant_date": "2027-05-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|19|16": {
+      "geplant_date": "2027-05-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|23|17": {
+      "geplant_date": "2027-06-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|24|18": {
+      "geplant_date": "2027-06-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|25|19": {
+      "geplant_date": "2027-06-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|26|20": {
+      "geplant_date": "2027-07-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|28|21": {
+      "geplant_date": "2027-07-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|29|22": {
+      "geplant_date": "2027-07-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|30|23": {
+      "geplant_date": "2027-07-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|35|24": {
+      "geplant_date": "2027-09-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|36|25": {
+      "geplant_date": "2027-09-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|37|26": {
+      "geplant_date": "2027-09-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|38|27": {
+      "geplant_date": "2027-09-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|39|28": {
+      "geplant_date": "2027-09-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|40|29": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|42|30": {
+      "geplant_date": "2027-10-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|43|31": {
+      "geplant_date": "2027-10-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|44|32": {
+      "geplant_date": "2027-11-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|45|33": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|46|34": {
+      "geplant_date": "2027-11-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|47|35": {
+      "geplant_date": "2027-11-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|49|36": {
+      "geplant_date": "2027-12-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2027|50|37": {
+      "geplant_date": "2027-12-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|2|38": {
+      "geplant_date": "2028-01-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|4|39": {
+      "geplant_date": "2028-01-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|5|40": {
+      "geplant_date": "2028-02-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|6|41": {
+      "geplant_date": "2028-02-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|7|42": {
+      "geplant_date": "2028-02-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|8|43": {
+      "geplant_date": "2028-02-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|10|44": {
+      "geplant_date": "2028-03-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|11|45": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|12|46": {
+      "geplant_date": "2028-03-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|13|47": {
+      "geplant_date": "2028-03-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|14|48": {
+      "geplant_date": "2028-04-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|15|49": {
+      "geplant_date": "2028-04-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|17|50": {
+      "geplant_date": "2028-04-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|18|51": {
+      "geplant_date": "2028-05-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|19|52": {
+      "geplant_date": "2028-05-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|20|53": {
+      "geplant_date": "2028-05-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|22|54": {
+      "geplant_date": "2028-06-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|25|55": {
+      "geplant_date": "2028-06-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|26|56": {
+      "geplant_date": "2028-06-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|27|57": {
+      "geplant_date": "2028-07-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|28|58": {
+      "geplant_date": "2028-07-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|30|59": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|34|60": {
+      "geplant_date": "2028-08-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|35|61": {
+      "geplant_date": "2028-08-31",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|36|62": {
+      "geplant_date": "2028-09-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|37|63": {
+      "geplant_date": "2028-09-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|38|64": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|40|65": {
+      "geplant_date": "2028-10-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|41|66": {
+      "geplant_date": "2028-10-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|42|67": {
+      "geplant_date": "2028-10-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|43|68": {
+      "geplant_date": "2028-10-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|44|69": {
+      "geplant_date": "2028-11-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|45|70": {
+      "geplant_date": "2028-11-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|46|71": {
+      "geplant_date": "2028-11-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|47|72": {
+      "geplant_date": "2028-11-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|48|73": {
+      "geplant_date": "2028-11-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2458.9003|2028|49|74": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2026|49|0": {
+      "geplant_date": "2026-12-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|3|1": {
+      "geplant_date": "2027-01-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|6|2": {
+      "geplant_date": "2027-02-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|10|3": {
+      "geplant_date": "2027-03-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|17|4": {
+      "geplant_date": "2027-04-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|24|5": {
+      "geplant_date": "2027-06-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|27|6": {
+      "geplant_date": "2027-07-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|34|7": {
+      "geplant_date": "2027-08-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|37|8": {
+      "geplant_date": "2027-09-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|40|9": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|43|10": {
+      "geplant_date": "2027-10-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|45|11": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|46|12": {
+      "geplant_date": "2027-11-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2027|48|13": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|2|14": {
+      "geplant_date": "2028-01-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|4|15": {
+      "geplant_date": "2028-01-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|7|16": {
+      "geplant_date": "2028-02-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|11|17": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|13|18": {
+      "geplant_date": "2028-03-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|17|19": {
+      "geplant_date": "2028-04-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|19|20": {
+      "geplant_date": "2028-05-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|23|21": {
+      "geplant_date": "2028-06-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|26|22": {
+      "geplant_date": "2028-06-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|29|23": {
+      "geplant_date": "2028-07-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|35|24": {
+      "geplant_date": "2028-08-31",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|38|25": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|40|26": {
+      "geplant_date": "2028-10-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|43|27": {
+      "geplant_date": "2028-10-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|46|28": {
+      "geplant_date": "2028-11-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2459.9001|2028|48|29": {
+      "geplant_date": "2028-11-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2026|46|0": {
+      "geplant_date": "2026-11-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2026|49|1": {
+      "geplant_date": "2026-12-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|3|2": {
+      "geplant_date": "2027-01-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|7|3": {
+      "geplant_date": "2027-02-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|10|4": {
+      "geplant_date": "2027-03-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|14|5": {
+      "geplant_date": "2027-04-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|17|6": {
+      "geplant_date": "2027-04-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|24|7": {
+      "geplant_date": "2027-06-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|28|8": {
+      "geplant_date": "2027-07-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|34|9": {
+      "geplant_date": "2027-08-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|37|10": {
+      "geplant_date": "2027-09-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|40|11": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|43|12": {
+      "geplant_date": "2027-10-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|46|13": {
+      "geplant_date": "2027-11-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2027|49|14": {
+      "geplant_date": "2027-12-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|2|15": {
+      "geplant_date": "2028-01-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|5|16": {
+      "geplant_date": "2028-02-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|7|17": {
+      "geplant_date": "2028-02-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|11|18": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|13|19": {
+      "geplant_date": "2028-03-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|17|20": {
+      "geplant_date": "2028-04-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|20|21": {
+      "geplant_date": "2028-05-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|27|22": {
+      "geplant_date": "2028-07-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|30|23": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|35|24": {
+      "geplant_date": "2028-08-31",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|38|25": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|41|26": {
+      "geplant_date": "2028-10-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|43|27": {
+      "geplant_date": "2028-10-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|46|28": {
+      "geplant_date": "2028-11-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2460.9001|2028|48|29": {
+      "geplant_date": "2028-11-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2026|46|0": {
+      "geplant_date": "2026-11-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2026|50|1": {
+      "geplant_date": "2026-12-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|4|2": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|7|3": {
+      "geplant_date": "2027-02-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|10|4": {
+      "geplant_date": "2027-03-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|15|5": {
+      "geplant_date": "2027-04-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|18|6": {
+      "geplant_date": "2027-05-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|22|7": {
+      "geplant_date": "2027-06-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|26|8": {
+      "geplant_date": "2027-07-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|28|9": {
+      "geplant_date": "2027-07-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|35|10": {
+      "geplant_date": "2027-09-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|38|11": {
+      "geplant_date": "2027-09-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|41|12": {
+      "geplant_date": "2027-10-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|43|13": {
+      "geplant_date": "2027-10-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|47|14": {
+      "geplant_date": "2027-11-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2027|49|15": {
+      "geplant_date": "2027-12-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|3|16": {
+      "geplant_date": "2028-01-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|5|17": {
+      "geplant_date": "2028-02-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|8|18": {
+      "geplant_date": "2028-02-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|12|19": {
+      "geplant_date": "2028-03-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|14|20": {
+      "geplant_date": "2028-04-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|17|21": {
+      "geplant_date": "2028-04-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|21|22": {
+      "geplant_date": "2028-05-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|25|23": {
+      "geplant_date": "2028-06-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|27|24": {
+      "geplant_date": "2028-07-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|34|25": {
+      "geplant_date": "2028-08-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|36|26": {
+      "geplant_date": "2028-09-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|38|27": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|42|28": {
+      "geplant_date": "2028-10-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|44|29": {
+      "geplant_date": "2028-11-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|47|30": {
+      "geplant_date": "2028-11-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2461.9001|2028|49|31": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2521.9001|2026|49|0": {
+      "geplant_date": "2026-12-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2521.9001|2027|27|1": {
+      "geplant_date": "2027-07-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2521.9001|2027|51|2": {
+      "geplant_date": "2027-12-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2521.9001|2028|27|3": {
+      "geplant_date": "2028-07-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2522.9001|2027|40|0": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2522.9001|2028|15|1": {
+      "geplant_date": "2028-04-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2522.9001|2028|44|2": {
+      "geplant_date": "2028-11-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2522.9003|2026|50|0": {
+      "geplant_date": "2026-12-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2523.9001|2027|10|0": {
+      "geplant_date": "2027-03-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2523.9001|2027|37|1": {
+      "geplant_date": "2027-09-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2523.9001|2028|11|2": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2523.9001|2028|40|3": {
+      "geplant_date": "2028-10-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2026|51|0": {
+      "geplant_date": "2026-12-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|5|1": {
+      "geplant_date": "2027-02-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|10|2": {
+      "geplant_date": "2027-03-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|15|3": {
+      "geplant_date": "2027-04-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|20|4": {
+      "geplant_date": "2027-05-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|24|5": {
+      "geplant_date": "2027-06-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|28|6": {
+      "geplant_date": "2027-07-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|35|7": {
+      "geplant_date": "2027-09-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|39|8": {
+      "geplant_date": "2027-09-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|42|9": {
+      "geplant_date": "2027-10-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|45|10": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2027|48|11": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|2|12": {
+      "geplant_date": "2028-01-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|5|13": {
+      "geplant_date": "2028-02-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|9|14": {
+      "geplant_date": "2028-03-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|12|15": {
+      "geplant_date": "2028-03-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|20|16": {
+      "geplant_date": "2028-05-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|25|17": {
+      "geplant_date": "2028-06-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|28|18": {
+      "geplant_date": "2028-07-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|36|19": {
+      "geplant_date": "2028-09-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|39|20": {
+      "geplant_date": "2028-09-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|42|21": {
+      "geplant_date": "2028-10-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|46|22": {
+      "geplant_date": "2028-11-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2524.9001|2028|49|23": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2026|44|0": {
+      "geplant_date": "2026-10-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "verspätet"
+    },
+    "2525.9001|2026|48|1": {
+      "geplant_date": "2026-11-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|4|2": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|9|3": {
+      "geplant_date": "2027-03-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|14|4": {
+      "geplant_date": "2027-04-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|19|5": {
+      "geplant_date": "2027-05-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|23|6": {
+      "geplant_date": "2027-06-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|27|7": {
+      "geplant_date": "2027-07-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|34|8": {
+      "geplant_date": "2027-08-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|38|9": {
+      "geplant_date": "2027-09-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|41|10": {
+      "geplant_date": "2027-10-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|45|11": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|48|12": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2027|51|13": {
+      "geplant_date": "2027-12-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|4|14": {
+      "geplant_date": "2028-01-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|8|15": {
+      "geplant_date": "2028-02-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|11|16": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|15|17": {
+      "geplant_date": "2028-04-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|19|18": {
+      "geplant_date": "2028-05-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|23|19": {
+      "geplant_date": "2028-06-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|27|20": {
+      "geplant_date": "2028-07-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|34|21": {
+      "geplant_date": "2028-08-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|38|22": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|42|23": {
+      "geplant_date": "2028-10-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|45|24": {
+      "geplant_date": "2028-11-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2525.9001|2028|48|25": {
+      "geplant_date": "2028-11-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2026|47|0": {
+      "geplant_date": "2026-11-19",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2027|4|1": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2027|10|2": {
+      "geplant_date": "2027-03-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2027|14|3": {
+      "geplant_date": "2027-04-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2027|20|4": {
+      "geplant_date": "2027-05-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2027|25|5": {
+      "geplant_date": "2027-06-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2027|30|6": {
+      "geplant_date": "2027-07-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2027|39|7": {
+      "geplant_date": "2027-09-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2027|43|8": {
+      "geplant_date": "2027-10-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2027|48|9": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2028|3|10": {
+      "geplant_date": "2028-01-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2028|8|11": {
+      "geplant_date": "2028-02-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2028|14|12": {
+      "geplant_date": "2028-04-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2028|19|13": {
+      "geplant_date": "2028-05-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2028|30|14": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2028|38|15": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2028|44|16": {
+      "geplant_date": "2028-11-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9001|2028|49|17": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2026|45|0": {
+      "geplant_date": "2026-11-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|2|1": {
+      "geplant_date": "2027-01-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|7|2": {
+      "geplant_date": "2027-02-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|12|3": {
+      "geplant_date": "2027-03-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|16|4": {
+      "geplant_date": "2027-04-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|20|5": {
+      "geplant_date": "2027-05-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|25|6": {
+      "geplant_date": "2027-06-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|30|7": {
+      "geplant_date": "2027-07-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|37|8": {
+      "geplant_date": "2027-09-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|41|9": {
+      "geplant_date": "2027-10-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|46|10": {
+      "geplant_date": "2027-11-18",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2027|50|11": {
+      "geplant_date": "2027-12-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2028|4|12": {
+      "geplant_date": "2028-01-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2028|8|13": {
+      "geplant_date": "2028-02-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2028|12|14": {
+      "geplant_date": "2028-03-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2028|17|15": {
+      "geplant_date": "2028-04-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2028|22|16": {
+      "geplant_date": "2028-06-01",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2028|28|17": {
+      "geplant_date": "2028-07-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2028|34|18": {
+      "geplant_date": "2028-08-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2028|40|19": {
+      "geplant_date": "2028-10-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2541.9002|2028|47|20": {
+      "geplant_date": "2028-11-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2544.9001|2026|44|0": {
+      "geplant_date": "2026-10-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "verspätet"
+    },
+    "2544.9001|2027|2|1": {
+      "geplant_date": "2027-01-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2026|45|0": {
+      "geplant_date": "2026-11-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2027|3|1": {
+      "geplant_date": "2027-01-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2027|12|2": {
+      "geplant_date": "2027-03-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2027|22|3": {
+      "geplant_date": "2027-06-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2027|29|4": {
+      "geplant_date": "2027-07-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2027|40|5": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2027|48|6": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2028|6|7": {
+      "geplant_date": "2028-02-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2028|14|8": {
+      "geplant_date": "2028-04-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2028|23|9": {
+      "geplant_date": "2028-06-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2028|30|10": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2028|40|11": {
+      "geplant_date": "2028-10-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2601.9001|2028|49|12": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2026|45|0": {
+      "geplant_date": "2026-11-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2027|4|1": {
+      "geplant_date": "2027-01-28",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2027|23|2": {
+      "geplant_date": "2027-06-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2027|30|3": {
+      "geplant_date": "2027-07-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2027|40|4": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2027|45|5": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2027|49|6": {
+      "geplant_date": "2027-12-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2028|6|7": {
+      "geplant_date": "2028-02-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2028|15|8": {
+      "geplant_date": "2028-04-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2028|30|9": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2602.9001|2028|41|10": {
+      "geplant_date": "2028-10-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2026|45|0": {
+      "geplant_date": "2026-11-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2027|3|1": {
+      "geplant_date": "2027-01-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2027|12|2": {
+      "geplant_date": "2027-03-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2027|22|3": {
+      "geplant_date": "2027-06-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2027|29|4": {
+      "geplant_date": "2027-07-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2027|40|5": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2027|48|6": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2028|6|7": {
+      "geplant_date": "2028-02-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2028|14|8": {
+      "geplant_date": "2028-04-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2028|23|9": {
+      "geplant_date": "2028-06-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2028|30|10": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2028|40|11": {
+      "geplant_date": "2028-10-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2603.9001|2028|49|12": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2026|45|0": {
+      "geplant_date": "2026-11-05",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2027|3|1": {
+      "geplant_date": "2027-01-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2027|12|2": {
+      "geplant_date": "2027-03-25",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2027|22|3": {
+      "geplant_date": "2027-06-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2027|30|4": {
+      "geplant_date": "2027-07-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2027|40|5": {
+      "geplant_date": "2027-10-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2027|48|6": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2028|6|7": {
+      "geplant_date": "2028-02-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2028|14|8": {
+      "geplant_date": "2028-04-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2028|30|9": {
+      "geplant_date": "2028-07-27",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2028|41|10": {
+      "geplant_date": "2028-10-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2604.9001|2028|49|11": {
+      "geplant_date": "2028-12-07",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2026|46|0": {
+      "geplant_date": "2026-11-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2027|5|1": {
+      "geplant_date": "2027-02-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2027|14|2": {
+      "geplant_date": "2027-04-08",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2027|23|3": {
+      "geplant_date": "2027-06-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2027|30|4": {
+      "geplant_date": "2027-07-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2027|41|5": {
+      "geplant_date": "2027-10-14",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2027|50|6": {
+      "geplant_date": "2027-12-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2028|7|7": {
+      "geplant_date": "2028-02-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2028|15|8": {
+      "geplant_date": "2028-04-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2028|25|9": {
+      "geplant_date": "2028-06-22",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2028|34|10": {
+      "geplant_date": "2028-08-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2605.9001|2028|41|11": {
+      "geplant_date": "2028-10-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2664.9001|2026|49|0": {
+      "geplant_date": "2026-12-03",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2664.9001|2027|19|1": {
+      "geplant_date": "2027-05-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2664.9001|2027|42|2": {
+      "geplant_date": "2027-10-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2664.9001|2028|8|3": {
+      "geplant_date": "2028-02-24",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2664.9001|2028|26|4": {
+      "geplant_date": "2028-06-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2664.9001|2028|46|5": {
+      "geplant_date": "2028-11-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2665.9001|2027|3|0": {
+      "geplant_date": "2027-01-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2665.9001|2027|24|1": {
+      "geplant_date": "2027-06-17",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2665.9001|2027|45|2": {
+      "geplant_date": "2027-11-11",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2665.9001|2028|11|3": {
+      "geplant_date": "2028-03-16",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2665.9001|2028|29|4": {
+      "geplant_date": "2028-07-20",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2665.9001|2028|48|5": {
+      "geplant_date": "2028-11-30",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2666.9001|2026|44|0": {
+      "geplant_date": "2026-10-29",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "verspätet"
+    },
+    "2666.9001|2027|9|1": {
+      "geplant_date": "2027-03-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2666.9001|2027|36|2": {
+      "geplant_date": "2027-09-09",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2666.9001|2028|2|3": {
+      "geplant_date": "2028-01-13",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2666.9001|2028|18|4": {
+      "geplant_date": "2028-05-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2666.9001|2028|38|5": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2667.9001|2027|9|0": {
+      "geplant_date": "2027-03-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2667.9001|2027|35|1": {
+      "geplant_date": "2027-09-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2667.9001|2027|51|2": {
+      "geplant_date": "2027-12-23",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2667.9001|2028|18|3": {
+      "geplant_date": "2028-05-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2667.9001|2028|38|4": {
+      "geplant_date": "2028-09-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2668.9001|2027|5|0": {
+      "geplant_date": "2027-02-04",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2668.9001|2027|28|1": {
+      "geplant_date": "2027-07-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2668.9001|2027|48|2": {
+      "geplant_date": "2027-12-02",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2668.9001|2028|14|3": {
+      "geplant_date": "2028-04-06",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2668.9001|2028|35|4": {
+      "geplant_date": "2028-08-31",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2668.9001|2028|51|5": {
+      "geplant_date": "2028-12-21",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2720.9001|2026|50|0": {
+      "geplant_date": "2026-12-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2721.9001|2026|50|0": {
+      "geplant_date": "2026-12-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2724.9001|2026|42|0": {
+      "geplant_date": "2026-10-15",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "verspätet"
+    },
+    "2724.9001|2026|50|1": {
+      "geplant_date": "2026-12-10",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2727.9001|2026|46|0": {
+      "geplant_date": "2026-11-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2848.9001|2026|48|0": {
+      "geplant_date": "2026-11-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2849.9001|2026|48|0": {
+      "geplant_date": "2026-11-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2850.9001|2026|48|0": {
+      "geplant_date": "2026-11-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2847.9001|2026|48|0": {
+      "geplant_date": "2026-11-26",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    },
+    "2726.9001|2026|46|0": {
+      "geplant_date": "2026-11-12",
+      "geliefert_date": "",
+      "lieferschein": "",
+      "menge_geliefert": 0,
+      "status": "offen"
+    }
+  }
 }
