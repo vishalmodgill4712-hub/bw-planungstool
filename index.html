@@ -745,7 +745,7 @@
           <thead><tr>
             <th>Pos</th><th style="text-align:left;padding-left:14px">Artikel</th><th>KW/Jahr</th><th>Soll</th>
             <th>Geplant (Datum)</th><th>Geliefert (Datum)</th>
-            <th>Ist-Menge</th><th>Lieferschein-Nr</th><th>Δ Tage</th><th>Status</th><th>Aktion</th>
+            <th>Ist-Menge</th><th>Lieferschein-Nr</th><th>Δ Tage</th><th>Status</th><th>Kommentar</th><th>Aktion</th>
           </tr></thead>
           <tbody id="otifBody"></tbody>
         </table>
@@ -977,8 +977,15 @@ function formatDate(d) {
 function getOtifEntry(art, year, kw, pos) {
   var k = otifKey(art, year, kw, pos);
   if (!OTIF_DATA[k]) {
-    var pd = kwToDate(year, kw);
-    OTIF_DATA[k] = { geplant_date: pd.toISOString().slice(0,10), geliefert_date: '', lieferschein: '', menge_geliefert: 0, status: 'offen' };
+    // Use exact datum from liefertermin if available (from Excel import), otherwise calculate from KW
+    var d = PLAN[art] || INPUT_DATA[art];
+    var pd;
+    if (d && d.liefertermin && d.liefertermin[pos] && d.liefertermin[pos].datum) {
+      pd = new Date(d.liefertermin[pos].datum);
+    } else {
+      pd = kwToDate(year, kw);
+    }
+    OTIF_DATA[k] = { geplant_date: pd.toISOString().slice(0,10), geliefert_date: '', lieferschein: '', menge_geliefert: 0, status: 'offen', kommentar: '' };
   }
   return OTIF_DATA[k];
 }
@@ -1282,7 +1289,7 @@ function renderOtifTracker() {
       rows.push({
         pos: posCounter, art: art, menge: lt.menge, year: lt.year, kw: lt.kw, liIdx: li,
         geplant_date: entry.geplant_date, geliefert_date: entry.geliefert_date,
-        menge_geliefert: entry.menge_geliefert, lieferschein: entry.lieferschein,
+        menge_geliefert: entry.menge_geliefert, lieferschein: entry.lieferschein, kommentar: entry.kommentar || '',
         deltaDays: deltaDays, status: entry.status, onTime: onTime, inFull: inFull
       });
     }
@@ -1428,12 +1435,13 @@ function renderOtifTracker() {
       '<td><input type="text" class="otif-input" value="' + (r.lieferschein || '') + '" placeholder="LS-Nr..." onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'lieferschein\',this.value)"></td>' +
       '<td class="' + deltaCls + '">' + deltaStr + '</td>' +
       '<td><span class="otif-badge ' + badgeCls + '">' + statusIcon + ' ' + statusText + '</span></td>' +
+      '<td><input type="text" class="otif-input" value="' + (r.kommentar || '') + '" placeholder="Kommentar..." onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'kommentar\',this.value)" style="min-width:120px;"></td>' +
       '<td>' + (r.status === 'geliefert' ?
         '<button class="otif-btn otif-btn-undo" onclick="otifMarkGeliefert(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ')">↩ Zurück</button>' :
         '<button class="otif-btn otif-btn-deliver" onclick="otifMarkGeliefert(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ')">✓ Liefern</button>') +
       '</td></tr>';
   });
-  document.getElementById('otifBody').innerHTML = tbody || '<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:30px;font-size:13px">Keine Lieferpositionen gefunden</td></tr>';
+  document.getElementById('otifBody').innerHTML = tbody || '<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:30px;font-size:13px">Keine Lieferpositionen gefunden</td></tr>';
   _otifExpandedRows = {};
 }
 
@@ -1995,20 +2003,23 @@ function handleExcelImport(file) {
         const menge = parseFloat(row[mengeIdx]);
         if (!art || isNaN(menge)) { skipped++; continue; }
 
-        var kw, year;
+        var kw, year, datum = null;
         if (datumIdx !== -1 && row[datumIdx]) {
-          // Datum column present → auto-calculate KW and Year
+          // Datum column present → auto-calculate KW and Year, store exact date
           var dt = parseExcelDate(row[datumIdx]);
           if (!dt) { skipped++; continue; }
           var iw = getIsoWeek(dt);
           kw = iw.kw; year = iw.year;
+          datum = dt.toISOString().slice(0,10);
         } else if (kwIdx !== -1) {
           kw = parseInt(row[kwIdx]);
           year = yearIdx !== -1 ? parseInt(row[yearIdx]) : CURRENT_YEAR;
         } else { skipped++; continue; }
         if (!kw || isNaN(kw) || isNaN(year)) { skipped++; continue; }
         if (!importedByArt[art]) importedByArt[art] = [];
-        importedByArt[art].push({ year, kw, menge });
+        var entry = { year, kw, menge };
+        if (datum) entry.datum = datum;
+        importedByArt[art].push(entry);
       }
 
       const importedArts = Object.keys(importedByArt);
