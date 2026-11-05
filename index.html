@@ -976,17 +976,17 @@ function formatDate(d) {
 
 function getOtifEntry(art, year, kw, pos) {
   var k = otifKey(art, year, kw, pos);
+  var d = PLAN[art] || INPUT_DATA[art];
+  var hasDatum = d && d.liefertermin && d.liefertermin[pos] && d.liefertermin[pos].datum;
   if (!OTIF_DATA[k]) {
-    // Use exact datum from liefertermin if available (from Excel import), otherwise calculate from KW
-    var d = PLAN[art] || INPUT_DATA[art];
-    var pd;
-    if (d && d.liefertermin && d.liefertermin[pos] && d.liefertermin[pos].datum) {
-      pd = new Date(d.liefertermin[pos].datum);
-    } else {
-      pd = kwToDate(year, kw);
-    }
+    var pd = hasDatum ? new Date(d.liefertermin[pos].datum) : kwToDate(year, kw);
     OTIF_DATA[k] = { geplant_date: pd.toISOString().slice(0,10), geliefert_date: '', lieferschein: '', menge_geliefert: 0, status: 'offen', kommentar: '' };
+  } else if (hasDatum) {
+    // Update geplant_date from exact datum if it was imported after OTIF entry was created
+    OTIF_DATA[k].geplant_date = new Date(d.liefertermin[pos].datum).toISOString().slice(0,10);
   }
+  // Ensure kommentar field exists (for older data)
+  if (OTIF_DATA[k].kommentar === undefined) OTIF_DATA[k].kommentar = '';
   return OTIF_DATA[k];
 }
 
@@ -1435,7 +1435,7 @@ function renderOtifTracker() {
       '<td><input type="text" class="otif-input" value="' + (r.lieferschein || '') + '" placeholder="LS-Nr..." onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'lieferschein\',this.value)"></td>' +
       '<td class="' + deltaCls + '">' + deltaStr + '</td>' +
       '<td><span class="otif-badge ' + badgeCls + '">' + statusIcon + ' ' + statusText + '</span></td>' +
-      '<td><input type="text" class="otif-input" value="' + (r.kommentar || '') + '" placeholder="Kommentar..." onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'kommentar\',this.value)" style="min-width:120px;"></td>' +
+      '<td><textarea class="otif-input" rows="2" placeholder="Kommentar..." onchange="otifSetField(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ',\'kommentar\',this.value)" style="min-width:160px;max-width:220px;resize:vertical;font-size:11px;line-height:1.4;padding:6px 8px;">' + (r.kommentar || '') + '</textarea></td>' +
       '<td>' + (r.status === 'geliefert' ?
         '<button class="otif-btn otif-btn-undo" onclick="otifMarkGeliefert(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ')">↩ Zurück</button>' :
         '<button class="otif-btn otif-btn-deliver" onclick="otifMarkGeliefert(\'' + r.art + '\',' + r.year + ',' + r.kw + ',' + r.liIdx + ')">✓ Liefern</button>') +
