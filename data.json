@@ -10515,10 +10515,10 @@
     },
     "2525.9001|2026|44|0": {
       "geplant_date": "2026-10-28",
-      "geliefert_date": "2026-11-05",
+      "geliefert_date": "",
       "lieferschein": "",
       "menge_geliefert": 25,
-      "status": "geliefert",
+      "status": "verspätet",
       "kommentar": "Teil menge on 09.11"
     },
     "2525.9001|2026|48|1": {
@@ -11051,10 +11051,10 @@
     },
     "2601.9001|2026|45|0": {
       "geplant_date": "2026-11-04",
-      "geliefert_date": "2026-11-05",
+      "geliefert_date": "",
       "lieferschein": "",
       "menge_geliefert": 15,
-      "status": "geliefert",
+      "status": "verspätet",
       "kommentar": ""
     },
     "2601.9001|2027|3|1": {
