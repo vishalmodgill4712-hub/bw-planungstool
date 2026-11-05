@@ -6491,44 +6491,47 @@
       "doneAtKw": 38
     },
     "LI|2454.9001|2026|44": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": false,
+      "done": false
     },
     "MO|2454.9001|2026|43": {
+      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "FR|2454.2001|2026|42": {
+      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "FR|2454.2002|2026|42": {
+      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "FR|2454.2003|2026|42": {
+      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "TZ|2454.1001|2026|41": {
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "TZ|2454.1002|2026|41": {
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "TZ|2454.1003|2026|41": {
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "TZ|2544.1001|2026|41": {
       "geplant": false,
@@ -7601,10 +7604,10 @@
     },
     "2454.9001|2026|44|0": {
       "geplant_date": "2026-10-28",
-      "geliefert_date": "",
+      "geliefert_date": "2026-11-05",
       "lieferschein": "",
-      "menge_geliefert": 0,
-      "status": "verspätet",
+      "menge_geliefert": 50,
+      "status": "geliefert",
       "kommentar": "Teil menge on 09.11"
     },
     "2454.9001|2026|47|1": {
