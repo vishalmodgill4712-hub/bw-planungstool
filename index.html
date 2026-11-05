@@ -1572,153 +1572,176 @@ function getOtifChartImages() {
 
 function exportOtifExcel() {
   var wb = new ExcelJS.Workbook();
+  var ws = wb.addWorksheet('OTIF Tracker', { views: [{ state: 'frozen', ySplit: 0 }] });
 
-  /* ───── Sheet 1: OTIF KPIs ───── */
-  var ks = wb.addWorksheet('OTIF KPIs');
-  // Collect all rows first for KPI calculation
+  // ── Collect data (same logic as renderOtifTracker) ──
   var allRows = [];
-  var kpiByArt = {}; // per-article KPIs
-  var kpiByKw = {};  // per-KW KPIs
+  var today = new Date(); today.setHours(0,0,0,0);
+  var total=0, delivered=0, onTimeCount=0, inFullCount=0, otifCount=0, late=0, partial=0, openCount=0;
+  var totalDelayDays=0, delayCount=0, thisWeekDue=0, nextWeekDue=0;
   for (var art in PLAN) {
     var d = PLAN[art];
     if (!d.liefertermin || d.liefertermin.length === 0) continue;
-    if (!kpiByArt[art]) kpiByArt[art] = { total: 0, geliefert: 0, onTime: 0, inFull: 0, otif: 0, late: 0, partial: 0, offen: 0, mengeGeplant: 0, mengeGeliefert: 0 };
     for (var li = 0; li < d.liefertermin.length; li++) {
       var lt = d.liefertermin[li];
       var entry = getOtifEntry(art, lt.year, lt.kw, li);
       var gd = new Date(entry.geplant_date);
       var dd = entry.geliefert_date ? new Date(entry.geliefert_date) : null;
       var delta = dd ? Math.round((dd - gd) / 86400000) : null;
-      var isOnTime = dd && delta <= 0;
-      var isInFull = entry.menge_geliefert >= lt.menge;
-      var isOtif = isOnTime && isInFull;
-      var kwKey = 'KW' + lt.kw + '/' + lt.year;
-      if (!kpiByKw[kwKey]) kpiByKw[kwKey] = { total: 0, geliefert: 0, onTime: 0, inFull: 0, otif: 0, year: lt.year, kw: lt.kw };
-      kpiByArt[art].total++;
-      kpiByArt[art].mengeGeplant += lt.menge;
-      kpiByArt[art].mengeGeliefert += (entry.menge_geliefert || 0);
-      kpiByKw[kwKey].total++;
-      if (entry.status === 'geliefert' || entry.status === 'verspätet') {
-        kpiByArt[art].geliefert++;
-        kpiByKw[kwKey].geliefert++;
-        if (isOnTime) { kpiByArt[art].onTime++; kpiByKw[kwKey].onTime++; }
-        if (isInFull) { kpiByArt[art].inFull++; kpiByKw[kwKey].inFull++; }
-        if (isOtif) { kpiByArt[art].otif++; kpiByKw[kwKey].otif++; }
-        if (delta > 0) kpiByArt[art].late++;
-      } else if (entry.status === 'teilweise') {
-        kpiByArt[art].partial++;
+      // Determine status (same as web)
+      if (dd) {
+        if (entry.menge_geliefert > 0 && entry.menge_geliefert < lt.menge) entry.status = 'teilweise';
+        else entry.status = 'geliefert';
+      } else if (gd < today) {
+        delta = Math.round((today - gd) / 86400000);
+        entry.status = 'verspätet';
       } else {
-        kpiByArt[art].offen++;
+        entry.status = 'offen';
       }
-      allRows.push({ art: art, lt: lt, entry: entry, gd: gd, dd: dd, delta: delta });
+      var isOnTime = dd && (dd <= gd);
+      var isInFull = entry.menge_geliefert >= lt.menge;
+      total++;
+      if (entry.status==='geliefert'||entry.status==='teilweise') {
+        delivered++; if(isOnTime) onTimeCount++; if(isInFull) inFullCount++; if(isOnTime&&isInFull) otifCount++;
+        if(entry.status==='teilweise') partial++;
+        if(delta!==null&&delta>0){totalDelayDays+=delta;delayCount++;}
+      }
+      if(entry.status==='verspätet'){late++;if(delta!==null){totalDelayDays+=delta;delayCount++;}}
+      if(entry.status==='offen') openCount++;
+      var daysTilDue=Math.round((gd-today)/86400000);
+      if(daysTilDue>=0&&daysTilDue<=7&&entry.status==='offen') thisWeekDue++;
+      if(daysTilDue>7&&daysTilDue<=14&&entry.status==='offen') nextWeekDue++;
+      allRows.push({art:art,lt:lt,entry:entry,gd:gd,dd:dd,delta:delta,isOnTime:isOnTime,isInFull:isInFull});
     }
   }
-  // Global KPIs
-  var gTotal = 0, gGeliefert = 0, gOnTime = 0, gInFull = 0, gOtif = 0;
-  for (var a in kpiByArt) { var k = kpiByArt[a]; gTotal += k.total; gGeliefert += k.geliefert; gOnTime += k.onTime; gInFull += k.inFull; gOtif += k.otif; }
-  var pct = function(n, d) { return d > 0 ? Math.round(n / d * 1000) / 10 : 0; };
+  allRows.sort(function(a,b){return a.gd-b.gd;});
+  var pct=function(n,d){return d>0?Math.round(n/d*100):0;};
+  var otPct=pct(onTimeCount,delivered), ifPct=pct(inFullCount,delivered), otifPct=pct(otifCount,delivered);
+  var avgDelay=delayCount>0?(totalDelayDays/delayCount).toFixed(1):'0';
 
-  // Style helpers
-  var hdrFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0f172a' } };
-  var hdrFont = { bold: true, color: { argb: 'FF7dd3fc' }, size: 11 };
-  var boldFont = { bold: true, size: 11 };
-  var accentFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0ea5e9' } };
-  var greenFont = { bold: true, color: { argb: 'FF16a34a' } };
-  var redFont = { bold: true, color: { argb: 'FFdc2626' } };
+  // ── Style helpers ──
+  var darkBg = {type:'pattern',pattern:'solid',fgColor:{argb:'FF0f172a'}};
+  var whiteBg = {type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFFFF'}};
+  var lightGray = {type:'pattern',pattern:'solid',fgColor:{argb:'FFF8FAFC'}};
+  var cardBorder = {style:'thin',color:{argb:'FFE2E8F0'}};
+  var allCardBorders = {top:cardBorder,left:cardBorder,bottom:cardBorder,right:cardBorder};
+  var hdrFont = {bold:true,color:{argb:'FF7dd3fc'},size:11,name:'Segoe UI'};
+  var kpiClr=function(v){return v>=90?'FF16a34a':v>=70?'FFf59e0b':'FFdc2626';};
 
-  // Summary section
-  ks.columns = [
-    { width: 24 }, { width: 14 }, { width: 14 }, { width: 14 }, { width: 14 }, { width: 14 }
+  // ── Column widths: 12 columns matching the web table ──
+  ws.columns = [
+    {width:6},{width:14},{width:10},{width:8},{width:15},{width:15},{width:10},{width:16},{width:8},{width:13},{width:28},{width:10}
   ];
-  ks.addRow(['OTIF KPI Übersicht', '', '', '', 'Stand:', 'KW' + CURRENT_KW + '/' + CURRENT_YEAR]);
-  ks.getRow(1).font = { bold: true, size: 14 };
-  ks.addRow([]);
-  ks.addRow(['Kennzahl', 'Anzahl', 'Quote (%)']);
-  ks.getRow(3).font = hdrFont; ks.getRow(3).fill = hdrFill;
-  ks.addRow(['Gesamt Lieferungen', gTotal, '']);
-  ks.addRow(['Geliefert', gGeliefert, pct(gGeliefert, gTotal) + '%']);
-  ks.addRow(['On-Time (pünktlich)', gOnTime, pct(gOnTime, gGeliefert) + '%']);
-  ks.addRow(['In-Full (vollständig)', gInFull, pct(gInFull, gGeliefert) + '%']);
-  var otifRow = ks.addRow(['OTIF (On-Time In-Full)', gOtif, pct(gOtif, gGeliefert) + '%']);
-  otifRow.font = { bold: true, size: 12 };
-  otifRow.getCell(3).font = pct(gOtif, gGeliefert) >= 90 ? greenFont : redFont;
 
-  // Per-KW breakdown
-  ks.addRow([]); ks.addRow([]);
-  var kwHdr = ks.addRow(['KW/Jahr', 'Gesamt', 'Geliefert', 'On-Time', 'In-Full', 'OTIF %']);
-  kwHdr.font = hdrFont; kwHdr.fill = hdrFill;
-  var kwKeys = Object.keys(kpiByKw).sort(function(a, b) {
-    return (kpiByKw[a].year * 100 + kpiByKw[a].kw) - (kpiByKw[b].year * 100 + kpiByKw[b].kw);
-  });
-  kwKeys.forEach(function(kwk) {
-    var kk = kpiByKw[kwk];
-    var otifPct = pct(kk.otif, kk.geliefert);
-    var r = ks.addRow([kwk, kk.total, kk.geliefert, kk.onTime, kk.inFull, otifPct + '%']);
-    r.getCell(6).font = otifPct >= 90 ? greenFont : otifPct >= 70 ? { bold: true, color: { argb: 'FFf59e0b' } } : redFont;
-  });
+  // ═══════ ROW 1: Dark header bar ═══════
+  var r1 = ws.addRow(['  OTIF Tracker','','','','On-Time In-Full · Lieferperformance Dashboard','','','','','','','KW '+CURRENT_KW+' / '+CURRENT_YEAR]);
+  r1.height = 36;
+  r1.eachCell(function(c){c.fill=darkBg;c.font={bold:true,color:{argb:'FF38bdf8'},size:14,name:'Segoe UI'};c.alignment={vertical:'middle'};});
+  r1.getCell(5).font={color:{argb:'FF8899aa'},size:10,name:'Segoe UI'};
+  r1.getCell(12).font={color:{argb:'FF64748b'},size:10,name:'Segoe UI'};r1.getCell(12).alignment={horizontal:'right',vertical:'middle'};
+  ws.addRow([]).height=8;
 
-  // Per-Artikel breakdown
-  ks.addRow([]); ks.addRow([]);
-  var artHdr = ks.addRow(['Artikel', 'Lieferungen', 'Geliefert', 'On-Time', 'OTIF %', 'Offen']);
-  artHdr.font = hdrFont; artHdr.fill = hdrFill;
-  Object.keys(kpiByArt).sort().forEach(function(a) {
-    var ka = kpiByArt[a];
-    var otifPct = pct(ka.otif, ka.geliefert);
-    var r = ks.addRow([a, ka.total, ka.geliefert, ka.onTime, otifPct + '%', ka.offen]);
-    r.getCell(5).font = otifPct >= 90 ? greenFont : otifPct >= 70 ? { bold: true, color: { argb: 'FFf59e0b' } } : redFont;
-  });
+  // ═══════ ROW 3-5: KPI Cards Row 1 (4 cards across cols A-C, D-F, G-I, J-L) ═══════
+  function writeKpiCard(startRow, startCol, icon, value, label, sub, color) {
+    var vRow = ws.getRow(startRow);
+    var lRow = ws.getRow(startRow+1);
+    var sRow = ws.getRow(startRow+2);
+    vRow.height=28; lRow.height=14; sRow.height=14;
+    // Value
+    var vc = vRow.getCell(startCol+1); // center col of 3
+    vc.value = icon + ' ' + value;
+    vc.font = {bold:true,size:20,color:{argb:color},name:'Segoe UI'};
+    vc.alignment = {horizontal:'center',vertical:'middle'};
+    // Label
+    var lc = lRow.getCell(startCol+1);
+    lc.value = label;
+    lc.font = {bold:true,size:9,color:{argb:'FF64748b'},name:'Segoe UI'};
+    lc.alignment = {horizontal:'center',vertical:'middle'};
+    // Sub
+    var sc = sRow.getCell(startCol+1);
+    sc.value = sub;
+    sc.font = {size:9,color:{argb:'FF94a3b8'},name:'Segoe UI'};
+    sc.alignment = {horizontal:'center',vertical:'middle'};
+    // Borders on all 9 cells (3x3 grid)
+    for(var dr=0;dr<3;dr++){for(var dc=0;dc<3;dc++){
+      var cell=ws.getRow(startRow+dr).getCell(startCol+dc);
+      cell.fill=whiteBg;
+      cell.border={
+        top:dr===0?{style:'medium',color:{argb:color}}:cardBorder,
+        left:cardBorder, right:cardBorder,
+        bottom:dr===2?cardBorder:undefined
+      };
+    }}
+  }
+  var kpiStartRow = 3;
+  writeKpiCard(kpiStartRow, 1, '🎯', otifPct+'%', 'OTIF SCORE', otifCount+' / '+delivered+' perfekt geliefert', kpiClr(otifPct));
+  writeKpiCard(kpiStartRow, 4, '⏱️', otPct+'%', 'ON-TIME', onTimeCount+' / '+delivered+' pünktlich', kpiClr(otPct));
+  writeKpiCard(kpiStartRow, 7, '📦', ifPct+'%', 'IN-FULL', inFullCount+' / '+delivered+' vollständig', kpiClr(ifPct));
+  writeKpiCard(kpiStartRow, 10, '✅', delivered+' / '+total, 'GELIEFERT', late+' verspätet · '+partial+' Teillieferung', late>0?'FFdc2626':'FF16a34a');
+  ws.addRow([]).height=6;
 
-  /* ───── Embed chart images in KPI sheet ───── */
+  // ═══════ ROW 7-9: KPI Cards Row 2 ═══════
+  var kpi2Row = ws.rowCount+1;
+  writeKpiCard(kpi2Row, 1, '📊', avgDelay+'d', 'Ø VERZUG', 'Durchschn. Verspätung', parseFloat(avgDelay)>3?'FFdc2626':parseFloat(avgDelay)>1?'FFf59e0b':'FF16a34a');
+  writeKpiCard(kpi2Row, 4, '🔴', ''+late, 'ÜBERFÄLLIG', (total>0?Math.round(late/total*100):0)+'% aller Positionen', 'FFdc2626');
+  writeKpiCard(kpi2Row, 7, '📅', ''+thisWeekDue, 'DIESE WOCHE FÄLLIG', 'Nächste Woche: '+nextWeekDue, 'FF0369a1');
+  writeKpiCard(kpi2Row, 10, '⏳', ''+openCount, 'OFFEN', Object.keys(PLAN).length+' Artikel gesamt', 'FF0ea5e9');
+  ws.addRow([]).height=6;
+  ws.addRow([]).height=6;
+
+  // ═══════ Embedded chart images ═══════
   var charts = getOtifChartImages();
   if (charts.trend) {
-    var trendImg = wb.addImage({ base64: charts.trend.split(',')[1], extension: 'png' });
-    ks.addRow([]); ks.addRow([]);
-    var chartRow = ks.rowCount + 1;
-    ks.addRow(['📈 OTIF Trend nach Kalenderwoche']);
-    ks.getRow(chartRow).font = { bold: true, size: 12 };
-    ks.addImage(trendImg, { tl: { col: 0, row: chartRow }, ext: { width: 560, height: 200 } });
-    // Add spacer rows for the image
-    for (var si=0;si<12;si++) ks.addRow([]);
+    var tImg = wb.addImage({base64:charts.trend.split(',')[1],extension:'png'});
+    var cR = ws.rowCount;
+    ws.addImage(tImg, {tl:{col:0,row:cR},ext:{width:620,height:230}});
+    for(var sp=0;sp<14;sp++) ws.addRow([]);
   }
   if (charts.donut) {
-    var donutImg = wb.addImage({ base64: charts.donut.split(',')[1], extension: 'png' });
-    ks.addRow([]);
-    var dRow = ks.rowCount + 1;
-    ks.addRow(['📊 Status Verteilung']);
-    ks.getRow(dRow).font = { bold: true, size: 12 };
-    ks.addImage(donutImg, { tl: { col: 0, row: dRow }, ext: { width: 240, height: 240 } });
-    for (var si2=0;si2<14;si2++) ks.addRow([]);
+    var dImg = wb.addImage({base64:charts.donut.split(',')[1],extension:'png'});
+    var dR = ws.rowCount;
+    ws.addImage(dImg, {tl:{col:7,row:dR-14},ext:{width:240,height:240}});
   }
+  ws.addRow([]).height=6;
 
-  /* ───── Sheet 2: OTIF Detail ───── */
-  var ws = wb.addWorksheet('OTIF Detail');
-  ws.columns = [
-    { header: 'Pos', key: 'pos', width: 6 },
-    { header: 'Artikel', key: 'art', width: 14 },
-    { header: 'KW/Jahr', key: 'kwjahr', width: 10 },
-    { header: 'Soll-Menge', key: 'menge', width: 10 },
-    { header: 'Geplant (Datum)', key: 'geplant', width: 14 },
-    { header: 'Geliefert (Datum)', key: 'geliefert', width: 14 },
-    { header: 'Ist-Menge', key: 'menge_gel', width: 10 },
-    { header: 'Lieferschein-Nr', key: 'ls', width: 16 },
-    { header: 'Δ Tage', key: 'delta', width: 8 },
-    { header: 'Status', key: 'status', width: 12 },
-    { header: 'Kommentar', key: 'kommentar', width: 30 }
-  ];
-  ws.getRow(1).font = hdrFont;
-  ws.getRow(1).fill = hdrFill;
-  var pos = 0;
-  allRows.forEach(function(r) {
+  // ═══════ OTIF Table (same columns as web) ═══════
+  var tblHdr = ws.addRow(['Pos','Artikel','KW/Jahr','Soll','Geplant (Datum)','Geliefert (Datum)','Ist-Menge','Lieferschein-Nr','Δ Tage','Status','Kommentar','']);
+  tblHdr.height = 22;
+  tblHdr.eachCell(function(c,i){
+    c.fill=lightGray; c.font={bold:true,size:10,color:{argb:'FF64748b'},name:'Segoe UI'};
+    c.alignment={horizontal:'center',vertical:'middle'};
+    c.border={bottom:{style:'thin',color:{argb:'FFE2E8F0'}}};
+  });
+
+  var pos=0;
+  allRows.forEach(function(r){
     pos++;
-    var row = ws.addRow({
-      pos: pos, art: r.art, kwjahr: 'KW' + r.lt.kw + '/' + r.lt.year, menge: r.lt.menge,
-      geplant: formatDate(r.gd), geliefert: r.dd ? formatDate(r.dd) : '',
-      menge_gel: r.entry.menge_geliefert, ls: r.entry.lieferschein || '',
-      delta: r.delta !== null ? r.delta : '', status: r.entry.status,
-      kommentar: r.entry.kommentar || ''
-    });
-    var sc = r.entry.status === 'geliefert' ? '16a34a' : r.entry.status === 'verspätet' ? 'dc2626' : 'f59e0b';
-    row.getCell('status').font = { bold: true, color: { argb: 'FF' + sc } };
+    var statusLabel = r.entry.status==='geliefert'?'✅ Geliefert':r.entry.status==='verspätet'?'⏰ Verspätet':r.entry.status==='teilweise'?'📦 Teilweise':'⏳ Offen';
+    var deltaStr = r.delta!==null?(r.delta>0?'+'+r.delta+'d':r.delta<0?r.delta+'d':'0d'):'—';
+    var row = ws.addRow([
+      pos, r.art, 'KW'+r.lt.kw+'/'+r.lt.year, r.lt.menge,
+      formatDate(r.gd), r.dd?formatDate(r.dd):'',
+      r.entry.menge_geliefert, r.entry.lieferschein||'',
+      deltaStr, statusLabel, r.entry.kommentar||'', ''
+    ]);
+    row.height = 22;
+    row.eachCell(function(c){c.font={size:11,name:'Segoe UI'};c.alignment={horizontal:'center',vertical:'middle'};c.border={bottom:{style:'hair',color:{argb:'FFEFF2F5'}}};});
+    // Column-specific styling
+    row.getCell(1).font={bold:true,size:10,color:{argb:'FF94a3b8'},name:'Segoe UI'};
+    row.getCell(2).font={bold:true,size:11,name:'Segoe UI'};row.getCell(2).alignment={horizontal:'left',vertical:'middle'};
+    row.getCell(3).font={size:10,color:{argb:'FF64748b'},name:'Segoe UI'};
+    row.getCell(4).font={bold:true,size:12,name:'Segoe UI'};
+    // Delta color
+    if(r.delta!==null&&r.delta>0) row.getCell(9).font={bold:true,color:{argb:'FFdc2626'},size:11,name:'Segoe UI'};
+    else if(r.delta!==null&&r.delta<0) row.getCell(9).font={bold:true,color:{argb:'FF16a34a'},size:11,name:'Segoe UI'};
+    // Status color
+    var sc = r.entry.status==='geliefert'?'FF16a34a':r.entry.status==='verspätet'?'FFdc2626':r.entry.status==='teilweise'?'FF6366f1':'FFd97706';
+    row.getCell(10).font={bold:true,color:{argb:sc},size:11,name:'Segoe UI'};
+    // Ist-Menge color
+    if(r.entry.menge_geliefert>=r.lt.menge&&r.entry.menge_geliefert>0) row.getCell(7).font={bold:true,color:{argb:'FF16a34a'},size:11,name:'Segoe UI'};
+    else if(r.entry.menge_geliefert>0) row.getCell(7).font={bold:true,color:{argb:'FFf59e0b'},size:11,name:'Segoe UI'};
+    // Alternate row shading
+    if(pos%2===0){row.eachCell(function(c){c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFAFBFC'}};});}
   });
 
   wb.xlsx.writeBuffer().then(function(buf) {
