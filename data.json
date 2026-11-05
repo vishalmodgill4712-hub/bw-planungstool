@@ -6476,9 +6476,8 @@
       "doneAtKw": 38
     },
     "LI|2724.9001|2026|42": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": false,
+      "done": false
     },
     "MO|2724.9001|2026|41": {
       "done": true,
@@ -6558,79 +6557,343 @@
       "doneAtKw": 38
     },
     "LI|2601.9001|2026|45": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": false,
+      "done": false
     },
     "MO|2601.9001|2026|44": {
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "FR|2601.2001|2026|43": {
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "FR|2601.2002|2026|43": {
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "TZ|2601.1001|2026|42": {
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "TZ|2601.1002|2026|42": {
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "LI|2525.9001|2026|48": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": false,
+      "done": false
     },
     "MO|2525.9001|2026|47": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": false,
+      "done": false
     },
     "FR|2525.2001|2026|46": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": false,
+      "done": false
     },
     "FR|2525.2002|2026|46": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": false,
+      "done": false
     },
     "FR|2525.2003|2026|46": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": false,
+      "done": false
     },
     "FR|2525.2004|2026|46": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": false,
+      "done": false
     },
     "TZ|2525.1001|2026|45": {
-      "done": true,
-      "doneAtYear": 2026,
-      "doneAtKw": 38
+      "geplant": true,
+      "done": false
     },
     "TZ|2525.1002|2026|45": {
+      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
     },
     "TZ|2525.1003|2026|45": {
+      "geplant": true,
+      "done": false
+    },
+    "TZ|2454.1001|2026|44": {
+      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
-      "doneAtKw": 38
+      "doneAtKw": 45
+    },
+    "TZ|2454.1002|2026|44": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2454.1003|2026|44": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2457.1001|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2458.1001|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2458.2003|2026|44": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2458.1001|2026|44": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2458.2003|2026|45": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "MO|2458.9003|2026|45": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2461.1001|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2525.1003|2026|41": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "LI|2525.9001|2026|44": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "MO|2525.9001|2026|43": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2525.2001|2026|42": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2525.2002|2026|42": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2525.2003|2026|42": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2525.2004|2026|42": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2525.1001|2026|41": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2525.1002|2026|41": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2541.1001|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2541.2002|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2541.2002|2026|51": {
+      "geplant": false,
+      "done": false
+    },
+    "TZ|2541.1001|2026|50": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2602.1001|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2602.1002|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2602.2002|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2603.1001|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2603.2001|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2604.1003|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2604.1002|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2604.1001|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2604.2003|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2604.2002|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2666.1003|2026|41": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2666.1002|2026|41": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2666.1001|2026|41": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2666.2004|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2666.2003|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2666.2002|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2666.2001|2026|42": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "MO|2666.9001|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2726.1001|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2726.2001|2026|44": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "MO|2726.9001|2026|45": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "TZ|2727.1001|2026|43": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2727.2001|2026|44": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "MO|2727.9001|2026|45": {
+      "geplant": false,
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
     }
   },
   "otif_data": {
@@ -7604,10 +7867,10 @@
     },
     "2454.9001|2026|44|0": {
       "geplant_date": "2026-10-28",
-      "geliefert_date": "2026-11-05",
+      "geliefert_date": "",
       "lieferschein": "",
       "menge_geliefert": 50,
-      "status": "geliefert",
+      "status": "verspätet",
       "kommentar": "Teil menge on 09.11"
     },
     "2454.9001|2026|47|1": {
@@ -10252,10 +10515,10 @@
     },
     "2525.9001|2026|44|0": {
       "geplant_date": "2026-10-28",
-      "geliefert_date": "",
+      "geliefert_date": "2026-11-05",
       "lieferschein": "",
-      "menge_geliefert": 0,
-      "status": "verspätet",
+      "menge_geliefert": 25,
+      "status": "geliefert",
       "kommentar": "Teil menge on 09.11"
     },
     "2525.9001|2026|48|1": {
@@ -10788,10 +11051,10 @@
     },
     "2601.9001|2026|45|0": {
       "geplant_date": "2026-11-04",
-      "geliefert_date": "",
+      "geliefert_date": "2026-11-05",
       "lieferschein": "",
-      "menge_geliefert": 0,
-      "status": "verspätet",
+      "menge_geliefert": 15,
+      "status": "geliefert",
       "kommentar": ""
     },
     "2601.9001|2027|3|1": {
