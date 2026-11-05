@@ -711,11 +711,7 @@
         .otif-art-clickable.expanded::before { transform:rotate(90deg); color:#38bdf8; }
         @media (max-width:900px) { .otif-kpi { grid-template-columns:repeat(2,1fr); } }
         @media (max-width:500px) { .otif-kpi { grid-template-columns:1fr; } }
-        /* OTIF Charts section */
-        .otif-charts { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:20px; }
-        @media (max-width:800px) { .otif-charts { grid-template-columns:1fr; } }
-        .otif-chart-box { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; }
-        .otif-chart-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin-bottom:12px; }
+        /* (Charts rendered off-screen for Excel export only) */
       </style>
       <div class="otif-header" id="otifHeader" style="background:#0f172a;padding:16px 20px;border-radius:var(--radius);margin-bottom:18px;">
         <div style="display:flex;align-items:center;gap:12px;">
@@ -730,15 +726,10 @@
         </div>
       </div>
       <div id="otifKpiCards" class="otif-kpi"></div>
-      <div class="otif-charts">
-        <div class="otif-chart-box">
-          <div class="otif-chart-title">📈 OTIF Trend nach Kalenderwoche</div>
-          <canvas id="otifTrendChart" height="200" style="width:100%;"></canvas>
-        </div>
-        <div class="otif-chart-box">
-          <div class="otif-chart-title">📊 Status Verteilung</div>
-          <canvas id="otifDonutChart" height="200" style="width:100%;"></canvas>
-        </div>
+      <!-- Hidden canvases for Excel chart generation only -->
+      <div style="position:absolute;left:-9999px;top:-9999px;pointer-events:none;">
+        <canvas id="otifTrendChart" width="800" height="300"></canvas>
+        <canvas id="otifDonutChart" width="300" height="300"></canvas>
       </div>
       <div class="otif-toolbar">
         <select id="otifFilterArt" onchange="renderOtifTracker()">
@@ -1470,14 +1461,8 @@ function renderOtifTrendChart(rows) {
   var canvas = document.getElementById('otifTrendChart');
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
-  var dpr = window.devicePixelRatio || 1;
-  var rect = canvas.parentElement.getBoundingClientRect();
-  canvas.width = rect.width * dpr;
-  canvas.height = 200 * dpr;
-  canvas.style.width = rect.width + 'px';
-  canvas.style.height = '200px';
-  ctx.scale(dpr, dpr);
-  var W = rect.width, H = 200;
+  var W = 800, H = 300;
+  canvas.width = W; canvas.height = H;
   ctx.clearRect(0, 0, W, H);
   // Group by KW
   var byKw = {};
@@ -1537,22 +1522,19 @@ function renderOtifDonutChart(rows) {
   var canvas = document.getElementById('otifDonutChart');
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
-  var dpr = window.devicePixelRatio || 1;
-  canvas.width = 200 * dpr; canvas.height = 200 * dpr;
-  canvas.style.width = '200px'; canvas.style.height = '200px';
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, 200, 200);
+  canvas.width = 300; canvas.height = 300;
+  ctx.clearRect(0, 0, 300, 300);
   var counts = { geliefert:0, offen:0, teilweise:0, 'verspätet':0 };
   rows.forEach(function(r){ counts[r.status] = (counts[r.status]||0)+1; });
   var total = rows.length;
-  if (total === 0) { ctx.fillStyle='#94a3b8'; ctx.font='12px sans-serif'; ctx.fillText('Keine Daten',60,100); return; }
+  if (total === 0) { ctx.fillStyle='#94a3b8'; ctx.font='14px sans-serif'; ctx.fillText('Keine Daten',110,150); return; }
   var slices = [
     { label:'Geliefert', val:counts.geliefert, color:'#16a34a' },
     { label:'Offen', val:counts.offen, color:'#f59e0b' },
     { label:'Teilweise', val:counts.teilweise, color:'#6366f1' },
     { label:'Verspätet', val:counts['verspätet'], color:'#dc2626' }
   ].filter(function(s){ return s.val > 0; });
-  var cx=100, cy=88, r=70, ir=42;
+  var cx=150, cy=130, r=100, ir=60;
   var startA = -Math.PI/2;
   slices.forEach(function(s){
     var sweep = (s.val/total)*Math.PI*2;
@@ -1563,15 +1545,15 @@ function renderOtifDonutChart(rows) {
     // Label
     var mid = startA + sweep/2;
     var lx = cx + (r+14)*Math.cos(mid), ly = cy + (r+14)*Math.sin(mid);
-    ctx.fillStyle='#334155'; ctx.font='bold 9px sans-serif'; ctx.textAlign='center';
+    ctx.fillStyle='#334155'; ctx.font='bold 11px sans-serif'; ctx.textAlign='center';
     ctx.fillText(s.val+' ('+Math.round(s.val/total*100)+'%)',lx,ly);
     startA += sweep;
   });
   // Center text
-  ctx.fillStyle='#0f172a'; ctx.font='bold 22px sans-serif'; ctx.textAlign='center'; ctx.fillText(total,cx,cy+2);
-  ctx.fillStyle='#94a3b8'; ctx.font='10px sans-serif'; ctx.fillText('Gesamt',cx,cy+14);
+  ctx.fillStyle='#0f172a'; ctx.font='bold 28px sans-serif'; ctx.textAlign='center'; ctx.fillText(total,cx,cy+4);
+  ctx.fillStyle='#94a3b8'; ctx.font='12px sans-serif'; ctx.fillText('Gesamt',cx,cy+20);
   // Legend below
-  var lx = 10, ly = 182;
+  var lx = 20, ly = 275;
   slices.forEach(function(s,i){
     ctx.fillStyle=s.color; ctx.fillRect(lx,ly-6,8,8); ctx.fillStyle='#64748b'; ctx.font='9px sans-serif'; ctx.textAlign='left'; ctx.fillText(s.label,lx+11,ly+1);
     lx += ctx.measureText(s.label).width + 22;
