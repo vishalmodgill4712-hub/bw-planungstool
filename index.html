@@ -582,7 +582,7 @@
         <button class="btn-small btn-primary" onclick="document.getElementById('excelImportInput').click()">📥 Aus Excel importieren</button>
         <input type="file" id="excelImportInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleExcelImport(this.files[0])">
         <button class="btn-small btn-danger" onclick="clearAllLiefertermin()">🗑 Alle Liefertermine löschen</button>
-        <span style="font-size:11px;color:var(--muted)">Pro Liefertermin-KW können Sie den Vorlauf für Montage, Fräsen und Tiefziehen individuell einstellen (z.B. diese Woche 1, nächste Woche 2 Wochen Vorlauf). Leer = Standard 1 Woche.</span>
+        <span style="font-size:11px;color:var(--muted)">Excel-Import: Spalten Artikel-Nr, Menge + entweder Datum (KW/Jahr wird automatisch berechnet) oder KW (+ optional Jahr). Pro Liefertermin-KW können Sie den Vorlauf individuell einstellen. Leer = Standard 1 Woche.</span>
       </div>
       <div id="excelImportStatus" style="margin-bottom:10px"></div>
       <div style="overflow-x:auto" id="inputTableWrap">
@@ -849,7 +849,7 @@ function applyRolePermissions() {
   } catch (e) {}
 })();
 
-let CURRENT_KW = 38;
+let CURRENT_KW = 45;
 let CURRENT_YEAR = 2026;
 const FEST_WEEKS = 6;
 const KW_WINDOW = 120;
@@ -1946,14 +1946,43 @@ function handleExcelImport(file) {
       if (!rows.length) { showImportStatus('Die Datei enthält keine Zeilen.', true); return; }
 
       const header = rows[0];
-      const kwIdx = findColumnIndex(header, ['kw', 'woche', 'week']);
       const artIdx = findColumnIndex(header, ['artikel', 'artikel-nr', 'artikelnummer', 'article']);
       const mengeIdx = findColumnIndex(header, ['menge', 'qty', 'quantity', 'stück', 'stueck']);
-      const yearIdx = findColumnIndex(header, ['year', 'jahr', 'year']);
+      const kwIdx = findColumnIndex(header, ['kw', 'woche', 'week']);
+      const yearIdx = findColumnIndex(header, ['year', 'jahr']);
+      const datumIdx = findColumnIndex(header, ['datum', 'date', 'lieferdatum', 'termin']);
 
-      if (kwIdx === -1 || artIdx === -1 || mengeIdx === -1) {
-        showImportStatus('Spalten nicht erkannt. Bitte stellen Sie sicher, dass die Datei Spalten für KW, Artikel-Nr und Menge enthält (Reihenfolge egal).', true);
+      if (artIdx === -1 || mengeIdx === -1) {
+        showImportStatus('Spalten nicht erkannt. Bitte mindestens Artikel-Nr und Menge als Spalten angeben.', true);
         return;
+      }
+      if (kwIdx === -1 && datumIdx === -1) {
+        showImportStatus('Bitte entweder eine Datum-Spalte oder eine KW-Spalte angeben.', true);
+        return;
+      }
+
+      // Helper: get ISO week number from a Date
+      function getIsoWeek(dt) {
+        var d = new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()));
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+        var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        var weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+        // ISO year can differ from calendar year at year boundaries
+        var isoYear = d.getUTCFullYear();
+        return { kw: weekNo, year: isoYear };
+      }
+
+      // Parse Excel date: could be serial number, Date object, or string
+      function parseExcelDate(val) {
+        if (!val) return null;
+        if (val instanceof Date) return val;
+        if (typeof val === 'number') {
+          // Excel serial date (days since 1900-01-01, with the 1900 leap year bug)
+          var utcDays = Math.floor(val) - 25569;
+          return new Date(utcDays * 86400000);
+        }
+        var parsed = new Date(val);
+        return isNaN(parsed.getTime()) ? null : parsed;
       }
 
       // Group imported rows by artikel: art -> [{year, kw, menge}]
@@ -1963,10 +1992,21 @@ function handleExcelImport(file) {
         const row = rows[r];
         if (!row || row.length === 0) continue;
         const art = normalizeArtikelKey(row[artIdx]);
-        const kw = parseInt(row[kwIdx]);
         const menge = parseFloat(row[mengeIdx]);
-        const year = yearIdx !== -1 ? parseInt(row[yearIdx]) : CURRENT_YEAR;
-        if (!art || !kw || isNaN(menge) || isNaN(year)) { skipped++; continue; }
+        if (!art || isNaN(menge)) { skipped++; continue; }
+
+        var kw, year;
+        if (datumIdx !== -1 && row[datumIdx]) {
+          // Datum column present → auto-calculate KW and Year
+          var dt = parseExcelDate(row[datumIdx]);
+          if (!dt) { skipped++; continue; }
+          var iw = getIsoWeek(dt);
+          kw = iw.kw; year = iw.year;
+        } else if (kwIdx !== -1) {
+          kw = parseInt(row[kwIdx]);
+          year = yearIdx !== -1 ? parseInt(row[yearIdx]) : CURRENT_YEAR;
+        } else { skipped++; continue; }
+        if (!kw || isNaN(kw) || isNaN(year)) { skipped++; continue; }
         if (!importedByArt[art]) importedByArt[art] = [];
         importedByArt[art].push({ year, kw, menge });
       }
