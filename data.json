@@ -6861,10 +6861,10 @@
     },
     "2454.9001|2026|44|0": {
       "geplant_date": "2026-10-29",
-      "geliefert_date": "2026-11-04",
+      "geliefert_date": "",
       "lieferschein": "",
       "menge_geliefert": 0,
-      "status": "geliefert"
+      "status": "verspätet"
     },
     "2454.9001|2026|47|1": {
       "geplant_date": "2026-11-19",
@@ -9185,10 +9185,10 @@
     },
     "2525.9001|2026|48|1": {
       "geplant_date": "2026-11-26",
-      "geliefert_date": "2026-11-05",
+      "geliefert_date": "",
       "lieferschein": "",
       "menge_geliefert": 0,
-      "status": "geliefert"
+      "status": "offen"
     },
     "2525.9001|2027|4|2": {
       "geplant_date": "2027-01-28",
@@ -9647,10 +9647,10 @@
     },
     "2601.9001|2026|45|0": {
       "geplant_date": "2026-11-05",
-      "geliefert_date": "2026-11-05",
+      "geliefert_date": "",
       "lieferschein": "",
       "menge_geliefert": 0,
-      "status": "geliefert"
+      "status": "offen"
     },
     "2601.9001|2027|3|1": {
       "geplant_date": "2027-01-21",
@@ -10291,10 +10291,10 @@
     },
     "2724.9001|2026|42|0": {
       "geplant_date": "2026-10-15",
-      "geliefert_date": "2026-11-04",
+      "geliefert_date": "",
       "lieferschein": "",
       "menge_geliefert": 0,
-      "status": "geliefert"
+      "status": "verspätet"
     },
     "2724.9001|2026|50|1": {
       "geplant_date": "2026-12-10",
