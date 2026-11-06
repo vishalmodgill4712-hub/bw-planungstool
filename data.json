@@ -10510,8 +10510,8 @@
       "geplant_date": "2026-10-28",
       "geliefert_date": "2026-11-06",
       "lieferschein": "255160",
-      "menge_geliefert": 25,
-      "status": "geliefert",
+      "menge_geliefert": 13,
+      "status": "teilweise",
       "kommentar": "Teil menge on 09.11"
     },
     "2525.9001|2026|48|1": {
