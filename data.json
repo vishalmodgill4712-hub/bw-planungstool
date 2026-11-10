@@ -6645,13 +6645,11 @@
       "doneAtKw": 45
     },
     "TZ|2458.1001|2026|43": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
     },
     "FR|2458.2003|2026|44": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
@@ -6669,7 +6667,6 @@
       "doneAtKw": 45
     },
     "MO|2458.9003|2026|45": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
@@ -6884,6 +6881,11 @@
       "doneAtKw": 45
     },
     "LI|2666.9001|2026|44": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "LI|2458.9003|2026|46": {
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
@@ -8884,18 +8886,18 @@
     },
     "2458.9003|2026|46|0": {
       "geplant_date": "2026-11-11",
-      "geliefert_date": "",
-      "lieferschein": "",
-      "menge_geliefert": 0,
-      "status": "offen",
+      "geliefert_date": "2026-11-10",
+      "lieferschein": "255290",
+      "menge_geliefert": 20,
+      "status": "geliefert",
       "kommentar": ""
     },
     "2458.9003|2026|47|1": {
       "geplant_date": "2026-11-18",
-      "geliefert_date": "",
-      "lieferschein": "",
-      "menge_geliefert": 0,
-      "status": "offen",
+      "geliefert_date": "2026-11-10",
+      "lieferschein": "255290",
+      "menge_geliefert": 11,
+      "status": "teilweise",
       "kommentar": ""
     },
     "2458.9003|2026|49|2": {
@@ -10508,10 +10510,10 @@
     },
     "2525.9001|2026|44|0": {
       "geplant_date": "2026-10-28",
-      "geliefert_date": "2026-11-06",
-      "lieferschein": "255160",
-      "menge_geliefert": 13,
-      "status": "teilweise",
+      "geliefert_date": "2026-11-10",
+      "lieferschein": "255160+255274",
+      "menge_geliefert": 25,
+      "status": "geliefert",
       "kommentar": "Teil menge on 09.11"
     },
     "2525.9001|2026|48|1": {
@@ -11028,10 +11030,10 @@
     },
     "2544.9001|2026|44|0": {
       "geplant_date": "2026-10-27",
-      "geliefert_date": "",
-      "lieferschein": "",
-      "menge_geliefert": 0,
-      "status": "verspätet",
+      "geliefert_date": "2026-11-10",
+      "lieferschein": "255288",
+      "menge_geliefert": 21,
+      "status": "teilweise",
       "kommentar": "Teil menge on 09.11"
     },
     "2544.9001|2027|2|1": {
