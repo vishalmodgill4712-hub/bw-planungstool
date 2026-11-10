@@ -1694,7 +1694,7 @@
         {
           "year": 2026,
           "kw": 46,
-          "menge": 26,
+          "menge": 20,
           "datum": "2026-11-11"
         },
         {
@@ -8888,7 +8888,7 @@
       "geplant_date": "2026-11-11",
       "geliefert_date": "2026-11-10",
       "lieferschein": "255290",
-      "menge_geliefert": 26,
+      "menge_geliefert": 20,
       "status": "geliefert",
       "kommentar": ""
     },
