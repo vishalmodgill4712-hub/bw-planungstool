@@ -6554,8 +6554,9 @@
       "doneAtKw": 38
     },
     "LI|2601.9001|2026|45": {
-      "geplant": false,
-      "done": false
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
     },
     "MO|2601.9001|2026|44": {
       "done": true,
@@ -6766,31 +6767,26 @@
       "doneAtKw": 45
     },
     "TZ|2604.1003|2026|42": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
     },
     "TZ|2604.1002|2026|42": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
     },
     "TZ|2604.1001|2026|42": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
     },
     "FR|2604.2003|2026|43": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
     },
     "FR|2604.2002|2026|43": {
-      "geplant": false,
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
@@ -7009,6 +7005,21 @@
       "doneAtKw": 45
     },
     "MO|2541.9002|2026|44": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "LI|2604.9001|2026|45": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "MO|2604.9001|2026|44": {
+      "done": true,
+      "doneAtYear": 2026,
+      "doneAtKw": 45
+    },
+    "FR|2604.2001|2026|43": {
       "done": true,
       "doneAtYear": 2026,
       "doneAtKw": 45
@@ -11169,10 +11180,10 @@
     },
     "2601.9001|2026|45|0": {
       "geplant_date": "2026-11-04",
-      "geliefert_date": "2026-11-12",
-      "lieferschein": "255390",
-      "menge_geliefert": 8,
-      "status": "teilweise",
+      "geliefert_date": "2026-11-16",
+      "lieferschein": "255390 + 255497",
+      "menge_geliefert": 15,
+      "status": "geliefert",
       "kommentar": ""
     },
     "2601.9001|2027|3|1": {
@@ -11465,10 +11476,10 @@
     },
     "2604.9001|2026|45|0": {
       "geplant_date": "2026-11-04",
-      "geliefert_date": "2026-11-12",
-      "lieferschein": "255394",
-      "menge_geliefert": 8,
-      "status": "teilweise",
+      "geliefert_date": "2026-11-16",
+      "lieferschein": "255394 + 255495",
+      "menge_geliefert": 15,
+      "status": "geliefert",
       "kommentar": ""
     },
     "2604.9001|2027|3|1": {
@@ -11924,7 +11935,7 @@
       "geliefert_date": "",
       "lieferschein": "",
       "menge_geliefert": 0,
-      "status": "offen",
+      "status": "verspätet",
       "kommentar": ""
     },
     "2848.9001|2026|48|0": {
@@ -11964,7 +11975,7 @@
       "geliefert_date": "",
       "lieferschein": "",
       "menge_geliefert": 0,
-      "status": "offen",
+      "status": "verspätet",
       "kommentar": ""
     },
     "2341.9012|2027|1|5": {
